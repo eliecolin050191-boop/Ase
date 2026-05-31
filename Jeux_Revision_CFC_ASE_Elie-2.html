@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révision CFC ASE — Elie</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+:root {
+  --bleu:#1A5276;--bleu2:#2874A6;--bleu3:#AED6F1;
+  --orange:#E67E22;--orange2:#F39C12;
+  --vert:#1E8449;--vert2:#27AE60;
+  --rouge:#922B21;--rouge2:#E74C3C;
+  --violet:#6C3483;--violet2:#8E44AD;
+  --fond:#F0F4F8;--blanc:#FFFFFF;--gris:#7F8C8D;--texte:#1A2340;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--fond);color:var(--texte);min-height:100vh}
+
+/* PIN */
+#pin-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0D1B2A 0%,#1A5276 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
+#pin-screen h1{font-family:'Fredoka One',cursive;color:#fff;font-size:2.2rem;text-align:center}
+#pin-screen p{color:var(--bleu3);font-size:.95rem}
+#pin-display{display:flex;gap:14px;margin:8px 0}
+.pin-dot{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);transition:all .2s}
+.pin-dot.filled{background:var(--orange2);border-color:var(--orange2)}
+#pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:210px}
+.pin-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:1.4rem;font-weight:700;border-radius:50%;width:62px;height:62px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+.pin-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
+.pin-btn:active{transform:scale(.95)}
+#pin-error{color:var(--rouge2);font-weight:700;display:none;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.nav{background:var(--bleu);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.nav-titre{font-family:'Fredoka One',cursive;color:#fff;font-size:1.2rem}
+.nav-score{background:var(--orange2);color:#fff;font-weight:800;padding:4px 12px;border-radius:20px;font-size:.85rem}
+
+/* MENU */
+#menu{padding:20px 14px;max-width:520px;margin:0 auto}
+.salut h2{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--bleu);text-align:center;margin-bottom:4px}
+.salut p{color:var(--gris);text-align:center;margin-bottom:18px}
+.progress-box{background:#fff;border-radius:14px;padding:14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.progress-bar{background:#E8EDF2;border-radius:8px;height:14px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--vert2),#58D68D);border-radius:8px;transition:width .5s}
+.section-titre{font-weight:900;color:var(--bleu);margin:16px 0 10px;font-size:1rem;text-transform:uppercase;letter-spacing:.5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.card{background:#fff;border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);border:3px solid transparent}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.card.done{border-color:var(--vert2)}
+.card.done::after{content:"✅";position:absolute;top:8px;right:8px;font-size:.9rem}
+.card{position:relative}
+.card-emoji{font-size:1.8rem;margin-bottom:6px}
+.card-titre{font-weight:800;font-size:.82rem;line-height:1.3}
+.card-nb{color:var(--gris);font-size:.72rem;margin-top:3px}
+.card[data-c="bleu"]{background:linear-gradient(135deg,#EBF5FB,#D6EAF8)}
+.card[data-c="orange"]{background:linear-gradient(135deg,#FEF9E7,#FDEBD0)}
+.card[data-c="vert"]{background:linear-gradient(135deg,#EAFAF1,#D5F5E3)}
+.card[data-c="violet"]{background:linear-gradient(135deg,#F4ECF7,#E8DAEF)}
+.card[data-c="rouge"]{background:linear-gradient(135deg,#FDEDEC,#FADBD8)}
+.btn-big{width:100%;border:none;border-radius:14px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:10px;transition:all .2s}
+.btn-big:hover{transform:translateY(-2px)}
+.btn-quiz-all{background:linear-gradient(135deg,var(--bleu),#0D1B2A);color:#fff;box-shadow:0 4px 12px rgba(26,82,118,.4)}
+.btn-cas{background:linear-gradient(135deg,var(--violet2),var(--violet));color:#fff;box-shadow:0 4px 12px rgba(142,68,173,.4)}
+.btn-flashcard{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 12px rgba(230,126,34,.4)}
+
+/* FICHE */
+#fiche-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.fiche-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.btn-back{background:#fff;border:2px solid var(--bleu3);color:var(--bleu);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Nunito',sans-serif}
+.fiche-titre-h{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--bleu)}
+.idee-box{background:linear-gradient(135deg,#FEF9E7,#FDEBD0);border-left:5px solid var(--orange2);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-weight:700;color:#784212;font-size:.9rem}
+.section-h{font-weight:800;font-size:.95rem;color:var(--bleu);margin:16px 0 8px;padding-bottom:3px;border-bottom:2px solid var(--bleu3)}
+.t{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:.8rem}
+.t th{background:var(--bleu);color:#fff;padding:7px 8px;text-align:left;font-weight:700}
+.t td{padding:7px 8px;border-bottom:1px solid #E8EDF2;vertical-align:top}
+.t tr:nth-child(even) td{background:#F7FAFC}
+.cle-box{background:linear-gradient(135deg,#EAFAF1,#D5F5E3);border-left:5px solid var(--vert2);border-radius:12px;padding:11px 14px;margin:12px 0;color:var(--vert);font-weight:700;font-size:.87rem}
+.alerte-box{background:linear-gradient(135deg,#FDEDEC,#FADBD8);border-left:5px solid var(--rouge2);border-radius:12px;padding:11px 14px;margin:12px 0;color:var(--rouge);font-weight:700;font-size:.87rem}
+.q-box{background:linear-gradient(135deg,#F4ECF7,#E8DAEF);border-left:5px solid var(--violet2);border-radius:12px;padding:12px 14px;margin:12px 0}
+.q-box .q{font-weight:800;color:var(--violet);font-size:.88rem;margin-bottom:6px}
+.q-box .r{color:#1A1A1A;font-size:.85rem;line-height:1.5}
+.btn-quiz-fiche{width:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none;border-radius:12px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;margin-top:8px;font-family:'Nunito',sans-serif}
+
+/* QUIZ */
+#quiz-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.quiz-top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.quiz-dots-wrap{display:flex;gap:3px;flex:1}
+.quiz-dot{height:5px;flex:1;border-radius:3px;background:#E8EDF2;transition:all .3s}
+.quiz-dot.actif{background:var(--bleu2)}
+.quiz-dot.ok{background:var(--vert2)}
+.quiz-dot.ko{background:var(--rouge2)}
+.quiz-nb{color:var(--gris);font-size:.82rem;font-weight:700}
+.q-card{background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.1);border-top:5px solid var(--bleu2)}
+.q-text{font-weight:700;font-size:1rem;line-height:1.5;color:var(--texte)}
+.q-infos{color:var(--gris);font-size:.78rem;margin-top:6px}
+.options{display:flex;flex-direction:column;gap:9px}
+.opt{background:#fff;border:3px solid #E8EDF2;border-radius:11px;padding:13px 14px;cursor:pointer;transition:all .15s;font-weight:600;font-size:.87rem;font-family:'Nunito',sans-serif;text-align:left}
+.opt:hover{border-color:var(--bleu2);background:#EBF5FB}
+.opt.correct{border-color:var(--vert2);background:#EAFAF1;color:var(--vert)}
+.opt.incorrect{border-color:var(--rouge2);background:#FDEDEC;color:var(--rouge)}
+.feedback{border-radius:11px;padding:13px;margin-top:11px;font-weight:700;display:none;font-size:.87rem;line-height:1.5}
+.feedback.correct{background:#EAFAF1;color:var(--vert);border:2px solid var(--vert2)}
+.feedback.incorrect{background:#FDEDEC;color:var(--rouge);border:2px solid var(--rouge2)}
+.btn-next{width:100%;background:var(--bleu2);color:#fff;border:none;border-radius:12px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;margin-top:11px;display:none;font-family:'Nunito',sans-serif}
+
+/* CAS PRATIQUE */
+#cas-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.cas-card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.1);border-top:5px solid var(--violet2)}
+.cas-titre{font-family:'Fredoka One',cursive;color:var(--violet);font-size:1.1rem;margin-bottom:8px}
+.cas-texte{font-size:.88rem;line-height:1.6;color:var(--texte);margin-bottom:14px}
+.cas-question{font-weight:800;color:var(--violet2);font-size:.9rem;margin-bottom:10px}
+.cas-textarea{width:100%;border:2px solid #E8EDF2;border-radius:10px;padding:12px;font-family:'Nunito',sans-serif;font-size:.87rem;min-height:100px;resize:vertical;margin-bottom:10px}
+.cas-textarea:focus{outline:none;border-color:var(--violet2)}
+.btn-voir-rep{background:var(--violet2);color:#fff;border:none;border-radius:11px;padding:11px;font-size:.9rem;font-weight:800;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-bottom:10px}
+.cas-reponse{background:linear-gradient(135deg,#F4ECF7,#E8DAEF);border-radius:11px;padding:13px;font-size:.85rem;line-height:1.5;display:none;margin-bottom:10px;color:var(--texte)}
+.cas-reponse strong{color:var(--violet);display:block;margin-bottom:4px}
+
+/* FLASHCARDS */
+#flash-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.flash-card{background:#fff;border-radius:20px;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.15);cursor:pointer;margin-bottom:16px;border:4px solid var(--bleu3);transition:all .3s;position:relative}
+.flash-front{font-weight:800;font-size:1.05rem;color:var(--bleu)}
+.flash-back{font-size:.9rem;color:var(--texte);line-height:1.5;display:none}
+.flash-hint{color:var(--gris);font-size:.75rem;position:absolute;bottom:10px;right:14px}
+.flash-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.flash-btn{border:none;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.85rem}
+.flash-btn.rouge{background:var(--rouge2);color:#fff}
+.flash-btn.vert{background:var(--vert2);color:#fff}
+.flash-btn.bleu{background:var(--bleu2);color:#fff}
+.flash-progress{text-align:center;color:var(--gris);font-size:.82rem;margin-bottom:10px}
+
+/* RÉSULTATS */
+#result-view{padding:16px;max-width:520px;margin:0 auto;display:none;text-align:center}
+.result-emoji{font-size:4rem;margin:20px 0}
+.result-titre{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--bleu)}
+.result-score{font-size:2.8rem;font-weight:900;margin:14px 0;color:var(--bleu)}
+.result-msg{color:var(--gris);font-size:.95rem;margin-bottom:20px;line-height:1.5}
+.result-btns{display:flex;flex-direction:column;gap:9px}
+.btn-retry{background:var(--orange);color:#fff;border:none;border-radius:12px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.btn-menu-r{background:#fff;color:var(--bleu);border:3px solid var(--bleu);border-radius:12px;padding:12px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.detail-rep{background:#fff;border-radius:12px;padding:14px;text-align:left;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.detail-rep .dr-q{font-weight:700;font-size:.85rem;margin-bottom:4px}
+.detail-rep.ok{border-left:4px solid var(--vert2)}
+.detail-rep.ko{border-left:4px solid var(--rouge2)}
+.detail-rep .dr-r{font-size:.8rem;color:var(--gris)}
+</style>
+</head>
+<body>
+
+<!-- PIN -->
+<div id="pin-screen">
+  <div style="font-size:3rem">🎓</div>
+  <h1>CFC ASE — Révision</h1>
+  <p>Entre ton code secret à 4 chiffres</p>
+  <div id="pin-display">
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+  </div>
+  <div id="pin-error">❌ Code incorrect, réessaie !</div>
+  <div id="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinClear()">✕</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinDel()">⌫</button>
+  </div>
+  <p style="color:var(--bleu3);font-size:.78rem;margin-top:8px">Code: 1234</p>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="nav">
+  <span class="nav-titre">📚 CFC ASE — Elie</span>
+  <span class="nav-score" id="nav-score">⭐ 0 pts</span>
+</div>
+
+<!-- MENU -->
+<div id="menu">
+  <div class="salut">
+    <h2>Salut Elie ! 💪</h2>
+    <p>Choisis ton mode de révision</p>
+  </div>
+  <div class="progress-box">
+    <div class="progress-row">
+      <span style="font-weight:800;color:var(--bleu)">📊 Ma progression</span>
+      <span id="prog-txt" style="color:var(--vert2);font-weight:800">0 / 14 modules</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-titre">🧠 Careum F0 — Développement</div>
+  <div class="grid">
+    <div class="card" data-c="bleu" onclick="showFiche(0)" id="card-0"><div class="card-emoji">📖</div><div class="card-titre">Développement<br>& Facteurs</div><div class="card-nb">3 facteurs clés</div></div>
+    <div class="card" data-c="orange" onclick="showFiche(1)" id="card-1"><div class="card-emoji">🎭</div><div class="card-titre">Erikson<br>8 Crises</div><div class="card-nb">Toute la vie</div></div>
+    <div class="card" data-c="vert" onclick="showFiche(2)" id="card-2"><div class="card-emoji">🧒</div><div class="card-titre">Piaget<br>4 Stades</div><div class="card-nb">Cognition</div></div>
+    <div class="card" data-c="violet" onclick="showFiche(3)" id="card-3"><div class="card-emoji">😊</div><div class="card-titre">Émotions<br>& Attachement</div><div class="card-nb">8 compétences</div></div>
+    <div class="card" data-c="rouge" onclick="showFiche(4)" id="card-4"><div class="card-emoji">🗣️</div><div class="card-titre">Langage<br>7 Stades</div><div class="card-nb">0 à 5 ans</div></div>
+    <div class="card" data-c="bleu" onclick="showFiche(5)" id="card-5"><div class="card-emoji">👥</div><div class="card-titre">Social<br>& Moral</div><div class="card-nb">Eisenberg</div></div>
+  </div>
+
+  <div class="section-titre">🏢 Careum D — Organisation</div>
+  <div class="grid">
+    <div class="card" data-c="orange" onclick="showFiche(6)" id="card-6"><div class="card-emoji">🤝</div><div class="card-titre">D1 — Travail<br>en Équipe</div><div class="card-nb">Groupe vs Équipe</div></div>
+    <div class="card" data-c="vert" onclick="showFiche(7)" id="card-7"><div class="card-emoji">🔗</div><div class="card-titre">D2 — Collaboration<br>Interpro</div><div class="card-nb">Multi-disciplines</div></div>
+    <div class="card" data-c="violet" onclick="showFiche(8)" id="card-8"><div class="card-emoji">👨‍👩‍👧</div><div class="card-titre">D3 — Proches<br>& Entretiens</div><div class="card-nb">Formel/Informel</div></div>
+    <div class="card" data-c="rouge" onclick="showFiche(9)" id="card-9"><div class="card-emoji">⭐</div><div class="card-titre">D4 — Gestion<br>Qualité</div><div class="card-nb">PDCA cycle</div></div>
+    <div class="card" data-c="bleu" onclick="showFiche(10)" id="card-10"><div class="card-emoji">📋</div><div class="card-titre">D5 — Tâches<br>Admin</div><div class="card-nb">PV, lettres, rapports</div></div>
+    <div class="card" data-c="orange" onclick="showFiche(11)" id="card-11"><div class="card-emoji">⚖️</div><div class="card-titre">Cadre Légal<br>Suisse/GE</div><div class="card-nb">Curatelles, droits</div></div>
+  </div>
+
+  <div class="section-titre">🎮 Modes de jeu</div>
+  <button class="btn-big btn-quiz-all" onclick="startQuiz(-1)">🎯 QUIZ COMPLET — Toutes les fiches</button>
+  <button class="btn-big btn-cas" onclick="showCas()">📝 CAS PRATIQUES — Questions ouvertes</button>
+  <button class="btn-big btn-flashcard" onclick="startFlash()">🃏 FLASHCARDS — Mémorisation rapide</button>
+</div>
+
+<!-- FICHE DÉTAIL -->
+<div id="fiche-view"></div>
+
+<!-- QUIZ -->
+<div id="quiz-view">
+  <div class="quiz-top">
+    <button class="btn-back" onclick="showMenu()">← Menu</button>
+    <div class="quiz-dots-wrap" id="quiz-dots"></div>
+    <span class="quiz-nb" id="quiz-nb">1/10</span>
+  </div>
+  <div class="q-card"><div class="q-text" id="q-text"></div><div class="q-infos" id="q-infos"></div></div>
+  <div class="options" id="q-opts"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn-next" id="btn-next" onclick="nextQ()">Suivant →</button>
+</div>
+
+<!-- CAS PRATIQUES -->
+<div id="cas-view"></div>
+
+<!-- FLASHCARDS -->
+<div id="flash-view">
+  <div class="quiz-top">
+    <button class="btn-back" onclick="showMenu()">← Menu</button>
+    <span style="font-family:'Fredoka One',cursive;color:var(--orange);font-size:1.1rem">🃏 Flashcards</span>
+    <span class="quiz-nb" id="flash-nb">1/30</span>
+  </div>
+  <p class="flash-progress" id="flash-prog">✅ 0 sues | ❌ 0 à revoir</p>
+  <div class="flash-card" id="flash-card" onclick="flipCard()">
+    <div class="flash-front" id="flash-front"></div>
+    <div class="flash-back" id="flash-back"></div>
+    <span class="flash-hint">👆 Cliquer pour retourner</span>
+  </div>
+  <div class="flash-nav">
+    <button class="flash-btn rouge" onclick="flashResult(false)">❌ À revoir</button>
+    <button class="flash-btn bleu" onclick="flipCard()">🔄 Retourner</button>
+    <button class="flash-btn vert" onclick="flashResult(true)">✅ Je sais !</button>
+  </div>
+</div>
+
+<!-- RÉSULTATS -->
+<div id="result-view">
+  <div class="result-emoji" id="res-emoji">🎉</div>
+  <div class="result-titre" id="res-titre">Bravo !</div>
+  <div class="result-score" id="res-score"></div>
+  <div class="result-msg" id="res-msg"></div>
+  <div id="res-details"></div>
+  <div class="result-btns">
+    <button class="btn-retry" onclick="retryQuiz()">🔄 Réessayer</button>
+    <button class="btn-menu-r" onclick="showMenu()">🏠 Menu</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============ PIN ============
+const PIN = "1234";
+let pin = "";
+function pinPress(n){if(pin.length>=4)return;pin+=n;updateDots();if(pin.length===4)setTimeout(checkPin,200)}
+function pinDel(){pin=pin.slice(0,-1);updateDots()}
+function pinClear(){pin="";updateDots()}
+function updateDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('filled',i<pin.length)}
+function checkPin(){
+  if(pin===PIN){document.getElementById('pin-screen').style.display='none';document.getElementById('app').style.display='block';updateProg()}
+  else{const e=document.getElementById('pin-error');e.style.display='block';e.style.animation='none';setTimeout(()=>e.style.animation='shake .4s',10);pin="";updateDots()}
+}
+
+// ============ DONNÉES ============
+let score=0,done=new Set(),quizQs=[],quizIdx=0,quizScore=0,quizAnswered=false,quizFiche=-1;
+let flashCards=[],flashIdx=0,flashFlipped=false,flashOk=0,flashKo=0;
+
+const fiches=[
+  {
+    id:0,titre:"📖 Développement & Facteurs",emoji:"📖",
+    idee:"Le développement = processus permanent de la conception à la mort.",
+    sections:[
+      {t:"Les 3 facteurs",tab:{h:["FACTEUR","DESCRIPTION","EXEMPLE"],r:[
+        ["🧬 Biologique","Inné — gènes, tempérament","Enfant né avec trisomie 21"],
+        ["🌍 Environnement","Acquis — famille, école, culture","Éducation stricte → comportement different"],
+        ["💪 Autodétermination","Volonté propre — choix","Décider d'apprendre une langue"]
+      ]}}
+    ],
+    cle:"BIO + ENVIRO + MOI = Mon développement",
+    alerte:"",
+    qs:[{q:"Citez les 3 facteurs du développement.",r:"1) Biologique (inné, génétique). 2) Environnement (famille, école, culture). 3) Autodétermination (volonté propre). Ils agissent simultanément et en interaction."}]
+  },
+  {
+    id:1,titre:"🎭 Erikson — 8 Crises",emoji:"🎭",
+    idee:"À chaque étape de la vie, on doit résoudre un défi. Si résolu → force. Sinon → faiblesse.",
+    sections:[
+      {t:"Les 8 crises",tab:{h:["ÂGE","CRISE","✅ Résolue","❌ Non résolue"],r:[
+        ["0-1 an","Confiance vs Méfiance","Confiance fondamentale","Méfiance envers le monde"],
+        ["1-3 ans","Autonomie vs Honte","Autodétermination","Honte et doute"],
+        ["3-5 ans","Initiative vs Culpabilité","Capacité d'initiative","Peur de mal faire"],
+        ["5-12 ans","Travail vs Infériorité","Compétence, fierté","Sentiment d'être nul"],
+        ["Adolescence","Identité vs Confusion","Identité claire","Diffusion de l'identité"],
+        ["Jeune adulte","Intimité vs Isolement","Relations profondes","Isolement social"],
+        ["Adulte","Générativité vs Stagnation","Contribuer à la société","Stagnation"],
+        ["Vieillesse","Intégrité vs Désespoir","Paix avec sa vie","Amertume, désespoir"]
+      ]}}
+    ],
+    cle:"CONFIANCE → AUTONOMIE → INITIATIVE → TRAVAIL → IDENTITÉ → INTIMITÉ → GÉNÉRATIVITÉ → INTÉGRITÉ",
+    alerte:"",
+    qs:[{q:"Quelle crise traverse un adolescent selon Erikson ? Conséquences si non résolue ?",r:"Identité vs Confusion. Si non résolue → diffusion de l'identité: le jeune ne sait plus qui il est, peut adopter des comportements extrêmes ou s'isoler."}]
+  },
+  {
+    id:2,titre:"🧒 Piaget — 4 Stades",emoji:"🧒",
+    idee:"La pensée se développe en 4 étapes. L'enfant est acteur de son propre développement.",
+    sections:[
+      {t:"Les 4 stades cognitifs",tab:{h:["STADE","ÂGE","CARACTÉRISTIQUES","MOT CLÉ"],r:[
+        ["1. Sensorimoteur","0-2 ans","Corps et sens. À 18 mois: miroir (révolution cognitive).","CORPS & SENS"],
+        ["2. Préopératoire","2-7 ans","Magie, égocentrisme, irréversibilité, centration.","MAGIE & MOI"],
+        ["3. Opératoire concret","7-12 ans","Logique réelle, décentration, réversibilité, invariance.","LOGIQUE CONCRÈTE"],
+        ["4. Opératoire formel","12 ans+","Abstrait, hypothèses, 'si...alors'.","ABSTRAIT"]
+      ]}}
+    ],
+    cle:"CORPS → MAGIE → CONCRET → ABSTRAIT",
+    alerte:"Assimilation = adapter à ce qu'on sait. Accommodation = modifier ses schèmes face au nouveau.",
+    qs:[{q:"Décrivez 2 caractéristiques du stade préopératoire avec un exemple de terrain.",r:"1) Égocentrisme: l'enfant ne voit que son point de vue (ex: enfant de 4 ans qui pense que tout le monde voit ce qu'il voit). 2) Pensée magique: croit que les objets sont vivants ('méchante table'). Dans mon travail: je ne peux pas demander à un enfant de 5 ans de se mettre à la place d'un autre enfant."}]
+  },
+  {
+    id:3,titre:"😊 Émotions & Attachement",emoji:"😊",
+    idee:"Les émotions influencent le corps, les pensées ET le comportement. L'attachement conditionne tout le développement.",
+    sections:[
+      {t:"8 compétences émotionnelles (Saarni)",tab:{h:["N°","COMPÉTENCE"],r:[
+        ["1","Reconnaître SES propres émotions"],["2","Reconnaître les émotions des AUTRES"],
+        ["3","Mettre des MOTS sur ses émotions"],["4","EMPATHIE"],
+        ["5","Distinguer SON ressenti de celui des autres"],["6","GÉRER ses émotions difficiles"],
+        ["7","Comprendre l'impact sur les RELATIONS"],["8","Accepter ses émotions même si différentes"]
+      ]}},
+      {t:"Attachement (Ainsworth)",tab:{h:["TYPE","COMPORTEMENT","CONSÉQUENCES"],r:[
+        ["✅ SÉCURE","Confiance → explore → revient","Bon développement cog., soc., émot."],
+        ["❌ INSÉCURE-ÉVITANT","Évite la personne de référence","Difficultés relationnelles"],
+        ["❌ INSÉCURE-AMBIVALENT","Clinique + résistant","Anxiété, dépendance"],
+        ["❌ DÉSORGANISÉ","Comportement contradictoire","Risque de troubles graves"]
+      ]}}
+    ],
+    cle:"Coaching émotionnel: 1) Nommer l'émotion. 2) Chercher UNE SOLUTION avec la personne.",
+    alerte:"Sensibilité (Ainsworth): percevoir → interpréter correctement → réagir rapidement et de façon appropriée.",
+    qs:[{q:"Qu'est-ce que la compétence émotionnelle ? Importance pour l'ASE ?",r:"Capacité à reconnaître, nommer, exprimer et réguler ses émotions + empathie. Pour l'ASE: relation de confiance, désamorcer les conflits, se protéger du burn-out."}]
+  },
+  {
+    id:4,titre:"🗣️ Langage — 7 Stades",emoji:"🗣️",
+    idee:"Le langage se développe en 7 étapes. Il influence TOUS les autres domaines (cognition, social, émotions).",
+    sections:[
+      {t:"Les 7 stades du langage",tab:{h:["STADE","ÂGE","CARACTÉRISTIQUES CLÉS"],r:[
+        ["1. Préliminaire","0-5 mois","Pleurs (réflexe), premiers sons. Universel: même sons dans tous les pays."],
+        ["2. Babillage","6-12 mois","'ba-ba-ba'. Joie. Enfants sourds s'arrêtent car n'entendent pas."],
+        ["3. Phrases d'1 mot","12-18 mois","'maman' = phrase entière. 20-50 mots à la fin."],
+        ["4. Phrases de 2 mots","18 mois-2 ans","'maman partie'. 1er âge du questionnement. 600 mots."],
+        ["5. Grammaire","2-3 ans","Règles grammaticales. Erreurs par analogie ('plus mieux')."],
+        ["6. Consolidation","3-4 ans","Phrases complexes. Bégaiement normal. 2e âge du questionnement."],
+        ["7. Maîtrise complète","4-5 ans","Bases maîtrisées. Développement continue toute la vie."]
+      ]}}
+    ],
+    cle:"À 5 ans: bases de la langue maternelle maîtrisées. Stimulation: mamanais, reformulation, lecture dialoguée.",
+    alerte:"",
+    qs:[{q:"Comment stimuler le langage d'un enfant de 2 ans dans votre travail quotidien ?",r:"1) Mamanais (phrases courtes, répétitions, intonation positive). 2) Reformuler ses énoncés ('tu veux encore du lait?'). 3) Lecture d'images dialoguée. 4) Répondre aux questions du 1er âge du questionnement. 5) Comptines et chansons."}]
+  },
+  {
+    id:5,titre:"👥 Social & Moral",emoji:"👥",
+    idee:"Le développement social et moral = apprendre à vivre ensemble selon des normes et valeurs.",
+    sections:[
+      {t:"Eisenberg — 5 stades moraux",tab:{h:["STADE","ÂGE","LOGIQUE MORALE"],r:[
+        ["1. Hédoniste","4-5 ans","J'aide si j'y gagne quelque chose"],
+        ["2. Besoins","6 ans","Je tiens compte des besoins des autres"],
+        ["3. Reconnaissance","7-12 ans","J'agis pour être bien vu"],
+        ["4a. Empathie","12-14 ans","Je me mets à la place de l'autre"],
+        ["4b. Valeurs","14-17 ans","Valeurs internalisées, devoir"],
+        ["5. Internalisé","18-25 ans","Principes moraux abstraits"]
+      ]}},
+      {t:"Socialisation",tab:{h:["NIVEAU","OÙ ?","EXEMPLE"],r:[
+        ["🥇 Primaire","Famille","Valeurs de base, langage"],
+        ["🥈 Secondaire","École, crèche, institution","Règles sociales, normes collectives"],
+        ["🥉 Tertiaire","Loisirs, médias, pairs","Clubs, réseaux sociaux"]
+      ]}}
+    ],
+    cle:"Normaliser dans le travail: ne pas punir le stade 1 chez un enfant de 4 ans — c'est NORMAL !",
+    alerte:"",
+    qs:[{q:"Qu'est-ce que la socialisation secondaire ? Rôle de l'ASE ?",r:"Socialisation secondaire: dès 3 ans, hors famille (crèche, école). L'enfant apprend les normes sociales. Rôle ASE: être un modèle, structurer des règles claires, accompagner les transitions (modèle berlinois), soutenir les relations avec les pairs."}]
+  },
+  {
+    id:6,titre:"🤝 D1 — Travail en équipe",emoji:"🤝",
+    idee:"Une équipe ≠ un groupe. L'équipe a un objectif commun, des rôles définis et une responsabilité partagée.",
+    sections:[
+      {t:"Groupe vs Équipe",tab:{h:["CRITÈRE","GROUPE","ÉQUIPE"],r:[
+        ["Objectif","Variable ou absent","Commun et défini"],
+        ["Rôles","Non définis","Clairs et répartis"],
+        ["Responsabilité","Individuelle","Individuelle ET collective"],
+        ["Taille","Variable","Idéalement 3-8 personnes"]
+      ]}},
+      {t:"6 Rôles d'équipe (Gellert & Nowak)",tab:{h:["RÔLE","CARACTÉRISTIQUES"],r:[
+        ["Leader/Animateur","Dirige, vue d'ensemble, feedback critique"],
+        ["Promoteur/Coordinateur","Orienté résultats, planifie, calendrier"],
+        ["Inspirateur d'idées","Créatif, innovant, expérimente"],
+        ["Networker","Contacts extérieurs, circulation de l'info"],
+        ["Travailleur d'équipe","Soutien, écoute, harmonie"],
+        ["Finisseur/Détail","Consciencieux, délais, qualité"]
+      ]}},
+      {t:"3 formes de suivi professionnel",tab:{h:["FORME","QUI DIRIGE ?","DIFFÉRENCE CLÉ"],r:[
+        ["Supervision","Expert EXTERNE","Regard neutre extérieur"],
+        ["Intervision","Pairs (rotation)","Pas d'expert — entre collègues"],
+        ["Coaching","Coach externe","Ne donne PAS de solutions directes"]
+      ]}}
+    ],
+    cle:"COACHING: aider à s'aider soi-même. Le coach pose des questions ouvertes, ne donne pas de conseils directs.",
+    alerte:"",
+    qs:[{q:"Quelle est la différence entre supervision et coaching ? Exemple pour chacun.",r:"Supervision: expert externe, réflexion collective sur la pratique (ex: comment gérer les besoins de contact de Manuel?). Coaching: accompagnement individuel, le coach aide la personne à trouver SES PROPRES solutions (ex: Paola et son conflit de collègue → le coach l'aide à identifier ses ressources)."}]
+  },
+  {
+    id:7,titre:"🔗 D2 — Collaboration Interprofessionnelle",emoji:"🔗",
+    idee:"Interprofessionnel = différentes professions collaborent au service de la PERSONNE ACCOMPAGNÉE.",
+    sections:[
+      {t:"Conditions d'une collaboration efficace",tab:{h:["NIVEAU","CONDITIONS"],r:[
+        ["Structurel","Temps, rôles définis, objectifs communs, compétences clarifiées"],
+        ["Individuel","Haute expertise propre, connaît les autres métiers, attitude ouverte"],
+        ["Interpersonnel","Communication respectueuse, estime, confiance, gestion conflits"]
+      ]}}
+    ],
+    cle:"L'objectif commun: le BIEN-ÊTRE et la QUALITÉ DE VIE des personnes accompagnées. Pas les intérêts professionnels.",
+    alerte:"Interdisciplinaire ≠ Interprofessionnel. Interdisciplinaire = sciences (sociologie, psychologie). Interprofessionnel = métiers (ASE, médecin, logopédiste).",
+    qs:[{q:"Pourquoi la collaboration interprofessionnelle est-elle essentielle ? Donnez un exemple.",r:"Car les situations sont complexes et dépassent une seule profession. Ex: Emile (35 ans, troubles cognitifs + épilepsie) veut aller seul à un cours d'informatique. L'ASE organise une réunion avec le curateur, le neurologue, le responsable d'atelier pour trouver une solution sécurisée ensemble."}]
+  },
+  {
+    id:8,titre:"👨‍👩‍👧 D3 — Proches & Entretiens",emoji:"👨‍👩‍👧",
+    idee:"La collaboration avec les proches = PARTENARIAT, pas hiérarchie. Les proches sont des experts de leurs propres membres.",
+    sections:[
+      {t:"Formel vs Informel",tab:{h:["TYPE","CARACTÉRISTIQUES","EXEMPLE"],r:[
+        ["FORMEL","Planifié, objectifs définis, documenté, contraignant","Entretien de bilan semestriel"],
+        ["INFORMEL","Spontané, non documenté, crée du lien","Conversation au pick-up"]
+      ]}},
+      {t:"Types de curatelles (CC Suisse)",tab:{h:["MESURE","CONTENU"],r:[
+        ["Curatelle d'accompagnement","Conseille — n'impose pas. La personne garde sa capacité d'agir."],
+        ["Curatelle de représentation","Représente dans des domaines précis (finances, santé...)."],
+        ["Curatelle de coopération","Décide AVEC la personne."],
+        ["Curatelle de portée générale","Représente dans TOUS les domaines. Mesure la plus forte."]
+      ]}}
+    ],
+    cle:"Structure entretien bilan: AVANT (préparation) → PENDANT (échange) → APRÈS (suivi et documentation).",
+    alerte:"Les proches NE SONT PAS des collaborateurs! Ils ont le droit de rendre visite sans participer aux discussions professionnelles.",
+    qs:[{q:"Quelle est la différence entre entretien formel et informel ? Dans quels cas utiliser chacun ?",r:"Formel: planifié, lieu officiel, décisions contraignantes, documenté. Informel: spontané, non planifié, non documenté. Formel pour: bilans, décisions importantes, situations problématiques. Informel pour: échange quotidien rapide, renforcer le lien de confiance."}]
+  },
+  {
+    id:9,titre:"⭐ D4 — Gestion de la Qualité",emoji:"⭐",
+    idee:"La qualité = ensemble des mesures pour garantir ET améliorer les prestations. C'est un processus CONTINU.",
+    sections:[
+      {t:"3 types de qualité",tab:{h:["TYPE","DÉFINITION","EXEMPLE"],r:[
+        ["Qualité structurelle","CONDITIONS de travail","Ratio personnel/résidents, taille des locaux"],
+        ["Qualité des processus","FAÇON de travailler","Comment se fait l'admission? Les bilans?"],
+        ["Qualité des résultats","RÉSULTATS atteints","Satisfaction des PA, taux d'incidents"]
+      ]}},
+      {t:"Cycle PDCA (Roue de Deming)",tab:{h:["ÉTAPE","CONTENU"],r:[
+        ["P — PLANIFIER","Définir objectifs et mesures"],
+        ["D — DÉVELOPPER","Mettre en œuvre les mesures"],
+        ["C — CONTRÔLER","Vérifier les résultats"],
+        ["A — AJUSTER","Modifier si objectifs non atteints → recommencer"]
+      ]}}
+    ],
+    cle:"PDCA = Planifier → Faire → Contrôler → Ajuster. C'est un cycle CONTINU jamais terminé.",
+    alerte:"",
+    qs:[{q:"Expliquez le cycle PDCA avec un exemple concret de votre terrain.",r:"Plan: résidents s'ennuient le week-end → objectif: offrir des activités satisfaisantes. Do: groupe de travail crée des offres de loisirs. Check: enquête de satisfaction → faible participation. Act: modification → partenariat avec institutions extérieures pour des sorties."}]
+  },
+  {
+    id:10,titre:"📋 D5 — Tâches Administratives",emoji:"📋",
+    idee:"L'administration soutient le travail d'accompagnement. Elle ne doit JAMAIS être faite de façon automatique.",
+    sections:[
+      {t:"Les 3 phases d'une réunion",tab:{h:["PHASE","CONTENU CLÉ"],r:[
+        ["1. PRÉPARATION","Sujet, objectifs, ODJ, participants, animateur, salle, invitation"],
+        ["2. TENUE","Début: accueil. Réunion: animateur dirige. Fin: résumer, points en suspens."],
+        ["3. SUIVI","Envoyer PV, contrôler décisions, réflexion sur le déroulement"]
+      ]}},
+      {t:"Types de procès-verbaux",tab:{h:["TYPE","CONTENU"],r:[
+        ["PV décisionnel","Décisions, mesures, délais — réunions régulières"],
+        ["PV de synthèse","Décisions + principaux arguments — réunions importantes"],
+        ["Note au dossier","Incidents, conflits ponctuels — courte et factuelle"]
+      ]}},
+      {t:"Structure rapport de développement",tab:{h:["PHASE","CONTENU"],r:[
+        ["Phase 1: Analyse","Qui est la PA? Historique, mandat, objectifs fixés."],
+        ["Phase 2: Plan d'action","Objectifs SMART. Méthodes. Ressources de la PA."],
+        ["Phase 3: Évaluation","Qu'a-t-on atteint? Prochains objectifs. Date bilan."]
+      ]}}
+    ],
+    cle:"Un rapport: jamais de jugements de valeur. Toujours des OBSERVATIONS factuelles ('il n'a pas rendu son travail 3 fois').",
+    alerte:"Éléments obligatoires du PV: date/heure/lieu, participants, excusés, ODJ, décisions + délais + responsables, points en suspens, date prochaine réunion.",
+    qs:[{q:"Quels sont les éléments indispensables d'un procès-verbal de réunion d'équipe ?",r:"1) Date, heure, lieu. 2) Participants présents et excusés. 3) Nom du rédacteur. 4) Ordre du jour. 5) Contenu de chaque point. 6) Décisions + délais + responsables. 7) Points en suspens. 8) Date prochaine réunion. 9) Liste de diffusion. Rédigé au présent, objectif, sans jugement."}]
+  },
+  {
+    id:11,titre:"⚖️ Cadre Légal Suisse/Genève",emoji:"⚖️",
+    idee:"L'ASE travaille dans un cadre légal précis. Connaître les lois protège les PA ET le/la professionnel/le.",
+    sections:[
+      {t:"Droits fondamentaux des PA",tab:{h:["DROIT","IMPLICATION POUR L'ASE"],r:[
+        ["Autodétermination","Respecter les choix même si on n'est pas d'accord"],
+        ["Dignité","Pas de commentaires dégradants, privacité respectée"],
+        ["Participation","Inclure la PA dans l'élaboration de ses objectifs"],
+        ["Protection des données","Ne pas partager les infos sans accord de la PA"],
+        ["Droit au recours","Informer la PA des voies de recours"]
+      ]}},
+      {t:"Types de curatelles (CC Suisse depuis 2013)",tab:{h:["MESURE","CONTENU"],r:[
+        ["Curatelle d'accompagnement","Conseille uniquement. La personne garde sa capacité d'agir."],
+        ["Curatelle de représentation","Représente dans des domaines précis."],
+        ["Curatelle de coopération","Décide AVEC la personne."],
+        ["Curatelle de portée générale","Représente dans TOUS les domaines. Mesure maximale."]
+      ]}},
+      {t:"Institutions clés à Genève",tab:{h:["INSTITUTION","RÔLE"],r:[
+        ["TPAE","Tribunal de protection de l'adulte et de l'enfant (Genève)"],
+        ["APEA","Autorité de protection de l'enfant et de l'adulte (national)"],
+        ["DGCS","Direction générale de la cohésion sociale (Genève)"],
+        ["OfTra","Office de la formation professionnelle — supervise apprentissages ASE"],
+        ["CFPSo/CEFPSO","Formation théorique des ASE à Genève"],
+        ["AvenirSocial","Code de déontologie du travail social suisse"]
+      ]}}
+    ],
+    cle:"APEA = institution nationale. TPAE Genève = institution cantonale. Les deux peuvent instituer des curatelles.",
+    alerte:"Code de déontologie AvenirSocial: les professionnel/le/s travaillent de façon interprofessionnelle, respectent l'autodétermination, défendent les plus vulnérables.",
+    qs:[{q:"Quelle est la différence entre une curatelle de représentation et une curatelle d'accompagnement ?",r:"Curatelle d'accompagnement: le curateur conseille et soutient, mais la personne garde toute sa capacité d'agir. Elle prend ses propres décisions. Curatelle de représentation: le curateur représente la personne dans des domaines précis où elle est incapable d'agir (ex: finances). La personne ne peut pas agir seule dans ces domaines."}]
+  }
+];
+
+// ============ QUESTIONS QUIZ ============
+const questions = [
+  {fi:0,q:"Quels sont les 3 facteurs qui influencent le développement ?",opts:["Biologique, Environnement, Autodétermination","Famille, École, Travail","Génétique, Médecin, Société","Corps, Esprit, Social"],c:0,exp:"BIO (inné) + ENVIRO (acquis) + Autodétermination (volonté) = mon développement !"},
+  {fi:0,q:"Le développement commence et se termine...",opts:["À la naissance et à l'adolescence","De la conception à la mort","De 0 à 18 ans","À la naissance et à la retraite"],c:1,exp:"Le développement est un processus permanent qui débute lors de la conception et s'achève avec le décès."},
+  {fi:1,q:"Selon Erikson, quelle est la crise de la 1ère année de vie ?",opts:["Autonomie vs Honte","Identité vs Confusion","Confiance vs Méfiance","Initiative vs Culpabilité"],c:2,exp:"0-1 an: si le bébé est bien accompagné, il développe la CONFIANCE fondamentale."},
+  {fi:1,q:"Selon Erikson, quelle est la crise de l'adolescence ?",opts:["Intimité vs Isolement","Identité vs Confusion","Générativité vs Stagnation","Travail vs Infériorité"],c:1,exp:"À l'ado: 'Qui suis-je?' → IDENTITÉ vs CONFUSION. Si non résolue: diffusion de l'identité."},
+  {fi:1,q:"La crise de l'adulte selon Erikson est...",opts:["Intégrité vs Désespoir","Générativité vs Stagnation","Intimité vs Isolement","Confiance vs Méfiance"],c:1,exp:"À l'âge adulte: GÉNÉRATIVITÉ (contribuer à la société) vs STAGNATION (se replier sur soi)."},
+  {fi:2,q:"Dans quel stade de Piaget l'enfant pense-t-il de façon 'magique' ?",opts:["Sensorimoteur","Opératoire concret","Préopératoire","Opératoire formel"],c:2,exp:"PRÉOPÉRATOIRE (2-7 ans): pensée magique, égocentrisme, irréversibilité."},
+  {fi:2,q:"À quel âge l'enfant se reconnaît-il dans le miroir (révolution cognitive) ?",opts:["6 mois","12 mois","18 mois","3 ans"],c:2,exp:"À 18 mois: révolution cognitive ! L'enfant se reconnaît dans le miroir = début de la représentation mentale."},
+  {fi:2,q:"Un enfant de 4 ans pense que tout le monde voit ce qu'il voit. C'est...",opts:["La centration","L'irréversibilité","L'égocentrisme","L'animisme"],c:2,exp:"L'égocentrisme: incapacité à adopter le point de vue d'une autre personne. Normal au stade préopératoire."},
+  {fi:2,q:"Assimilation selon Piaget signifie...",opts:["Modifier ses schèmes face au nouveau","Adapter l'expérience à ce qu'on sait déjà","Rejeter les nouvelles informations","Imiter un modèle"],c:1,exp:"Assimilation = intégrer la nouvelle expérience dans les schèmes existants. Accommodation = modifier les schèmes."},
+  {fi:3,q:"Combien y a-t-il de compétences émotionnelles selon Saarni ?",opts:["5","6","8","10"],c:2,exp:"8 compétences émotionnelles: reconnaître, nommer, gérer, empathie, etc."},
+  {fi:3,q:"Le sens le plus important pour le développement du bébé est...",opts:["La vue","L'ouïe","Le toucher","L'odorat"],c:2,exp:"Le TOUCHER est le premier sens développé et le plus vital. Sans contact tactile, le bébé développe de graves troubles."},
+  {fi:3,q:"Quel type d'attachement favorise le mieux le développement cognitif ?",opts:["Insécure-évitant","Désorganisé","Sécure","Insécure-ambivalent"],c:2,exp:"L'attachement SÉCURE: confiance → explore l'environnement → développement cognitif optimal."},
+  {fi:3,q:"La sensibilité selon Ainsworth comprend...",opts:["Percevoir, interpréter correctement, réagir rapidement et de façon appropriée","Aimer l'enfant inconditionnellement","Répondre à CHAQUE signal immédiatement","Être toujours disponible 24h/24"],c:0,exp:"Sensibilité: 1) Percevoir les signaux. 2) Interpréter correctement. 3) Réagir rapidement. 4) Réagir de façon appropriée."},
+  {fi:4,q:"À quel stade du langage l'enfant dit 'ba-ba-ba' ?",opts:["Stade préliminaire","Babillage","Phrases d'1 mot","Phrases de 2 mots"],c:1,exp:"BABILLAGE (6-12 mois): l'enfant forme des chaînes de syllabes et éprouve beaucoup de joie !"},
+  {fi:4,q:"À quel âge environ l'enfant maîtrise les bases de sa langue maternelle ?",opts:["2 ans","3 ans","5 ans","7 ans"],c:2,exp:"À 5 ans: bases de la langue maternelle maîtrisées. Le développement continue toute la vie."},
+  {fi:4,q:"Le 'mamanais' se caractérise par...",opts:["Parler en langage bébé ('gaga')","Phrases courtes, répétitions, intonation positive","Parler très lentement","Utiliser des mots simples uniquement"],c:1,exp:"Le mamanais: phrases courtes, répétitions fréquentes, intonation légèrement plus aigüe. Aide le bébé à identifier le sens des mots."},
+  {fi:5,q:"Selon Eisenberg, un enfant de 4-5 ans aide les autres parce que...",opts:["Par empathie","Pour être reconnu","Pour avoir quelque chose en retour","Par valeur morale"],c:2,exp:"Stade 1 HÉDONISTE (4-5 ans): l'enfant aide seulement si ça lui apporte un avantage personnel direct."},
+  {fi:5,q:"La socialisation PRIMAIRE se passe...",opts:["À l'école et en institution","Dans les loisirs et médias","Au sein de la famille","Au travail"],c:2,exp:"Socialisation PRIMAIRE = dans la FAMILLE. C'est là qu'on apprend les bases: langage, comportements, valeurs."},
+  {fi:6,q:"Une équipe efficace selon Gellert & Nowak doit avoir...",opts:["Minimum 8 personnes","Tous les mêmes compétences","Tous les 6 rôles représentés","Un seul leader"],c:2,exp:"Tous les 6 rôles doivent être représentés. Pas besoin d'être 6 personnes — une personne peut jouer plusieurs rôles."},
+  {fi:6,q:"Dans le coaching, le coach...",opts:["Donne des conseils directs","Ne donne PAS de solutions, aide à trouver les siennes","Décide à la place de la personne","Supervise le travail de l'équipe"],c:1,exp:"Coaching = aider les gens à s'aider eux-mêmes. Le coach pose des questions ouvertes, ne donne pas de solutions directes."},
+  {fi:6,q:"La supervision est dirigée par...",opts:["Un membre de l'équipe","Un expert EXTERNE","Le responsable de groupe","L'apprenti(e) le plus expérimenté(e)"],c:1,exp:"Supervision: animée par un expert EXTERNE. C'est ce qui la différencie de l'intervision."},
+  {fi:7,q:"La collaboration interprofessionnelle vise avant tout...",opts:["L'efficacité du service","Le bien-être des personnes accompagnées","La hiérarchie professionnelle","La réduction des coûts"],c:1,exp:"L'objectif commun de la collaboration interprofessionnelle = le bien-être et la qualité de vie des personnes accompagnées."},
+  {fi:7,q:"La différence entre interdisciplinaire et interprofessionnel: interdisciplinaire concerne...",opts:["Les métiers (ASE, médecin...)","Les sciences (sociologie, psychologie...)","Les institutions","Les clients"],c:1,exp:"Interdisciplinaire = différentes SCIENCES. Interprofessionnel = différents MÉTIERS. Dans la pratique ASE, c'est surtout l'interprofessionnel qui compte."},
+  {fi:8,q:"Un entretien FORMEL avec des proches se caractérise par...",opts:["Spontané, dans le couloir","Planifié, objectifs définis, documenté, contraignant","Informel, pas de documentation","Courts et rapides"],c:1,exp:"Entretien formel: planifié, objectifs définis, lieu officiel, décisions contraignantes, documenté."},
+  {fi:8,q:"La curatelle de portée générale...",opts:["Conseille uniquement","Représente dans des domaines précis","Représente dans TOUS les domaines","Décide avec la personne"],c:2,exp:"Curatelle de portée générale = mesure la plus forte. Le curateur représente la personne dans TOUTES les affaires."},
+  {fi:9,q:"Le cycle PDCA se compose de...",opts:["Planifier, Décider, Contrôler, Améliorer","Planifier, Développer, Contrôler, Ajuster","Prévoir, Décider, Coordonner, Agir","Préparer, Documenter, Communiquer, Archiver"],c:1,exp:"PDCA: Plan (planifier) → Do (développer/faire) → Check (contrôler) → Act (ajuster). Cycle CONTINU."},
+  {fi:9,q:"La qualité des PROCESSUS concerne...",opts:["Les conditions de travail (locaux, personnel)","La manière de travailler et d'interagir avec les PA","Les résultats atteints (satisfaction, incidents)","Le budget de l'institution"],c:1,exp:"Qualité des processus = la FAÇON de travailler (ex: comment se fait l'admission? comment sont les bilans? approche centrée sur la personne?)."},
+  {fi:10,q:"Un procès-verbal décisionnel contient...",opts:["Tous les arguments de chacun","Uniquement les décisions, mesures, délais et responsables","La transcription intégrale","Les opinions personnelles"],c:1,exp:"PV décisionnel: décisions + mesures + délais + responsables. Simple et efficace pour les réunions régulières."},
+  {fi:10,q:"Dans un rapport de développement, on écrit...",opts:["'Il est paresseux et peu motivé'","'Il n'a pas rendu son travail 3 fois cette semaine'","'Il semble avoir des problèmes familiaux'","'À mon avis, il ne veut pas progresser'"],c:1,exp:"Toujours des OBSERVATIONS FACTUELLES, jamais de jugements de valeur. 'Il n'a pas rendu' = fait. 'Il est paresseux' = jugement."},
+  {fi:11,q:"La curatelle d'accompagnement (CC Suisse) signifie...",opts:["Le curateur représente la personne dans tous les domaines","Le curateur conseille mais la personne garde sa capacité d'agir","Le curateur décide avec la personne","Le curateur prend toutes les décisions"],c:1,exp:"Curatelle d'accompagnement: le curateur conseille et soutient. La personne garde TOUTE sa capacité d'agir et décide elle-même."},
+  {fi:11,q:"L'APEA est...",opts:["L'assurance pour personnes âgées","L'Autorité de Protection de l'Enfant et de l'Adulte","L'Association des Professionnels de l'Education et de l'Animation","Le bureau cantonal genevois"],c:1,exp:"APEA = Autorité de Protection de l'Enfant et de l'Adulte. Institution nationale compétente pour instituer les curatelles."},
+  {fi:11,q:"Le Code de déontologie du travail social suisse est publié par...",opts:["L'OFAS","AvenirSocial","Le SECO","La DGCS genevoise"],c:1,exp:"AvenirSocial = organisation professionnelle du travail social en Suisse, auteur du Code de déontologie."}
+];
+
+// ============ FLASHCARDS ============
+const flashData = [
+  {r:"Confiance fondamentale (0-1 an)",v:"Crise d'Erikson à 0-1 an"},
+  {r:"Autonomie (1-3 ans)",v:"Crise d'Erikson à 1-3 ans"},
+  {r:"Initiative (3-5 ans)",v:"Crise d'Erikson à 3-5 ans"},
+  {r:"Travail/Compétence (5-12 ans)",v:"Crise d'Erikson à 5-12 ans"},
+  {r:"Identité (Adolescence)",v:"Crise d'Erikson à l'adolescence"},
+  {r:"Intimité (Jeune adulte)",v:"Crise d'Erikson au début de l'âge adulte"},
+  {r:"Générativité (Adulte)",v:"Crise d'Erikson à l'âge adulte"},
+  {r:"Intégrité (Vieillesse)",v:"Crise d'Erikson en vieillesse"},
+  {r:"Sensorimoteur (0-2 ans): Corps, sens, miroir à 18 mois",v:"1er stade de Piaget"},
+  {r:"Préopératoire (2-7 ans): Magie, égocentrisme, centration",v:"2e stade de Piaget"},
+  {r:"Opératoire concret (7-12 ans): Logique réelle, invariance",v:"3e stade de Piaget"},
+  {r:"Opératoire formel (12 ans+): Abstrait, hypothèses",v:"4e stade de Piaget"},
+  {r:"Assimilation: adapter l'expérience à ce qu'on sait déjà",v:"Concept de Piaget (assimilation)"},
+  {r:"Accommodation: modifier ses schèmes face au nouveau",v:"Concept de Piaget (accommodation)"},
+  {r:"Le TOUCHER - premier et plus vital",v:"Quel est le sens le plus important pour le bébé ?"},
+  {r:"Avant la naissance",v:"Quand l'ouïe commence-t-elle à fonctionner ?"},
+  {r:"Babillage (6-12 mois): 'ba-ba-ba'",v:"2e stade du langage"},
+  {r:"Phrases d'1 mot (12-18 mois): 'maman' = phrase entière",v:"3e stade du langage"},
+  {r:"4 ans et demi à 5 ans",v:"À quel âge les bases de la langue maternelle sont-elles maîtrisées ?"},
+  {r:"Mamanais: phrases courtes, répétitions, intonation positive",v:"Qu'est-ce que le mamanais ?"},
+  {r:"Hédoniste (4-5 ans): aide si gain personnel",v:"Stade 1 d'Eisenberg"},
+  {r:"Besoins (6 ans): tient compte des besoins des autres",v:"Stade 2 d'Eisenberg"},
+  {r:"Reconnaissance (7-12 ans): agit pour être bien vu",v:"Stade 3 d'Eisenberg"},
+  {r:"PRIMAIRE: famille. SECONDAIRE: école/crèche. TERTIAIRE: loisirs/médias.",v:"Les 3 niveaux de socialisation"},
+  {r:"3 à 8 personnes",v:"Taille idéale d'une équipe"},
+  {r:"Leader, Promoteur, Inspirateur, Networker, Travailleur d'équipe, Finisseur",v:"Les 6 rôles d'équipe (Gellert & Nowak)"},
+  {r:"Expert EXTERNE. Réflexion sur la pratique collective.",v:"Qui dirige la supervision ?"},
+  {r:"Ne donne PAS de solutions directes. Aide à trouver SES PROPRES solutions.",v:"Rôle du coach dans le coaching"},
+  {r:"Plan → Do → Check → Act. Cycle CONTINU.",v:"Le cycle PDCA"},
+  {r:"Structurelle (conditions) / Processus (façon) / Résultats (résultats atteints)",v:"Les 3 types de qualité"},
+  {r:"Curatelle d'accompagnement: conseille. La personne garde sa capacité d'agir.",v:"Définition curatelle d'accompagnement"},
+  {r:"Curatelle de portée générale: représente dans TOUS les domaines.",v:"Mesure de curatelle la plus forte"},
+  {r:"APEA: Autorité de Protection de l'Enfant et de l'Adulte (national)",v:"APEA = ?"},
+  {r:"TPAE: Tribunal de Protection de l'Adulte et de l'Enfant (Genève)",v:"TPAE = ?"},
+  {r:"AvenirSocial",v:"Qui publie le Code de déontologie du travail social suisse ?"}
+];
+
+// ============ CAS PRATIQUES ============
+const casData = [
+  {
+    titre:"Cas 1 — L'équipe et Mme Meier",
+    texte:"Vous travaillez dans un EMS. L'assistante socio-éducative Kira Luhmann a des difficultés avec Mme Delatour, 83 ans, qui la traite comme une domestique. Kira vient d'une famille ouvrière et ne comprend pas ce comportement. Lors de la réunion d'équipe, plusieurs membres se plaignent de situations similaires.",
+    question:"1. Expliquez pourquoi Mme Delatour se comporte ainsi. 2. Quel type de suivi professionnel recommandez-vous à l'équipe et pourquoi ?",
+    reponse:"1. Le comportement de Mme Delatour est le résultat de sa socialisation primaire dans la haute société: elle a internalisé des normes où les domestiques existaient. C'est un exemple de socialisation primaire qui influence le comportement toute la vie.\n\n2. Je recommande une SUPERVISION car: a) C'est un problème d'équipe, pas individuel. b) Un expert externe apporte un regard neutre. c) L'objectif est de développer une attitude COMMUNE face à cette situation. L'intervision pourrait aussi fonctionner si l'équipe est expérimentée."
+  },
+  {
+    titre:"Cas 2 — Catherine Renard",
+    texte:"Catherine Renard, 22 ans, souffre d'infirmité motrice cérébrale et a des crises d'épilepsie. Elle veut passer un week-end avec des amies au bord du lac. Lors de la réunion interprofessionnelle, le médecin dit immédiatement 'Il n'en est pas question, c'est trop dangereux.' Tous acquiescent. Catherine a l'air triste.",
+    question:"1. Qu'est-ce qui ne va pas dans cette collaboration interprofessionnelle ? 2. Comment aurait-elle dû se dérouler ?",
+    reponse:"1. Problèmes: a) Décision prise par un seul professionnel (le médecin). b) Catherine n'a pas été consultée (atteinte à l'autodétermination). c) Les autres participants n'ont pas pu s'exprimer. d) Il n'y a pas eu de vraie collaboration interprofessionnelle.\n\n2. La réunion aurait dû: a) Donner la parole à TOUS (ASE, parents, Catherine elle-même). b) Clarifier les compétences de chacun. c) Chercher une solution respectant l'autodétermination de Catherine (ex: accompagnement par une amie formée, bracelet GPS...). d) Communication respectueuse et écoute mutuelle."
+  },
+  {
+    titre:"Cas 3 — Le procès-verbal raté",
+    texte:"Patricia travaille dans une institution. Elle décrit la réunion d'équipe: 'Jean-Pierre parle sans arrêt. Verena ne dit rien. Igor n'écoute pas. Milena arrive en retard et veut tout recommencer. Personne ne sait ce qui a été décidé. Le PV est confus. Et je n'ai pas pu accompagner Eugène à l'atelier à temps.'",
+    question:"Analysez les problèmes de cette réunion et proposez des mesures concrètes pour l'améliorer.",
+    reponse:"Problèmes identifiés: 1) Pas de gestion du temps → Jean-Pierre monopolise. 2) Participants passifs (Verena, Igor). 3) Pas de règles de communication. 4) Ordre du jour mal respecté → Milena recommence les discussions. 5) PV de mauvaise qualité. 6) Durée non respectée → impact sur le travail.\n\nMesures: 1) Envoyer l'ODJ 4 jours à l'avance. 2) Fixer un temps limite par point. 3) L'animateur/trice doit donner la parole à TOUS. 4) Établir une règle: les points clos ne sont PAS rouverts. 5) Utiliser un PV décisionnel clair. 6) Fixer une durée totale et s'y tenir."
+  },
+  {
+    titre:"Cas 4 — Tom Berner et le téléviseur",
+    texte:"Tom Berner, 28 ans, troubles cognitifs, vit dans un foyer. Il a une curatrice de représentation pour les finances. Il veut acheter une TV et une console de jeux avec l'argent de son anniversaire. Il demande à l'assistant socio-éducatif Leandro de l'emmener à la banque retirer l'argent.",
+    question:"1. Tom peut-il retirer l'argent seul ? 2. Quelle est la procédure correcte ? 3. Quel droit fondamental faut-il respecter ?",
+    reponse:"1. Tom ne peut PAS retirer seul d'importantes sommes car il a une curatelle de représentation dans le domaine patrimonial: il n'est pas autorisé à agir seul dans ce domaine.\n\n2. Procédure correcte: a) Leandro explique calmement la situation à Tom. b) Leandro contacte la curatrice Mme Giuliani pour lui expliquer le souhait de Tom. c) La curatrice décide avec Tom si cet achat est possible (selon son budget). d) Si oui, la curatrice autorise le retrait ou effectue le paiement.\n\n3. Droit à respecter: AUTODÉTERMINATION de Tom. Son souhait est légitime. Il faut l'impliquer dans la décision, pas décider À SA PLACE."
+  },
+  {
+    titre:"Cas 5 — Le rapport de bilan",
+    texte:"Luisa est ASE dans un foyer. Elle doit rédiger le rapport de bilan de Michael, 23 ans, troubles cognitifs. Dans son brouillon, elle écrit: 'Michael est souvent paresseux et peu motivé. Il refuse parfois de participer. C'est frustrant pour l'équipe. Il devrait faire plus d'efforts.'",
+    question:"1. Identifiez les problèmes dans ce rapport. 2. Réécrivez les observations de façon professionnelle.",
+    reponse:"1. Problèmes: a) 'Paresseux' = jugement de valeur, pas une observation. b) 'Peu motivé' = interprétation. c) 'C'est frustrant pour l'équipe' = émotion personnelle non appropriée. d) 'Il devrait faire plus d'efforts' = injonction subjective. Aucune observation factuelle concrète.\n\n2. Version professionnelle: 'Au cours des 4 dernières semaines, Michael n'a pas participé à 3 activités de groupe sur 8 (atelier poterie: 12/04, 19/04; sortie musée: 26/04). Lors des discussions individuelles, il a exprimé une préférence pour les activités sportives. L'équipe a observé une meilleure participation lors des activités physiques (basketball: 100% de présence). Objectif pour le prochain mois: proposer 2 activités sportives supplémentaires et réévaluer la participation.'"
+  }
+];
+
+// ============ FONCTIONS ============
+function showMenu(){
+  document.getElementById('menu').style.display='block';
+  ['fiche-view','quiz-view','cas-view','flash-view','result-view'].forEach(id=>document.getElementById(id).style.display='none');
+  updateProg(); window.scrollTo(0,0);
+}
+
+function updateProg(){
+  const pct=Math.round((done.size/14)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent=done.size+' / 14 modules';
+  document.getElementById('nav-score').textContent='⭐ '+score+' pts';
+  fiches.forEach(f=>{const c=document.getElementById('card-'+f.id);if(c)c.classList.toggle('done',done.has(f.id))});
+}
+
+function buildTable(h,r){
+  let html='<table class="t"><tr>';
+  h.forEach(c=>html+='<th>'+c+'</th>');html+='</tr>';
+  r.forEach((row,i)=>{html+='<tr>';row.forEach(c=>html+='<td>'+c+'</td>');html+='</tr>'});
+  html+='</table>';return html;
+}
+
+function showFiche(idx){
+  const f=fiches.find(x=>x.id===idx);
+  let html='<div class="fiche-header"><button class="btn-back" onclick="showMenu()">← Menu</button><span class="fiche-titre-h">'+f.titre+'</span></div>';
+  html+='<div class="idee-box">💡 '+f.idee+'</div>';
+  f.sections.forEach(s=>{
+    html+='<div class="section-h">'+s.t+'</div>';
+    if(s.tab)html+=buildTable(s.tab.h,s.tab.r);
+    if(s.bullets){html+='<ul style="padding-left:20px;font-size:.87rem;line-height:1.8">';s.bullets.forEach(b=>html+='<li>'+b+'</li>');html+='</ul>'}
+  });
+  if(f.cle)html+='<div class="cle-box">🔑 '+f.cle+'</div>';
+  if(f.alerte)html+='<div class="alerte-box">⚠️ '+f.alerte+'</div>';
+  f.qs.forEach(q=>{
+    html+='<div class="q-box"><div class="q">❓ QUESTION D\'EXAMEN: '+q.q+'</div><div class="r">✅ '+q.r+'</div></div>';
+  });
+  html+='<button class="btn-quiz-fiche" onclick="startQuiz('+idx+')">🎯 Quiz sur cette fiche</button>';
+  document.getElementById('fiche-view').innerHTML=html;
+  document.getElementById('menu').style.display='none';
+  document.getElementById('fiche-view').style.display='block';
+  window.scrollTo(0,0);
+  done.add(idx);score+=5;updateProg();
+}
+
+function startQuiz(ficheIdx){
+  quizFiche=ficheIdx;
+  quizQs=ficheIdx===-1?[...questions].sort(()=>Math.random()-.5):[...questions.filter(q=>q.fi===ficheIdx)].sort(()=>Math.random()-.5);
+  if(quizQs.length===0)quizQs=[...questions].sort(()=>Math.random()-.5).slice(0,8);
+  quizIdx=0;quizScore=0;
+  showQ();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('fiche-view').style.display='none';
+  document.getElementById('quiz-view').style.display='block';
+  document.getElementById('result-view').style.display='none';
+  window.scrollTo(0,0);
+}
+
+function showQ(){
+  const q=quizQs[quizIdx];quizAnswered=false;
+  let dots='';
+  quizQs.forEach((_,i)=>{const cls=i<quizIdx?'quiz-dot ok':i===quizIdx?'quiz-dot actif':'quiz-dot';dots+='<div class="'+cls+'"></div>'});
+  document.getElementById('quiz-dots').innerHTML=dots;
+  document.getElementById('quiz-nb').textContent=(quizIdx+1)+'/'+quizQs.length;
+  document.getElementById('q-text').textContent=q.q;
+  const f=fiches.find(x=>x.id===q.fi);
+  document.getElementById('q-infos').textContent=f?'📌 '+f.titre:'';
+  let opts='';q.opts.forEach((o,i)=>opts+='<button class="opt" onclick="answer('+i+')">'+o+'</button>');
+  document.getElementById('q-opts').innerHTML=opts;
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('btn-next').style.display='none';
+}
+
+function answer(idx){
+  if(quizAnswered)return;quizAnswered=true;
+  const q=quizQs[quizIdx];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.disabled=true);
+  opts[q.c].classList.add('correct');
+  const fb=document.getElementById('feedback');
+  if(idx===q.c){opts[idx].classList.add('correct');fb.className='feedback correct';fb.textContent='✅ Bravo ! '+q.exp;quizScore++;score+=10;}
+  else{opts[idx].classList.add('incorrect');fb.className='feedback incorrect';fb.textContent='❌ '+q.exp;}
+  fb.style.display='block';document.getElementById('btn-next').style.display='block';updateProg();
+}
+
+function nextQ(){
+  quizIdx++;
+  if(quizIdx>=quizQs.length)showResult();
+  else showQ();
+}
+
+function showResult(){
+  const pct=Math.round((quizScore/quizQs.length)*100);
+  let emoji,titre,msg;
+  if(pct>=80){emoji='🏆';titre='Excellent !';msg='Tu maîtrises vraiment bien ce contenu ! Continue comme ça, tu vas réussir ton examen fédéral !';}
+  else if(pct>=60){emoji='💪';titre='Bien joué !';msg='Tu progresses bien ! Relis les fiches où tu as eu des difficultés et réessaie.';}
+  else{emoji='📚';titre='Continue à réviser !';msg='Pas de panique ! Relis les fiches correspondantes et réessaie. Chaque erreur = une chance d\'apprendre !';}
+  document.getElementById('res-emoji').textContent=emoji;
+  document.getElementById('res-titre').textContent=titre;
+  document.getElementById('res-score').textContent=quizScore+' / '+quizQs.length+' ('+pct+'%)';
+  document.getElementById('res-msg').textContent=msg;
+  let det='';
+  quizQs.forEach((q,i)=>{
+    const correct=i<quizScore;
+    det+='<div class="detail-rep '+(correct?'ok':'ko')+'"><div class="dr-q">'+(correct?'✅':'❌')+' '+q.q+'</div><div class="dr-r">'+q.exp+'</div></div>';
+  });
+  document.getElementById('res-details').innerHTML=det;
+  document.getElementById('quiz-view').style.display='none';
+  document.getElementById('result-view').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function retryQuiz(){startQuiz(quizFiche)}
+
+// CAS PRATIQUES
+function showCas(){
+  let html='<div class="quiz-top"><button class="btn-back" onclick="showMenu()">← Menu</button><span style="font-family:\'Fredoka One\',cursive;color:var(--violet);font-size:1.1rem">📝 Cas Pratiques</span></div>';
+  casData.forEach((cas,i)=>{
+    html+='<div class="cas-card">';
+    html+='<div class="cas-titre">'+cas.titre+'</div>';
+    html+='<div class="cas-texte">'+cas.texte+'</div>';
+    html+='<div class="cas-question">❓ '+cas.question+'</div>';
+    html+='<textarea class="cas-textarea" placeholder="Écris ta réponse ici..." id="cas-ta-'+i+'"></textarea>';
+    html+='<button class="btn-voir-rep" onclick="toggleRep('+i+')">👁️ Voir la réponse type</button>';
+    html+='<div class="cas-reponse" id="cas-rep-'+i+'"><strong>✅ Réponse type :</strong>'+cas.reponse.replace(/\n/g,'<br>')+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('cas-view').innerHTML=html;
+  document.getElementById('menu').style.display='none';
+  document.getElementById('cas-view').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function toggleRep(i){
+  const el=document.getElementById('cas-rep-'+i);
+  el.style.display=el.style.display==='block'?'none':'block';
+  score+=2;updateProg();
+}
+
+// FLASHCARDS
+function startFlash(){
+  flashCards=[...flashData].sort(()=>Math.random()-.5);
+  flashIdx=0;flashOk=0;flashKo=0;flashFlipped=false;
+  showFlash();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('flash-view').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function showFlash(){
+  if(flashIdx>=flashCards.length){
+    alert('🎉 Flashcards terminées ! ✅ '+flashOk+' sues / ❌ '+flashKo+' à revoir');
+    if(flashKo>0){flashCards=flashCards.filter((_,i)=>i<flashKo);flashIdx=0;flashOk=0;flashKo=0;}
+    else{showMenu();return;}
+  }
+  flashFlipped=false;
+  const c=flashCards[flashIdx];
+  const fc=document.getElementById('flash-card');
+  fc.style.borderColor='var(--bleu3)';
+  document.getElementById('flash-front').style.display='block';
+  document.getElementById('flash-back').style.display='none';
+  document.getElementById('flash-front').textContent=c.v;
+  document.getElementById('flash-back').textContent=c.r;
+  document.getElementById('flash-nb').textContent=(flashIdx+1)+'/'+flashCards.length;
+  document.getElementById('flash-prog').textContent='✅ '+flashOk+' sues | ❌ '+flashKo+' à revoir';
+}
+
+function flipCard(){
+  flashFlipped=!flashFlipped;
+  document.getElementById('flash-front').style.display=flashFlipped?'none':'block';
+  document.getElementById('flash-back').style.display=flashFlipped?'block':'none';
+}
+
+function flashResult(ok){
+  if(ok){flashOk++;score+=8;}
+  else{flashKo++;const c=flashCards[flashIdx];flashCards.push(c);}
+  flashIdx++;updateProg();showFlash();
+}
+</script>
+</body>
+</html>

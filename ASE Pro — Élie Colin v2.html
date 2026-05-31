@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<title>Élie — Coach Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--bd:#2a2a4a;
+  --terra:#e94560;--gold:#f5a623;--sage:#4ecdc4;--blue:#45b7d1;
+  --green:#2ecc71;--purple:#9b59b6;--ink:#e8e8f0;--sub:#8888aa;
+  --inp:#0f0f1a;--red:#e74c3c
+}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;max-width:480px;margin:0 auto;padding-bottom:80px;min-height:100vh;line-height:1.5}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--bd);display:flex;z-index:99;box-shadow:0 -4px 20px rgba(0,0,0,.5)}
+.nb{flex:1;padding:8px 1px 7px;border:none;background:none;color:var(--sub);font-size:8.5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit;transition:.2s}
+.nb.on{color:var(--terra);font-weight:800}
+.nb .ic{font-size:18px}
+
+/* SCREENS */
+.sc{display:none;padding:0 12px 10px}
+.sc.on{display:block}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px}
+.card-terra{background:linear-gradient(135deg,#1a0a10,#2a1020);border:1px solid #4a2030;border-radius:16px;padding:14px;margin-bottom:10px}
+.card-sage{background:linear-gradient(135deg,#0a1a1a,#102020);border:1px solid #1a4a4a;border-radius:16px;padding:14px;margin-bottom:10px}
+.card-gold{background:linear-gradient(135deg,#1a150a,#2a2010);border:1px solid #4a3a10;border-radius:16px;padding:14px;margin-bottom:10px}
+.card-blue{background:linear-gradient(135deg,#0a1020,#101525);border:1px solid #1a3050;border-radius:16px;padding:14px;margin-bottom:10px}
+
+/* HEADER */
+.hdr{padding:20px 0 8px}
+.ht{font-size:24px;font-weight:900;background:linear-gradient(135deg,var(--terra),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs{font-size:12px;color:var(--sub);margin-top:2px}
+
+/* TYPO */
+.title{font-size:15px;font-weight:800;margin-bottom:4px;color:var(--ink)}
+.sub{font-size:11.5px;color:var(--sub);margin-bottom:8px}
+.note{font-size:11.5px;color:var(--sub);line-height:1.5}
+
+/* FICHE */
+.fiche{background:var(--card2);border-left:3px solid var(--sage);border-radius:0 12px 12px 0;padding:11px 12px;margin-bottom:8px}
+.fiche-t{font-size:13px;font-weight:800;margin-bottom:4px;color:var(--sage)}
+.fiche-c{font-size:13px;line-height:1.65;color:#c0c0d8;white-space:pre-line}
+
+/* BUTTONS */
+.btn{background:linear-gradient(135deg,var(--terra),#c73550);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px;width:100%;box-shadow:0 4px 15px rgba(233,69,96,.3)}
+.btn-sage{background:linear-gradient(135deg,var(--sage),#3aaba2);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4891e);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-sm{background:var(--card2);color:var(--ink);border:1px solid var(--bd);border-radius:10px;padding:8px 14px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:600}
+.btn-blue{background:linear-gradient(135deg,var(--blue),#3498db);color:#fff;border:none;border-radius:12px;padding:12px;font-weight:800;font-family:inherit;cursor:pointer;font-size:13px;flex:1}
+
+/* INPUTS */
+input,select,textarea{background:var(--card2);border:1px solid var(--bd);border-radius:10px;color:var(--ink);padding:10px 12px;font-size:14px;font-family:inherit;outline:none;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--sage)}
+textarea{min-height:80px;resize:vertical;line-height:1.6}
+
+/* CHIPS */
+.scroll-x{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch}
+.scroll-x::-webkit-scrollbar{display:none}
+.chip{border-radius:20px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid var(--bd);background:var(--card2);color:var(--sub);font-weight:700;white-space:nowrap;transition:.2s}
+.chip.on{color:#fff;border-color:transparent}
+
+/* BARS */
+.bar-bg{height:8px;background:var(--card2);border-radius:5px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:5px;transition:width .5s;background:var(--sage)}
+
+/* ROW */
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--card2);border-radius:10px;margin-bottom:6px;gap:8px}
+.row b{font-size:13.5px}
+
+/* TAG */
+.tag{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:800;color:#fff}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+
+/* XP BAR */
+.jeu-head{background:linear-gradient(135deg,#1a1a3a,#2a1a3a);border:1px solid #3a2a5a;border-radius:16px;padding:14px;margin-bottom:12px}
+.xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.xp-lvl{font-size:16px;font-weight:900}
+.xp-pts{font-size:12px;font-weight:700;background:rgba(255,255,255,.1);padding:3px 11px;border-radius:20px}
+.xp-bar-bg{height:9px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--terra),var(--gold));border-radius:5px;transition:width .4s}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--terra);color:#fff;padding:12px 22px;border-radius:30px;font-weight:800;font-size:14px;z-index:300;opacity:0;transition:.3s;pointer-events:none;box-shadow:0 4px 20px rgba(233,69,96,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* COACH IA */
+.chat-box{background:var(--card2);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px;min-height:120px;max-height:400px;overflow-y:auto}
+.msg-user{background:linear-gradient(135deg,var(--terra),#c73550);color:#fff;border-radius:16px 16px 4px 16px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;line-height:1.6;max-width:85%;margin-left:auto}
+.msg-bot{background:var(--card);border:1px solid var(--bd);border-radius:16px 16px 16px 4px;padding:10px 14px;margin-bottom:8px;font-size:13.5px;line-height:1.6;max-width:90%;white-space:pre-line}
+.msg-bot .ico{font-size:16px;margin-right:4px}
+.thinking{color:var(--sub);font-style:italic;font-size:13px}
+
+/* BADGE */
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.badge{text-align:center;background:var(--card2);border-radius:13px;padding:10px 4px;border:1px solid var(--bd)}
+.badge .be{font-size:24px;filter:grayscale(1);opacity:.25}
+.badge.on .be{filter:none;opacity:1}
+.badge .bl{font-size:9px;color:var(--sub);margin-top:3px;font-weight:700;line-height:1.2}
+.badge.on .bl{color:var(--ink)}
+
+/* INSTALL */
+.install-step{display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card2);border-radius:12px;margin-bottom:8px}
+.install-num{background:var(--terra);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0}
+.install-txt{font-size:13px;line-height:1.6;color:var(--ink)}
+
+/* MCQ */
+.mcq-opt{display:block;width:100%;text-align:left;background:var(--card2);border:1.5px solid var(--bd);border-radius:12px;padding:13px;margin-bottom:8px;font-size:14px;font-family:inherit;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.mcq-opt.good{background:#0a2a0a;border-color:var(--green);color:var(--green)}
+.mcq-opt.bad{background:#2a0a0a;border-color:var(--red);color:var(--red)}
+.mcq-opt.dim{opacity:.4}
+
+/* FINANCES */
+.fin-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--card2);border-radius:10px;margin-bottom:6px;gap:8px}
+.fin-row label{font-size:13px;font-weight:600;flex:1}
+.fin-row input{width:90px;text-align:right;padding:7px 9px;font-size:14px;flex:0 0 auto}
+.fin-tot{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;margin-top:6px;font-weight:800;font-size:15px}
+
+/* SPORT TIMER */
+.timer-display{text-align:center;font-size:60px;font-weight:900;color:var(--terra);line-height:1;margin:8px 0}
+.timer-phase{text-align:center;font-size:16px;font-weight:800;margin-bottom:8px}
+
+/* MOOD */
+.mood-row{display:flex;gap:7px}
+.mood-btn{flex:1;font-size:24px;background:var(--card2);border:2px solid transparent;border-radius:12px;padding:8px 0;cursor:pointer;transition:.2s}
+.mood-btn.on{border-color:var(--terra);background:#2a0a10}
+
+/* QUIZ FLASH */
+.flash{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--bd);border-radius:18px;padding:20px;min-height:160px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.fc-q{font-size:16px;font-weight:800;line-height:1.5}
+.fc-a{font-size:13.5px;line-height:1.7;color:var(--sage);display:none;margin-top:12px;white-space:pre-line}
+.fc-hint{font-size:11px;color:var(--terra);margin-top:9px;font-weight:600}
+
+/* PROGRESS BAR SPORT */
+.sport-prog{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.s-day{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--bd);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;color:var(--sub);transition:.2s}
+.s-day.done{background:var(--sage);border-color:var(--sage);color:#fff}
+.s-day.cur{border-color:var(--terra);color:var(--terra)}
+
+/* CONFETTI */
+.confetti{position:fixed;top:-12px;width:10px;height:14px;z-index:350;pointer-events:none;border-radius:2px;animation:cfall linear forwards}
+@keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+
+/* LEVEL UP */
+.levelup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:340;pointer-events:none;opacity:0;transition:.25s;background:rgba(0,0,0,.7)}
+.levelup.show{opacity:1;pointer-events:all}
+.levelup .box{background:var(--card);border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.8);transform:scale(.7);transition:.3s;border:2px solid var(--gold)}
+.levelup.show .box{transform:scale(1)}
+
+/* DIVIDER */
+.div{height:1px;background:var(--bd);margin:12px 0}
+
+/* ACCORDION */
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:14px;margin-bottom:8px;overflow:hidden}
+.acc-h{padding:13px 15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13.5px}
+.acc-h .ar{transition:transform .2s;color:var(--sub)}
+.acc.on .acc-h .ar{transform:rotate(180deg)}
+.acc-b{display:none;padding:0 15px 14px;font-size:13px;line-height:1.7;color:#c0c0d8;white-space:pre-line}
+.acc.on .acc-b{display:block}
+
+/* BIG NUMBERS */
+.big-num{font-size:28px;font-weight:900;color:var(--terra)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+.stat-box{background:var(--card2);border-radius:12px;padding:10px;text-align:center;border:1px solid var(--bd)}
+.stat-v{font-size:22px;font-weight:900;color:var(--terra)}
+.stat-l{font-size:10px;color:var(--sub);font-weight:700;margin-top:2px}
+
+/* BREATH */
+.breath-circle{width:140px;height:140px;border-radius:50%;margin:12px auto;background:radial-gradient(circle,var(--sage),#2a8080);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;transition:transform 4s ease-in-out;box-shadow:0 6px 30px rgba(78,205,196,.3)}
+.breath-circle.in{transform:scale(1.45)}
+.breath-circle.out{transform:scale(0.8)}
+
+/* TIKTOK STATS */
+.tik-stat{background:var(--card2);border-radius:14px;padding:14px;margin-bottom:8px;border:1px solid var(--bd)}
+.tik-num{font-size:26px;font-weight:900;color:var(--terra);margin-bottom:2px}
+.tik-lbl{font-size:11px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+
+/* SCROLLTOP */
+.scrolltop{position:fixed;bottom:90px;right:14px;background:var(--terra);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;z-index:98;display:none;box-shadow:0 4px 15px rgba(233,69,96,.4)}
+</style>
+</head>
+<body>
+
+<!-- ===== ACCUEIL ===== -->
+<div class="sc on" id="sc-accueil">
+  <div class="hdr">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0 4px">
+      <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--terra),var(--gold));display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 20px rgba(233,69,96,.4)">🥋</div>
+      <div>
+        <div class="ht">Élie Colin</div>
+        <div class="hs">Champion JJB · ASE · Coach Sport-Handicap</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jeu-head">
+    <div class="xp-row">
+      <span class="xp-lvl">⭐ Niveau <span id="d-lvl">1</span></span>
+      <span class="xp-pts"><span id="d-xp">0</span> XP</span>
+    </div>
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="d-bar" style="width:0%"></div></div>
+    <div class="stat-grid" style="margin-top:10px">
+      <div class="stat-box"><div class="stat-v" id="d-sport">0</div><div class="stat-l">Séances</div></div>
+      <div class="stat-box"><div class="stat-v" id="d-acts">0/4</div><div class="stat-l">Du jour</div></div>
+      <div class="stat-box"><div class="stat-v" id="d-streak">0🔥</div><div class="stat-l">Jours</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">🏅 Badges</div>
+    <div class="badge-grid" id="badge-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">✅ Cases du jour</div>
+    <div class="sub">Chaque case = +5 XP</div>
+    <div id="acts"></div>
+    <div class="note" id="acts-msg" style="margin-top:6px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">😊 Mon humeur</div>
+    <div class="mood-row" id="moods"></div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💡 Astuce du jour</div>
+    <div id="tip-txt" style="font-size:13.5px;line-height:1.7;margin-top:4px"></div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🔥 Mon pourquoi</div>
+    <div style="font-size:13.5px;line-height:1.7">Tu es <b>champion d'Europe JJB</b>. Cette discipline, tu la mets dans ton <b>CFC ASE</b>.<br><br>
+    Ton cap : réussir ton diplôme, rembourser tes dettes, lancer ton <b>asso sport-handicap</b> (boxe · golf · JJB).<br><br>
+    Un pas par jour. Tu te relèves toujours. 🥋</div>
+  </div>
+
+  <div class="card">
+    <div class="title">⏰ À ne pas oublier</div>
+    <div class="row"><span style="font-size:13px"><b>Déclaration impôts 2025</b></span><span class="tag" style="background:var(--red)">30 avr.</span></div>
+    <div class="row"><span style="font-size:13px"><b>Poursuites (OP)</b></span><span class="tag" style="background:var(--gold)">priorité</span></div>
+    <div class="row"><span style="font-size:13px"><b>Fin apprentissage</b></span><span class="tag" style="background:var(--sage)">18.08.2027</span></div>
+  </div>
+
+  <div class="card-blue">
+    <div class="title">📱 Installer sur Samsung</div>
+    <div class="sub">Fais ça UNE FOIS et c'est une vraie appli sur ton téléphone.</div>
+    <div class="install-step"><div class="install-num">1</div><div class="install-txt">Ouvre <b>Chrome</b> sur ton Samsung (pas Samsung Internet, pas Firefox — Chrome)</div></div>
+    <div class="install-step"><div class="install-num">2</div><div class="install-txt">Dans Chrome, touche les <b>3 points ⋮</b> en haut à droite</div></div>
+    <div class="install-step"><div class="install-num">3</div><div class="install-txt">Touche <b>"Ajouter à l'écran d'accueil"</b></div></div>
+    <div class="install-step"><div class="install-num">4</div><div class="install-txt">Touche <b>"Ajouter"</b> → elle apparaît sur ton écran comme une vraie appli ✅</div></div>
+    <div class="note" style="margin-top:8px;color:var(--gold)">⚠️ Si tu ouvres depuis Claude ou un mail, tu dois d'abord copier le lien et l'ouvrir dans Chrome.</div>
+  </div>
+</div>
+
+<!-- ===== COACH IA ===== -->
+<div class="sc" id="sc-coach">
+  <div class="hdr"><div class="ht">🤖 Coach IA</div><div class="hs">Répond sans internet · CFC · Argent · Sport · Mindset</div></div>
+
+  <div class="card">
+    <div class="title">Sujets rapides</div>
+    <div class="scroll-x" id="quick-topics"></div>
+  </div>
+
+  <div class="chat-box" id="chat-box">
+    <div class="msg-bot"><span class="ico">🤖</span>Salut Élie ! Je suis ton coach hors-ligne. Je connais ton CFC, tes objectifs, ton profil TDAH. Pose-moi n'importe quelle question — je réponds tout de suite, sans internet. 💪</div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:8px">
+    <textarea id="chat-in" placeholder="Ex : Comment gérer l'impulsivité ? Explique-moi la compétence B. Comment gagner plus d'argent ?" rows="2" style="min-height:52px;flex:1;margin-bottom:0"></textarea>
+    <button onclick="sendChat()" style="background:linear-gradient(135deg,var(--terra),var(--gold));color:#fff;border:none;border-radius:12px;padding:0 16px;font-size:20px;cursor:pointer;flex-shrink:0">➤</button>
+  </div>
+  <button class="btn-sm" onclick="clearChat()" style="width:100%">🗑️ Effacer la conversation</button>
+</div>
+
+<!-- ===== REVISE ===== -->
+<div class="sc" id="sc-revise">
+  <div class="hdr"><div class="ht">📚 Révise</div><div class="hs">CFC · Lois · Culture G · Stratégie</div></div>
+
+  <div class="card-terra">
+    <div class="title">⏱️ Pomodoro Focus (25 min)</div>
+    <div id="p-display" style="text-align:center;font-size:48px;font-weight:900;color:var(--terra);margin:4px 0">25:00</div>
+    <div id="p-phase" style="text-align:center;font-weight:800;font-size:14px;margin-bottom:8px;color:var(--sub)">Prêt à réviser ?</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="p-start" onclick="pomoToggle()">▶ Démarrer</button>
+      <button class="btn-sm" onclick="pomoReset()">↺</button>
+    </div>
+  </div>
+
+  <div class="scroll-x" id="comp-chips"></div>
+  <div id="comp-head"></div>
+  <div id="fiches"></div>
+</div>
+
+<!-- ===== JEUX ===== -->
+<div class="sc" id="sc-jeux">
+  <div class="hdr"><div class="ht">🎮 Jeux</div><div class="hs">Quiz · Flashcards · Défi chrono</div></div>
+  <div style="display:flex;gap:7px;margin-bottom:10px">
+    <button class="chip on" id="tab-quiz" onclick="setJeu('quiz')" style="flex:1;text-align:center">Quiz</button>
+    <button class="chip" id="tab-flash" onclick="setJeu('flash')" style="flex:1;text-align:center">Flashcards</button>
+    <button class="chip" id="tab-defi" onclick="setJeu('defi')" style="flex:1;text-align:center">⚡ Défi</button>
+  </div>
+  <div class="scroll-x" id="jeu-chips"></div>
+  <div id="jeu-zone"></div>
+</div>
+
+<!-- ===== SPORT ===== -->
+<div class="sc" id="sc-sport">
+  <div class="hdr"><div class="ht">💪 Sport</div><div class="hs">14 jours · Minuteur vocal · Programme complet</div></div>
+
+  <div class="card">
+    <div class="title">⏱️ Minuteur intervalles</div>
+    <div class="g2" style="margin-bottom:8px">
+      <div><div class="note">Effort (sec)</div><input id="t-work" type="number" inputmode="numeric" value="30"></div>
+      <div><div class="note">Repos (sec)</div><input id="t-rest" type="number" inputmode="numeric" value="30"></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div><div class="note">Tours</div><input id="t-rounds" type="number" inputmode="numeric" value="8"></div>
+      <div><div class="note">Voix</div><select id="t-voice"><option value="1">🔊 Active</option><option value="0">🔇 Coupée</option></select></div>
+    </div>
+    <div class="timer-display" id="t-display">00:30</div>
+    <div class="timer-phase" id="t-phase">Prêt ?</div>
+    <div class="note" style="text-align:center" id="t-info">Tour 0 / 8</div>
+    <div class="bar-bg"><div class="bar-fill" id="t-bar" style="width:0%;background:var(--terra)"></div></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" id="t-start" onclick="timerStart()" style="flex:1">▶ Go</button>
+      <button class="btn-sm" onclick="timerPause()">⏸</button>
+      <button class="btn-sm" onclick="timerReset()">↺</button>
+    </div>
+    <div class="g3" style="margin-top:8px">
+      <button class="btn-sm" onclick="preset(30,30,8)">30/30</button>
+      <button class="btn-sm" onclick="preset(30,15,10)">30/15</button>
+      <button class="btn-sm" onclick="preset(60,30,6)">MetCon</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">📅 Programme 14 jours</div>
+    <div class="sub">Touche un jour · coche quand c'est fait · +15 XP</div>
+    <div class="sport-prog" id="sport-prog"></div>
+    <div id="sport-day"></div>
+  </div>
+</div>
+
+<!-- ===== ARGENT ===== -->
+<div class="sc" id="sc-argent">
+  <div class="hdr"><div class="ht">💰 Argent</div><div class="hs">Budget · Gagner plus · Investir</div></div>
+
+  <div class="card">
+    <div class="title">📥 Revenus mensuels</div>
+    <div id="rev-rows"></div>
+    <button class="btn-sm" onclick="addRev()" style="margin-top:6px;width:100%">+ Ajouter un revenu</button>
+  </div>
+
+  <div class="card">
+    <div class="title">📤 Charges fixes</div>
+    <div id="chg-rows"></div>
+    <button class="btn-sm" onclick="addChg()" style="margin-top:6px;width:100%">+ Ajouter une charge</button>
+  </div>
+
+  <div class="card-sage">
+    <div class="fin-tot" style="background:rgba(255,255,255,.05)"><span>Total revenus</span><span id="t-rev" style="color:var(--green)">0 CHF</span></div>
+    <div class="fin-tot" style="background:rgba(255,255,255,.05)"><span>Total charges</span><span id="t-chg" style="color:var(--red)">0 CHF</span></div>
+    <div class="fin-tot" id="reste-box" style="background:rgba(255,255,255,.08);font-size:17px"><span>Reste à vivre</span><span id="t-reste">0 CHF</span></div>
+    <div class="bar-bg"><div class="bar-fill" id="reste-bar" style="width:0%"></div></div>
+    <div class="note" id="reste-msg" style="margin-top:8px"></div>
+    <button class="btn-sage" onclick="saveFin()" style="margin-top:10px">💾 Sauvegarder</button>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🛡️ Règle des 2% (paris)</div>
+    <div class="fin-row" style="margin-top:6px">
+      <label>Ma bankroll (CHF)</label>
+      <input id="bk-in" type="number" inputmode="decimal" value="900" style="width:90px">
+    </div>
+    <div class="fin-tot" style="background:rgba(255,255,255,.05)">
+      <span>Mise MAX par ticket</span>
+      <span id="bk-max" style="color:var(--terra)">18.00 CHF</span>
+    </div>
+    <div class="note" style="margin-top:6px">2% seulement. Jamais plus. Jamais sous alcool.</div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💸 Gagner plus — tes vraies pistes</div>
+    <div class="acc" id="acc1">
+      <div class="acc-h" onclick="tog('acc1')"><span>🥋 Coaching JJB / boxe privé</span><span class="ar">▼</span></div>
+      <div class="acc-b">Champion d'Europe = crédibilité énorme. 3 clients/semaine à 60 CHF/h = +720 CHF/mois net. C'est ton levier N°1 aujourd'hui.\n\n• Poste 1 vidéo démo par semaine\n• Dis à Handisport Genève que tu proposes des cours\n• DM direct aux clubs de MMA / boxe genevois</div>
+    </div>
+    <div class="acc" id="acc2">
+      <div class="acc-h" onclick="tog('acc2')"><span>♿ Mandats sport-handicap</span><span class="ar">▼</span></div>
+      <div class="acc-b">Tu as le brevet Plusport/Handisport. Des mandats existent :\n• Recontacte Handisport Genève directement\n• Propose des séances aux EMS (tu connais le milieu)\n• Mairies/communes cherchent des animateurs sport-adapté\n\nTarif : 45-75 CHF/h selon structure. 4h/semaine = +720 CHF/mois.</div>
+    </div>
+    <div class="acc" id="acc3">
+      <div class="acc-h" onclick="tog('acc3')"><span>📱 TikTok → clients coaching</span><span class="ar">▼</span></div>
+      <div class="acc-b">Pas pour les vues — pour les CLIENTS.\n\n• 1 vidéo technique JJB/semaine\n• 1 vidéo sport-handicap/semaine\n• Dans ta bio : "Coaching JJB Genève · DM pour séance"\n\nAvec 500 vrais abonnés locaux, tu as déjà des clients potentiels. La régularité prime sur la qualité de prod.</div>
+    </div>
+    <div class="acc" id="acc4">
+      <div class="acc-h" onclick="tog('acc4')"><span>🎓 Ton CFC = +1000 CHF/mois à vie</span><span class="ar">▼</span></div>
+      <div class="acc-b">ASE sans CFC : ~3000 CHF brut\nASE avec CFC : ~4000-4500 CHF brut\n\nDifférence sur 30 ans de carrière = +360 000 CHF.\n\nC'est ton meilleur investissement. Avant tout le reste.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">📈 Plan en 5 étapes (dans l'ordre)</div>
+    <div class="row"><span style="font-size:13px"><b>1.</b> Rembourser les poursuites (OP)</span><span class="tag" style="background:var(--red)">D'abord</span></div>
+    <div class="row"><span style="font-size:13px"><b>2.</b> Coussin 1-2 mois de charges</span><span class="tag" style="background:var(--gold)">Sécurité</span></div>
+    <div class="row"><span style="font-size:13px"><b>3.</b> 3e pilier 3a (déduit impôts)</span><span class="tag" style="background:var(--sage)">Malin</span></div>
+    <div class="row"><span style="font-size:13px"><b>4.</b> ETF monde (long terme)</span><span class="tag" style="background:var(--sage)">Solide</span></div>
+    <div class="row"><span style="font-size:13px"><b>5.</b> Investir dans ton asso/business</span><span class="tag" style="background:var(--terra)">Toi</span></div>
+  </div>
+</div>
+
+<!-- ===== TIKTOK ===== -->
+<div class="sc" id="sc-tiktok">
+  <div class="hdr"><div class="ht">📱 TikTok</div><div class="hs">Suivi manuel · Stratégie · Idées</div></div>
+
+  <div class="card-blue">
+    <div class="title">📊 Mes stats (mise à jour manuelle)</div>
+    <div class="sub">Va sur TikTok → ton profil → les chiffres. Tape-les ici.</div>
+    <div class="g2" style="margin-bottom:8px">
+      <div><div class="note">Abonnés</div><input id="tik-ab" type="number" inputmode="numeric" placeholder="ex: 124"></div>
+      <div><div class="note">Vues totales</div><input id="tik-vues" type="number" inputmode="numeric" placeholder="ex: 4500"></div>
+    </div>
+    <div class="g2" style="margin-bottom:8px">
+      <div><div class="note">Likes total</div><input id="tik-likes" type="number" inputmode="numeric" placeholder="ex: 890"></div>
+      <div><div class="note">Dernière vidéo vues</div><input id="tik-last" type="number" inputmode="numeric" placeholder="ex: 230"></div>
+    </div>
+    <button class="btn-blue" onclick="saveTik()">💾 Sauvegarder mes stats</button>
+  </div>
+
+  <div id="tik-dashboard"></div>
+
+  <div class="card">
+    <div class="title">🎯 Stratégie pour toi</div>
+    <div class="fiche" style="border-left-color:var(--terra)">
+      <div class="fiche-t">Ton créneau = ta force</div>
+      <div class="fiche-c">JJB Champion d'Europe + Sport Handicap + Coach ASE.\nPersonne n'a ce combo. C'est ta niche. Ne la dilue pas.</div>
+    </div>
+    <div class="fiche" style="border-left-color:var(--gold)">
+      <div class="fiche-t">Fréquence minimale viable</div>
+      <div class="fiche-c">3 vidéos/semaine. C'est tout.\n• Lundi : technique JJB (30 sec)\n• Mercredi : sport handicap / inclusion\n• Vendredi : mindset / ton parcours</div>
+    </div>
+    <div class="fiche" style="border-left-color:var(--sage)">
+      <div class="fiche-t">Objectifs progressifs</div>
+      <div class="fiche-c">500 abo → premiers contacts clients\n1000 abo → badge + partenariats locaux possibles\n5000 abo → tu attires des partenaires pour ton asso</div>
+    </div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💡 Idée de vidéo maintenant</div>
+    <div id="tik-idee" style="font-size:13.5px;line-height:1.7;margin:8px 0;min-height:60px"></div>
+    <button class="btn-gold" onclick="newIdee()">🎲 Nouvelle idée</button>
+  </div>
+
+  <div class="card">
+    <div class="title">✅ Check-list avant de publier</div>
+    <div id="checklist"></div>
+  </div>
+</div>
+
+<!-- ===== GARDE-FOUS ===== -->
+<div class="sc" id="sc-garde">
+  <div class="hdr"><div class="ht">🛡️ Garde-fous</div><div class="hs">Impulsivité · Alcool · Respiration</div></div>
+
+  <div class="card-sage">
+    <div class="title">🫁 Respire maintenant</div>
+    <div class="sub">Envie forte ? Stress ? 5 cycles = tu reprends le contrôle.</div>
+    <div class="breath-circle" id="br-circle">Touche ▶</div>
+    <button class="btn-sage" id="br-btn" onclick="breatheToggle()">▶ Démarrer</button>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🚨 Protocole d'urgence (envie forte)</div>
+    <div class="fiche" style="border-left-color:var(--terra)">
+      <div class="fiche-t">Les 3 gestes qui sauvent (20 min)</div>
+      <div class="fiche-c">1. 💧 Grand verre d'eau froid tout de suite\n2. 🚶 Sors marcher 10 min (ou 50 burpees)\n3. 📱 Envoie un message à quelqu'un\n\nL'envie redescend seule en ~20 min. Tu n'as pas à te battre — juste à tenir 20 min.</div>
+    </div>
+    <div class="fiche" style="border-left-color:var(--gold)">
+      <div class="fiche-t">Alcool / cannabis + TDAH = piège chimique</div>
+      <div class="fiche-c">Ton cerveau cherche la dopamine rapide. Alcool, cannabis, jeux = dopamine immédiate → accro plus vite que les autres. Ce n'est pas un manque de volonté.\n\n→ Remplace par : sport (+XP), victoire de révision, objectif coché.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">🎰 Vérificateur de mise</div>
+    <div class="fin-row" style="margin-top:4px"><label>Bankroll (CHF)</label><input id="g-bk" type="number" placeholder="ex: 900" style="width:80px"></div>
+    <div class="fin-row"><label>Je veux miser (CHF)</label><input id="g-mise" type="number" placeholder="0" style="width:80px"></div>
+    <button class="btn" onclick="checkMise()" style="margin-top:4px">Vérifier</button>
+    <div id="g-result" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">🆘 Numéros utiles</div>
+    <div class="row"><b>143</b><span style="font-size:13px">La Main Tendue — 24h/24, gratuit, anonyme</span></div>
+    <div class="row"><b>144</b><span style="font-size:13px">Urgences médicales</span></div>
+    <div class="row"><b>117</b><span style="font-size:13px">Police</span></div>
+    <div class="row"><span style="font-size:13px">Caritas Genève</span><span class="tag" style="background:var(--sage)">dettes</span></div>
+    <div class="row"><span style="font-size:13px">Stop-alcool.ch</span><span class="tag" style="background:var(--blue)">anonyme</span></div>
+  </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<div class="nav">
+  <button class="nb on" data-sc="accueil" onclick="go('accueil')"><span class="ic">🏠</span>Accueil</button>
+  <button class="nb" data-sc="coach" onclick="go('coach')"><span class="ic">🤖</span>Coach IA</button>
+  <button class="nb" data-sc="revise" onclick="go('revise')"><span class="ic">📚</span>Révise</button>
+  <button class="nb" data-sc="jeux" onclick="go('jeux')"><span class="ic">🎮</span>Jeux</button>
+  <button class="nb" data-sc="sport" onclick="go('sport')"><span class="ic">💪</span>Sport</button>
+  <button class="nb" data-sc="argent" onclick="go('argent')"><span class="ic">💰</span>Argent</button>
+  <button class="nb" data-sc="tiktok" onclick="go('tiktok')"><span class="ic">📱</span>TikTok</button>
+  <button class="nb" data-sc="garde" onclick="go('garde')"><span class="ic">🛡️</span>Garde</button>
+</div>
+
+<button class="scrolltop" id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ===== DATA CFC =====
+const COMP={
+A:{name:"Compétence A",sub:"Rôle pro · Éthique · Secret",color:"#45b7d1",fiches:[
+{t:"Les 5 principes éthiques",c:"1. Autonomie\n2. Non-malfaisance\n3. Assistance\n4. Justice\n5. Dignité humaine"},
+{t:"Art. 321 CP — Secret pro",c:"Tu ne divulgues RIEN sur les personnes accompagnées. LPD = loi sur la protection des données.\n\nExemple : la voisine demande des nouvelles de M. X → « Je ne peux pas donner d'informations. »"},
+{t:"Burn-out — 3 phases",c:"1. Idéalisation\n2. Fatigue chronique\n3. Épuisement total\n\nSignes : troubles du sommeil, perte d'empathie. Tu en parles à ton responsable."},
+{t:"Résilience & stress",c:"Bons copings : sport, planification, demander de l'aide.\nÀ éviter : faire semblant que tout va bien.\n\n⚠️ Pour l'examen : APEA = Autorité de Protection de l'Enfant et de l'Adulte"}],
+quiz:[{q:"Les 5 principes éthiques ?",a:"Autonomie · Non-malfaisance · Assistance · Justice · Dignité humaine."},
+{q:"Art. 321 CP ?",a:"Secret professionnel : aucune info sur les personnes accompagnées sans autorisation."},
+{q:"3 phases du burn-out ?",a:"Idéalisation → Fatigue chronique → Épuisement total."}]},
+
+B:{name:"Compétence B",sub:"Planifier · Organiser · Rituels",color:"#2ecc71",fiches:[
+{t:"Escalier 6 marches (Careum)",c:"1. Bilan du groupe\n2. Définition des objectifs\n3. Planification de l'activité\n4. Réalisation\n5. Évaluation / Suivi\n6. Réflexion sur sa propre action"},
+{t:"IPDRCE",c:"Informer · Planifier · Décider · Réaliser · Contrôler · Évaluer"},
+{t:"Transitions — 3 moments",c:"AVANT : « Mme Meyer, je vois que vous avez fini. »\nPENDANT : « Je vous accompagne. »\nAPRÈS : « Là vous pourrez vous reposer. »\n\n⚠️ Réaction en transition ≠ trouble du comportement"},
+{t:"Les rituels",c:"Répétition régulière = leur force.\nDébut / Milieu / Fin.\n\nIls rassurent, favorisent l'autonomie, facilitent les transitions."}],
+quiz:[{q:"Les 6 marches de l'escalier ?",a:"Bilan → Objectifs → Planification → Réalisation → Évaluation → Réflexion."},
+{q:"IPDRCE ?",a:"Informer · Planifier · Décider · Réaliser · Contrôler · Évaluer."},
+{q:"3 moments d'une transition ?",a:"Avant (ce qui vient) · Pendant (ce qui se passe) · Après (ce qui va venir)."}]},
+
+C:{name:"Compétence C",sub:"Observer · Documenter",color:"#4ecdc4",fiches:[
+{t:"Fait vs Interprétation",c:"FAIT = ce qu'on voit/entend exactement.\nINTERPRÉTATION = ce qu'on suppose.\n\n✅ « Marie a refusé son repas et est restée au lit 3h. »\n❌ « Marie est déprimée. »"},
+{t:"Le rapport",c:"Objectif, factuel, précis, sans jugement.\n\nExemple : « À 14h, M. X a frappé la table 3 fois et a crié. Il a quitté la salle. »"},
+{t:"Portfolio CFC",c:"Documente des situations réelles avec ton analyse. C'est ta preuve pour le jury.\n\nStructure : contexte → ce que j'ai fait → pourquoi → ce que je retiens."}],
+quiz:[{q:"Différence fait vs interprétation ?",a:"FAIT = ce qu'on observe directement. INTERPRÉTATION = ce qu'on suppose. Jamais d'interprétation dans un rapport."},
+{q:"Que dit le rapport ?",a:"Objectif, factuel, précis, sans jugement de valeur."}]},
+
+D:{name:"Compétence D",sub:"Collaborer · Communiquer",color:"#9b59b6",fiches:[
+{t:"Entretien formel vs informel",c:"FORMEL : planifié, objectif précis, durée fixe. Ex : réunion avec le curateur.\nINFORMEL : spontané, pendant un soin. Ex : Marie te confie sa peur."},
+{t:"Le consensus",c:"Décision collective où chacun peut « vivre avec ». Plus fort qu'un vote."},
+{t:"Feed-back constructif",c:"Donner : concret, factuel, bienveillant.\nRecevoir : écouter sans se défendre."}],
+quiz:[{q:"Formel ou informel : confidence pendant un soin ?",a:"Informel — échange spontané, sans structure."},
+{q:"C'est quoi le consensus ?",a:"Décision collective où chacun peut vivre avec le résultat."}]},
+
+E:{name:"Compétence E",sub:"Relations pro · Rogers · Proximité",color:"#e94560",fiches:[
+{t:"3 attitudes de Rogers",c:"1. Empathie : comprendre ce que ressent l'autre\n2. Acceptation inconditionnelle : accepter sans juger\n3. Congruence : être authentique"},
+{t:"3 phases relationnelles",c:"1. Début → instaurer la confiance\n2. Entretien → vivre la relation\n3. Fin → rituel, bilan, séparation\n\nLa fin est toujours préparée à l'avance."},
+{t:"Proximité / Distance",c:"Trop proche = perte d'objectivité.\nTrop loin = pas de confiance.\n\nExemple : inviter un résident chez soi = dépasser la limite pro."}],
+quiz:[{q:"3 attitudes de Rogers ?",a:"Empathie · Acceptation inconditionnelle · Congruence."},
+{q:"Comment se passe une bonne fin de relation ?",a:"Ritualisée et préparée à l'avance."}]},
+
+F:{name:"Compétence F",sub:"Accompagner · Jeu · Apprentissage",color:"#f5a623",fiches:[
+{t:"4 formes d'accompagnement",c:"1. Encourager (motiver)\n2. Inciter (proposer)\n3. Laisser essayer (autonomie)\n4. Faire avec (co-participer)"},
+{t:"Théories de l'apprentissage",c:"• Behaviorisme : renforcement (R+/R-)\n• Cognitif : compréhension, sens\n• Socio-cognitif : apprendre par observation (Bandura)"},
+{t:"Le jeu = le travail de l'enfant",c:"Types : libre · symbolique · de règles · de construction\n\nEn jouant, l'enfant développe langage, motricité, émotions, codes sociaux."}],
+quiz:[{q:"4 formes d'accompagnement ?",a:"Encourager · Inciter · Laisser essayer · Faire avec."},
+{q:"Bandura = quel type d'apprentissage ?",a:"Socio-cognitif : apprendre par observation."}]},
+
+F0:{name:"Psychologie",sub:"Développement · Piaget · Erikson",color:"#e74c3c",fiches:[
+{t:"Erikson — 8 crises",c:"0-1 : Confiance vs Méfiance\n1-3 : Autonomie vs Honte\n3-5 : Initiative vs Culpabilité\n5-12 : Travail vs Infériorité\nAdo : Identité vs Confusion\nJeune adulte : Intimité vs Isolement\nAdulte : Générativité vs Stagnation\nVieux : Intégrité vs Désespoir"},
+{t:"Piaget — 4 stades",c:"0-2 ans : Sensorimoteur (corps + sens)\n2-7 ans : Préopératoire (pensée magique)\n7-12 ans : Opératoire concret (logique réelle)\n12+ : Opératoire formel (abstraction)"},
+{t:"Les 7 sens",c:"👋 Toucher : le + important, 1er développé\n⚖️ Équilibre\n🏃 Proprioception\n👅 Goût\n👁️ Vue : le - développé à la naissance\n👂 Ouïe : fonctionne avant la naissance\n👃 Odorat"}],
+quiz:[{q:"Erikson 0-1 an ?",a:"Confiance vs Méfiance."},
+{q:"Piaget 2-7 ans ?",a:"Préopératoire — pensée magique, l'enfant ne voit que son point de vue."},
+{q:"Quel sens fonctionne avant la naissance ?",a:"L'ouïe."}]},
+
+LOIS:{name:"Lois & Droits",sub:"Art. 321 CP · APEA · Contrat",color:"#e74c3c",fiches:[
+{t:"Articles clés CP",c:"Art. 321 CP = Secret professionnel\nArt. 314c-d CC = Obligation de signalement (maltraitance)\nArt. 187 CP = Majorité sexuelle = 16 ans"},
+{t:"Tes droits employé (CO)",c:"Art. 321c CO = Heures sup +25% ou compensation\nArt. 328 CO = Protection contre le harcèlement\nArt. 8 CF = Égalité salariale H/F"},
+{t:"Mesures de protection enfant",c:"Ordre : Instructions (307) → Curatelle (308) → Retrait garde (310) → Retrait autorité parentale (311-312)\n\nBut : protéger l'enfant, pas punir les parents."}],
+quiz:[{q:"Heures sup : quel article et compensation ?",a:"Art. 321c CO : +25% ou compensation en congé."},
+{q:"Ordre des mesures de protection ?",a:"Instructions → Curatelle → Retrait garde → Retrait autorité parentale."},
+{q:"Majorité sexuelle en Suisse ?",a:"16 ans (art. 187 CP), sauf écart d'âge ≤ 3 ans."}]}
+};
+
+const ORDER=["A","B","C","D","E","F","F0","LOIS"];
+let curComp="A",curJeuComp="A",curJeu="quiz";
+
+// ===== XP & STORAGE =====
+let XP=parseInt(localStorage.getItem("xp_v2")||"0");
+let DONE=JSON.parse(localStorage.getItem("qdone_v2")||"{}");
+let DAYDONE=JSON.parse(localStorage.getItem("sdone_v2")||"{}");
+let curDay=parseInt(localStorage.getItem("sday_v2")||"1");
+function saveXP(){localStorage.setItem("xp_v2",XP);localStorage.setItem("qdone_v2",JSON.stringify(DONE));}
+function saveSport(){localStorage.setItem("sdone_v2",JSON.stringify(DAYDONE));localStorage.setItem("sday_v2",curDay);}
+function lvl(){return Math.floor(XP/100)+1;}
+function lvlPct(){return XP%100;}
+
+// ===== NAV =====
+function go(s){
+  document.querySelectorAll(".sc").forEach(e=>e.classList.remove("on"));
+  document.getElementById("sc-"+s).classList.add("on");
+  document.querySelectorAll(".nb").forEach(e=>e.classList.toggle("on",e.dataset.sc===s));
+  window.scrollTo(0,0);
+}
+
+// ===== TOAST =====
+let _tt=null;
+function toast(msg){
+  let t=document.getElementById("_toast");
+  if(!t){t=document.createElement("div");t.id="_toast";t.className="toast";document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+// ===== CONFETTI + LEVEL =====
+const COLS=["#e94560","#f5a623","#4ecdc4","#45b7d1","#2ecc71"];
+function confetti(n){for(let i=0;i<n;i++){const c=document.createElement("div");c.className="confetti";c.style.left=Math.random()*100+"vw";c.style.background=COLS[i%COLS.length];c.style.animationDuration=(.9+Math.random()*.7)+"s";document.body.appendChild(c);setTimeout(()=>c.remove(),1800);}}
+let _lastLvl=lvl();
+function checkLvl(){const L=lvl();if(L>_lastLvl){_lastLvl=L;confetti(60);toast("🎉 NIVEAU "+L+" !");}}
+function reward(){confetti(18);}
+
+// ===== AUDIO =====
+let _ac=null;
+function chime(){
+  try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==="suspended")_ac.resume();
+  [659,880].forEach((f,i)=>{const o=_ac.createOscillator(),g=_ac.createGain(),t=_ac.currentTime+i*.12;o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(g);g.connect(_ac.destination);o.start(t);o.stop(t+.35);});}catch(e){}
+}
+
+// ===== CASES DU JOUR =====
+const ACTS=[{k:"sport",l:"💪 Sport / exercice fait"},{k:"revision",l:"📚 Révision CFC faite"},{k:"argent",l:"💰 Action argent (budget/épargne)"},{k:"social",l:"💬 Contact social positif"}];
+function actKey(){return "acts_"+today();}
+function today(){return new Date().toISOString().slice(0,10);}
+function buildActs(){
+  const done=JSON.parse(localStorage.getItem(actKey())||"{}");
+  document.getElementById("acts").innerHTML=ACTS.map(a=>`<div class="row" onclick="toggleAct('${a.k}')" style="cursor:pointer"><span style="font-size:13px">${a.l}</span><span style="font-size:22px">${done[a.k]?"✅":"⬜"}</span></div>`).join("");
+  const n=ACTS.filter(a=>done[a.k]).length;
+  document.getElementById("acts-msg").textContent=n===4?"🔥 Journée parfaite ! 4/4":""+n+" / 4 cases cochées aujourd'hui.";
+}
+function toggleAct(k){
+  const done=JSON.parse(localStorage.getItem(actKey())||"{}");
+  if(!done[k]){done[k]=true;XP+=5;saveXP();reward();toast("+5 XP ✅");}else{delete done[k];}
+  localStorage.setItem(actKey(),JSON.stringify(done));buildActs();buildDash();
+}
+
+// ===== HUMEUR =====
+const MOODS=["😞","😕","😐","🙂","😄"];
+function buildMoods(){
+  const sv=localStorage.getItem("mood_"+today());
+  document.getElementById("moods").innerHTML=MOODS.map((m,i)=>`<button class="mood-btn ${sv==i?"on":""}" onclick="setMood(${i})">${m}</button>`).join("");
+}
+function setMood(i){localStorage.setItem("mood_"+today(),i);buildMoods();}
+
+// ===== ASTUCE =====
+const TIPS=["📚 Révise 1 compétence par jour. La régularité bat l'intensité.","💪 Échauffe-toi toujours. Tu progresses plus et tu te blesses moins.","💰 Règle 24h : envie d'achat >50 CHF ? Attends demain. 9/10 l'envie passe.","🧠 Découpe en 10 min. Commencer = le plus dur.","🥋 Ta discipline de champion JJB, tu la transfères au CFC.","😴 7-8h de sommeil. La mémoire range tes révisions la nuit.","💧 Envie forte ? Verre d'eau + 10 min de marche + message à quelqu'un.","🎯 Coche tes 4 cases. Les ✅ qui s'alignent = dopamine SAINE.","🚴 Récup = progression. Le repos est obligatoire, pas optionnel.","📋 Traite tout de suite ce qui prend <2 min. Le reste : une seule liste."];
+function buildTip(){const d=new Date();document.getElementById("tip-txt").textContent=TIPS[Math.floor(d.getDay()*1.3)%TIPS.length]||TIPS[0];}
+
+// ===== DASHBOARD =====
+const BADGES_DEF=[{e:"🌱",l:"Premier XP",t:s=>s.xp>=10},{e:"🔥",l:"Niveau 2",t:s=>s.lvl>=2},{e:"📚",l:"10 révisions",t:s=>s.qDone>=10},{e:"🎯",l:"4/4 du jour",t:s=>s.acts>=4},{e:"💪",l:"3 séances",t:s=>s.sport>=3},{e:"🧠",l:"100 XP",t:s=>s.xp>=100},{e:"🏋️",l:"7 séances",t:s=>s.sport>=7},{e:"👑",l:"Niveau 5",t:s=>s.lvl>=5}];
+function buildDash(){
+  document.getElementById("d-lvl").textContent=lvl();
+  document.getElementById("d-xp").textContent=XP;
+  document.getElementById("d-bar").style.width=lvlPct()+"%";
+  const dSport=Object.keys(DAYDONE).filter(k=>DAYDONE[k]).length;
+  const ad=JSON.parse(localStorage.getItem(actKey())||"{}");
+  const nActs=ACTS.filter(a=>ad[a.k]).length;
+  document.getElementById("d-sport").textContent=dSport;
+  document.getElementById("d-acts").textContent=nActs+"/4";
+  // streak
+  let streak=0;const t=new Date();
+  for(let i=0;i<30;i++){const d=new Date(t);d.setDate(t.getDate()-i);const k="acts_"+d.toISOString().slice(0,10);const dd=JSON.parse(localStorage.getItem(k)||"{}");if(Object.keys(dd).length>0)streak++;else break;}
+  document.getElementById("d-streak").textContent=streak+"🔥";
+  // badges
+  const s={xp:XP,lvl:lvl(),qDone:Object.keys(DONE).length,acts:nActs,sport:dSport};
+  const bg=document.getElementById("badge-grid");
+  if(bg)bg.innerHTML=BADGES_DEF.map(b=>`<div class="badge ${b.t(s)?"on":""}"><div class="be">${b.e}</div><div class="bl">${b.l}</div></div>`).join("");
+  checkLvl();
+}
+
+// ===== COACH IA HORS-LIGNE =====
+const KB={
+"secret":"Art. 321 CP : tu ne divulgues JAMAIS d'informations sur les personnes accompagnées sans autorisation. Même à la famille. Même « juste pour savoir ». La LPD (loi sur la protection des données) complète ça.\n\nSi quelqu'un te demande des infos → « Je ne peux pas donner d'informations. »",
+"éthique":"Les 5 principes éthiques ASE :\n1. Autonomie — respecter les choix de la personne\n2. Non-malfaisance — ne pas nuire\n3. Assistance — aider\n4. Justice — traiter de façon équitable\n5. Dignité humaine — respecter la personne\n\nMémo : A-N-A-J-D",
+"rogers":"Les 3 attitudes de Carl Rogers :\n1. Empathie — comprendre ce que ressent l'autre\n2. Acceptation inconditionnelle — accepter sans juger\n3. Congruence — être authentique, ne pas jouer un rôle\n\nUn seul suffit à améliorer une relation difficile.",
+"rapport":"Un rapport ASE = FAITS uniquement.\n✅ FAIT : « À 14h, Mme X a refusé son repas et est restée au lit 3h. »\n❌ INTERPRÉTATION : « Mme X est déprimée. »\n\nJamais de jugement, jamais de supposition. Juste ce que tu as VU et ENTENDU.",
+"escalier":"L'escalier de planification Careum (6 marches) :\n1. Bilan du groupe\n2. Définition des objectifs\n3. Planification de l'activité\n4. Réalisation\n5. Évaluation / Suivi\n6. Réflexion sur sa propre action\n\nMémo : B-O-P-R-E-R",
+"ritual":"Un rituel = répétition régulière qui donne sécurité et repères.\n\nStructure : Début / Milieu / Fin\nMessage : « Nous faisons cela ainsi » + sentiment d'appartenance.\n\nSa force vient de la RÉPÉTITION. Un rituel unique ne suffit pas.",
+"transition":"Transition = passage entre 2 moments. 3 étapes :\n• AVANT : nommer ce qui vient de se passer\n• PENDANT : accompagner\n• APRÈS : annoncer la suite\n\n⚠️ Réaction difficile en transition ≠ trouble du comportement.",
+"burn":"Burn-out = 3 phases :\n1. Idéalisation (on donne tout)\n2. Fatigue chronique (on s'épuise)\n3. Épuisement total (on ne peut plus)\n\nSignes précoces : sommeil, irritabilité, perte d'empathie.\nAction : en parler au responsable AVANT la phase 3.",
+"piaget":"Stades de Piaget :\n0-2 ans → Sensorimoteur (apprend avec le corps)\n2-7 ans → Préopératoire (pensée magique, ego-centré)\n7-12 ans → Opératoire concret (logique avec objets réels)\n12+ ans → Opératoire formel (pensée abstraite)\n\nMémo : Corps → Magie → Concret → Abstrait",
+"erikson":"Crises d'Erikson :\n0-1 : Confiance vs Méfiance\n1-3 : Autonomie vs Honte\n3-5 : Initiative vs Culpabilité\n5-12 : Travail vs Infériorité\nAdo : Identité vs Confusion\nJ. adulte : Intimité vs Isolement\nAdulte : Générativité vs Stagnation\nVieux : Intégrité vs Désespoir",
+"argent":"Tes vraies pistes pour gagner plus :\n1. Coaching JJB privé (60-90 CHF/h) → 3 clients/semaine = +700 CHF/mois\n2. Mandats sport-handicap via Handisport Genève (brevet Plusport = crédibilité)\n3. Ton CFC = +1000 CHF/mois à vie (meilleur investissement possible)\n4. TikTok JJB → attirer des clients locaux\n5. Vente d'objets inutilisés (Anibis)\n\nOrdre des priorités : dettes → coussin → 3e pilier → coaching side income",
+"budget":"Ton budget actuel estimé :\n• Salaire net : ~2204 CHF\n• Charges fixes : ~2370 CHF (loyer + LAMal + OP + transport + food + tel)\n• Reste : serré\n\nLevier immédiat : 1 client coaching JJB/semaine = +240 CHF/mois. Priorité absolue.",
+"tdah":"TDAH et stratégies concrètes :\n• Découpe chaque tâche en blocs de 10-15 min max\n• Pomodoro : 25 min focus, 5 min pause\n• Avant de décider (argent, paroles) : 3 secondes de pause\n• Alarmes pour tout (rendez-vous, médicaments)\n• Une seule liste de tâches (pas 5 endroits différents)\n• Le sport = dopamine saine = meilleur médicament naturel",
+"alcool":"Alcool + TDAH = piège chimique :\nLe cerveau TDAH cherche la dopamine rapide. L'alcool = dopamine immédiate → accroche plus vite que les autres.\n\nEt ça coupe les freins → mauvaises décisions (argent, paroles).\n\nRemplacement : sport, victoire de révision, objectif coché = même dopamine, zéro dégât.\n\nAide gratuite à Genève : Caritas, Stop-alcool.ch",
+"impulsivité":"Protocole anti-impulsivité (3 gestes, 20 min) :\n1. Grand verre d'eau froid maintenant\n2. Sors marcher 10 min (ou 50 burpees)\n3. Envoie un message à quelqu'un\n\nL'envie passe seule en ~20 min. Tu n'as pas à te battre, juste à tenir.",
+"tiktok":"Stratégie TikTok pour toi :\n• Niche : JJB Champion + Sport Handicap + Coach ASE (personne n'a ce combo)\n• Rythme : 3 vidéos/sem minimum\n• Objectif : pas les vues, les CLIENTS locaux\n• Bio : « Coaching JJB Genève · DM pour séance »\n• 500 abonnés locaux engagés > 50 000 abonnés lointains\n• Dans ta bio : lien vers ton futur projet asso",
+"asso":"Ton projet asso sport-handicap :\n• Forme juridique : Association (Art. 60 CC) → but idéal, accès aux subventions\n• Financement : Ville/Canton GE, Loterie Romande, fondations, Pro Infirmis\n• Partenaires naturels : Handisport GE, Plusport, EMS (tu connais le milieu)\n• Premier pas : rédiger les statuts avec 2-3 membres fondateurs (gratuit)\n• Atout : tu es champion + moniteur + ASE = dossier solide",
+"vma":"VMA = Vitesse Maximale Aérobie.\n\nComment l'améliorer : intervalles courts et intenses.\nLe 30/30 (30 sec effort max / 30 sec récup) × 8 à 10 tours = séance VMA parfaite.\n\nPourquoi important pour toi : cardio JJB + résistance aux rondes longues.\n\nSans alcool/cannabis la veille : récup et VMA bien meilleures.",
+"canton":"La Suisse a 26 cantons. Genève en est un.\n4 langues nationales : allemand, français, italien, romanche.\nConseil fédéral : 7 membres, présidence tournante chaque année.\nInitiative populaire : 100 000 signatures.\nRéférendum : 50 000 signatures.",
+"loi":"Lois clés pour le CFC ASE :\n• Art. 321 CP = Secret professionnel\n• Art. 314c-d CC = Obligation de signalement (maltraitance)\n• Art. 321c CO = Heures sup +25%\n• Art. 328 CO = Protection contre le harcèlement\n• LPD = Protection des données\n• APEA = Autorité de Protection de l'Enfant et de l'Adulte"
+};
+
+const QUICK_TOPICS=["🔐 Secret pro","⚖️ Éthique","📝 Rapport","🗓️ Planifier","🔁 Transition","💰 Argent","🧠 TDAH","🥋 TikTok","♿ Mon asso","⚡ Impulsivité","📊 Budget","🥋 VMA"];
+const TOPIC_MAP={"🔐 Secret pro":"secret","⚖️ Éthique":"éthique","📝 Rapport":"rapport","🗓️ Planifier":"escalier","🔁 Transition":"transition","💰 Argent":"argent","🧠 TDAH":"tdah","🥋 TikTok":"tiktok","♿ Mon asso":"asso","⚡ Impulsivité":"impulsivité","📊 Budget":"budget","🥋 VMA":"vma"};
+
+function buildQuickTopics(){
+  document.getElementById("quick-topics").innerHTML=QUICK_TOPICS.map(t=>`<button class="chip" onclick="quickAsk('${t}')">${t}</button>`).join("");
+}
+function quickAsk(t){
+  const key=TOPIC_MAP[t]||t.toLowerCase();
+  document.getElementById("chat-in").value=t;
+  sendChat();
+}
+
+function findAnswer(q){
+  q=q.toLowerCase().replace(/[?!.]/g,"");
+  for(const key in KB){
+    if(q.includes(key)||key.split("").every(c=>q.includes(c)))continue;
+    if(q.includes(key))return KB[key];
+  }
+  // mots-clés
+  const MAP={secret:["secret","321","divulgu","confidentiel"],éthique:["éthiq","principe","autonomie","dignité","malfais"],rapport:["rapport","fait","interprét","observer","docum"],escalier:["escalier","planif","6 march","ipdrce","organis"],ritual:["ritual","rituel","répétit","repère"],transition:["transit","passage","moment"],burn:["burn","épuis","fatigue"],piaget:["piaget","stade","sensorimoteur","préopér"],erikson:["erikson","crise","confiance","autonomie vs"],argent:["argent","gagner","revenu","salaire","coaching","client","side"],budget:["budget","charges","reste","bilan"],tdah:["tdah","attention","impuls","concentr","pomodoro"],alcool:["alcool","cannabis","drogue","addic"],impulsivité:["impuls","envie","resist","vague","20 min"],tiktok:["tiktok","réseau","abonné","vidéo","instagram","post"],asso:["asso","association","sport-hand","handicap","fondation","subvention"],vma:["vma","cardio","vitesse","intervalles","endurance"],canton:["canton","suisse","fédéral","langue","votation"],loi:["loi","article","droit","co","cc","cp","apea","lpd"]};
+  for(const k in MAP){if(MAP[k].some(w=>q.includes(w)))return KB[k];}
+  return null;
+}
+
+function addMsg(role,txt){
+  const box=document.getElementById("chat-box");
+  const div=document.createElement("div");
+  div.className=role==="user"?"msg-user":"msg-bot";
+  if(role==="bot")div.innerHTML=`<span class="ico">🤖</span>${txt.replace(/\n/g,"<br>")}`;
+  else div.textContent=txt;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+}
+
+function sendChat(){
+  const inp=document.getElementById("chat-in");
+  const q=inp.value.trim();if(!q)return;
+  inp.value="";
+  addMsg("user",q);
+  // cherche réponse
+  const ans=findAnswer(q);
+  setTimeout(()=>{
+    if(ans){addMsg("bot",ans);}
+    else{addMsg("bot","Je n'ai pas cette info précise dans ma base hors-ligne. Essaie un sujet rapide ci-dessus, ou reformule avec : « secret pro », « rapport », « argent », « tdah », « tiktok », « escalier »… 💪");}
+  },400);
+}
+function clearChat(){document.getElementById("chat-box").innerHTML=`<div class="msg-bot"><span class="ico">🤖</span>Conversation effacée. Pose ta question !</div>`;}
+
+// ===== REVISE =====
+function buildCompChips(){
+  document.getElementById("comp-chips").innerHTML=ORDER.map(k=>`<button class="chip ${k===curComp?"on":""}" style="${k===curComp?"background:"+COMP[k].color+";border-color:"+COMP[k].color:""}" onclick="pickComp('${k}')">${k}</button>`).join("");
+}
+function pickComp(k){curComp=k;buildCompChips();renderComp();}
+function renderComp(){
+  const d=COMP[curComp];
+  document.getElementById("comp-head").innerHTML=`<div class="card" style="border-left:3px solid ${d.color}"><div class="title" style="color:${d.color}">${d.name}</div><div class="sub" style="margin:0">${d.sub}</div></div>`;
+  document.getElementById("fiches").innerHTML=d.fiches.map(f=>`<div class="fiche" style="border-left-color:${d.color}"><div class="fiche-t">${f.t}</div><div class="fiche-c">${f.c}</div></div>`).join("");
+}
+
+// ===== JEUX =====
+let curQuizArr=[];
+function dKey(q){return curJeuComp+"::"+q;}
+function buildJeuChips(){
+  document.getElementById("jeu-chips").innerHTML=ORDER.map(k=>`<button class="chip ${k===curJeuComp?"on":""}" style="${k===curJeuComp?"background:"+COMP[k].color:""}" onclick="pickJeu('${k}')">${k}</button>`).join("");
+}
+function pickJeu(k){curJeuComp=k;buildJeuChips();renderJeu();}
+function setJeu(j){
+  curJeu=j;
+  ["quiz","flash","defi"].forEach(x=>{
+    const b=document.getElementById("tab-"+x);if(!b)return;
+    const on=j===x;b.classList.toggle("on",on);
+    b.style.background=on?"var(--terra)":"";b.style.color=on?"#fff":"";
+  });
+  document.getElementById("jeu-chips").style.display=j==="defi"?"none":"flex";
+  renderJeu();
+}
+function hdHead(){return `<div class="jeu-head"><div class="xp-row"><span class="xp-lvl">⭐ Niveau ${lvl()}</span><span class="xp-pts">${XP} XP</span></div><div class="xp-bar-bg"><div class="xp-bar-fill" style="width:${lvlPct()}%"></div></div></div>`;}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function renderJeu(){
+  const z=document.getElementById("jeu-zone");
+  if(curJeu==="defi"){renderDefi();return;}
+  const d=COMP[curJeuComp];
+  if(curJeu==="quiz"){
+    curQuizArr=shuffle(d.quiz);
+    const nb=d.quiz.filter(q=>DONE[dKey(q.q)]).length;
+    let html=hdHead()+`<div class="sub" style="margin-bottom:8px">${nb}/${d.quiz.length} faites · ordre aléatoire</div>`;
+    html+=curQuizArr.map((q,i)=>{
+      const done=DONE[dKey(q.q)];
+      return `<div class="card" style="${done?"opacity:.6":""}"><div style="font-size:13.5px;font-weight:700;margin-bottom:8px">${i+1}. ${q.q}</div>`+
+      (done?`<div style="background:#0a2a0a;border:1px solid var(--green);border-radius:10px;padding:10px;font-size:13px;color:var(--green)">${q.a}</div><div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:700">✅ Maîtrisé</div>`:
+      `<button class="btn-sm" id="qb-${i}" onclick="revealQ(${i})" style="width:100%">Voir la réponse</button><div id="qa-${i}" style="display:none;background:var(--card2);border-radius:10px;padding:10px;font-size:13px;line-height:1.6;margin-top:8px;white-space:pre-line">${q.a}<div style="display:flex;gap:8px;margin-top:10px"><button class="btn-sage" style="flex:1;padding:9px" onclick="assess(${i},true)">✅ Je savais</button><button class="btn-sm" style="flex:1" onclick="assess(${i},false)">🔁 À revoir</button></div></div>`)+
+      `</div>`;
+    }).join("");
+    z.innerHTML=html;
+  }else{
+    z.innerHTML=hdHead()+shuffle(d.quiz).map(q=>`<div class="flash" onclick="this.querySelector('.fc-a').style.display='block';this.querySelector('.fc-hint').style.display='none'"><div class="fc-q">${q.q}</div><div class="fc-hint">👆 Touche pour retourner</div><div class="fc-a">✅ ${q.a}</div></div>`).join("");
+  }
+}
+function revealQ(i){document.getElementById("qa-"+i).style.display="block";document.getElementById("qb-"+i).style.display="none";}
+function assess(i,knew){
+  const q=curQuizArr[i];if(!q||DONE[dKey(q.q)])return;
+  DONE[dKey(q.q)]=true;XP+=knew?10:4;saveXP();
+  toast(knew?"Bravo ! +10 XP 🎉":"+4 XP 💪");reward();checkLvl();buildDash();renderJeu();
+}
+
+// ===== DÉFI =====
+const DEFI_Q=[
+{q:"Les 5 principes éthiques ASE ?",o:["Autonomie · Non-malfaisance · Assistance · Justice · Dignité","Force · Autorité · Distance · Règles · Hiérarchie","Écoute · Réponse · Action · Bilan · Repos"],c:0},
+{q:"Art. 321 CP = ?",o:["Heures supplémentaires","Secret professionnel","Protection contre le harcèlement"],c:1},
+{q:"6e marche de l'escalier ?",o:["Évaluation","Réalisation","Réflexion sur sa propre action"],c:2},
+{q:"Rogers : 3e attitude ?",o:["Réciprocité","Congruence (authenticité)","Autorité"],c:1},
+{q:"Fait ou interprétation : « Marie est déprimée » ?",o:["Fait","Interprétation","Les deux"],c:1},
+{q:"Piaget 2-7 ans = stade ?",o:["Sensorimoteur","Préopératoire","Opératoire formel"],c:1},
+{q:"Erikson 0-1 an = crise ?",o:["Autonomie vs Honte","Initiative vs Culpabilité","Confiance vs Méfiance"],c:2},
+{q:"Heures sup : compensation légale ?",o:["+10%","Rien","+25% ou congé (321c CO)"],c:2},
+{q:"APEA = ?",o:["Association Pro Emploi ASE","Autorité de Protection de l'Enfant et de l'Adulte","Aide Professionnelle à l'Enfance et aux Adultes"],c:1},
+{q:"Transition réussie : combien de moments ?",o:["1","2","3"],c:2}];
+let defiSt=null;
+function startDefi(){defiSt={qs:shuffle(DEFI_Q).slice(0,8),idx:0,score:0,locked:false};renderDefi();}
+function renderDefi(){
+  const z=document.getElementById("jeu-zone");
+  if(!defiSt){z.innerHTML=hdHead()+`<div class="card" style="text-align:center"><div style="font-size:48px">⚡</div><div class="title" style="margin-top:6px">Quiz Défi</div><div class="sub">8 questions · correction immédiate · vise les 3 étoiles</div><button class="btn" style="margin-top:12px" onclick="startDefi()">Démarrer ⚡</button></div>`;return;}
+  if(defiSt.idx>=defiSt.qs.length){
+    const sc=defiSt.score,tot=defiSt.qs.length,pct=sc/tot;
+    const stars=pct>=.875?"⭐⭐⭐":pct>=.625?"⭐⭐":"⭐";
+    const msg=pct>=.875?"Tu maîtrises ! Champion.":pct>=.625?"Bien ! Continue.":"Révise et relance.";
+    z.innerHTML=hdHead()+`<div class="card" style="text-align:center"><div style="font-size:44px">${stars}</div><div style="font-size:24px;font-weight:900;margin:6px 0">${sc} / ${tot}</div><div class="sub">${msg}</div><button class="btn" style="margin-top:12px" onclick="startDefi()">🔁 Rejouer</button></div>`;
+    XP+=sc*3;saveXP();buildDash();checkLvl();return;
+  }
+  const q=defiSt.qs[defiSt.idx];
+  z.innerHTML=hdHead()+`<div class="sub" style="margin-bottom:8px">Question ${defiSt.idx+1} / ${defiSt.qs.length} · Score ${defiSt.score}</div><div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:12px">${q.q}</div><div id="defi-opts">${q.o.map((o,i)=>`<button class="mcq-opt" onclick="ansDefi(${i})">${o}</button>`).join("")}</div><div id="defi-next"></div></div>`;
+}
+function ansDefi(i){
+  if(defiSt.locked)return;defiSt.locked=true;
+  const q=defiSt.qs[defiSt.idx];
+  q.o.forEach((_,k)=>{const b=document.querySelectorAll("#defi-opts .mcq-opt")[k];if(b){if(k===q.c)b.classList.add("good");else if(k===i)b.classList.add("bad");else b.classList.add("dim");b.onclick=null;}});
+  if(i===q.c){defiSt.score++;toast("Correct ! 🎉");reward();}else{toast("La bonne réponse est en vert 👀");}
+  document.getElementById("defi-next").innerHTML=`<button class="btn" style="margin-top:10px" onclick="nextDefi()">Suivant ➡</button>`;
+}
+function nextDefi(){defiSt.idx++;defiSt.locked=false;renderDefi();}
+
+// ===== POMODORO =====
+let pIv=null,pState="idle",pPhase="work",pLeft=1500;
+function pFmt(s){const m=Math.floor(s/60),x=s%60;return (m<10?"0":"")+m+":"+(x<10?"0":"")+x;}
+function pUpd(){document.getElementById("p-display").textContent=pFmt(pLeft);document.getElementById("p-phase").textContent=pPhase==="work"?"📚 Concentration !":"☕ Pause bien méritée";}
+function pomoToggle(){
+  if(pState==="running"){clearInterval(pIv);pIv=null;pState="paused";document.getElementById("p-start").textContent="▶ Reprendre";return;}
+  pState="running";document.getElementById("p-start").textContent="⏸ Pause";
+  pIv=setInterval(()=>{pLeft--;if(pLeft<=0){if(pPhase==="work"){pPhase="rest";pLeft=300;toast("Pause ! ☕ +10 XP");XP+=10;saveXP();buildDash();}else{pPhase="work";pLeft=1500;toast("On repart ! 📚");}};pUpd();},1000);pUpd();
+}
+function pomoReset(){clearInterval(pIv);pIv=null;pState="idle";pPhase="work";pLeft=1500;document.getElementById("p-start").textContent="▶ Démarrer";pUpd();}
+
+// ===== SPORT =====
+const SPORT_PROG=[
+"Jour 1 — Haut du corps\n🔥 Échauffement 8 min\n• Tractions : 5 × max\n• Pompes : 5 × 20\n• Tractions supination : 4 × max\n• Gainage : 4 × 45 sec\n🥋 Grip JJB : suspension 3 × 30 sec",
+"Jour 2 — VMA course 30/30\n🔥 Échauffement 10 min\n⏱️ 30/30 × 8 tours (minuteur ci-dessus)\n🪨 Gainage 3 tours\n📌 Note tes tours → comparaison Jour 13",
+"Jour 3 — Vélo endurance\n🚴 30-40 min zone confortable\n• Squats : 4 × 20\n• Fentes marchées : 4 × 20 pas\n• Hip thrust : 3 × 15\n• Mollets : 3 × 25",
+"Jour 4 — Récup active\n🌿 Journée légère\n• 20 min vélo tranquille\n• Mobilité 15 min\n• Drilling JJB léger\n• Respiration 5 min",
+"Jour 5 — WOD AMRAP 16 min\n🔥 Échauffement 8 min\n⏱️ Max tours de :\n• 8 tractions\n• 12 pompes\n• 15 squats\n• 10 burpees\n📌 Note ton score → Jour 12",
+"Jour 6 — VMA vélo 30/15\n🔥 Échauffement 10 min\n⏱️ Sprints vélo 30/15 × 10\nDouble-unders 5 × 40 sec + hollow hold 4 × 25 sec",
+"Jour 7 — Repos complet\n😴 Dors 7-8 h\n💧 Bois bien (1.5-2 L)\n❌ Zéro alcool/cannabis\nOptionnel : 15 min étirements",
+"Jour 8 — Force haut du corps\n💪 Tempo lent, qualité\n• Tractions lestées : 5 × 5\n• Pompes diamant : 4 × 12\n• Tractions prise large : 4 × max\n🥋 Grip JJB : serviette 3 × 20 sec",
+"Jour 9 — Intervalles longs\n⏱️ 60/30 × 6 (minuteur)\n1 min soutenu / 30 sec footing\nGainage léger 3 tours",
+"Jour 10 — Explosivité + vélo\n• Squats sautés : 5 × 10\n• Fentes sautées : 4 × 10\n• Box jumps : 4 × 8\n• Chaise mur : 3 × 45 sec\n🚴 Finisher 10 min alternance",
+"Jour 11 — Récup active\n🌿 25 min vélo ou marche\nMobilité 15 min\nDrilling JJB léger\nDemain on tape fort.",
+"Jour 12 — WOD chrono (reteste J5)\n⏱️ Reprends l'AMRAP 16 min\nBats ton score du Jour 5 !\n📈 Compare : preuve de progression",
+"Jour 13 — Test VMA (reteste J2)\n⏱️ Test 30/30 × 10\nCompare au Jour 2 → ta VMA a progressé 🚀",
+"Jour 14 — Simulation compétition\n🏆 Jour final !\n3 tours le plus vite possible :\n• 10 tractions\n• 20 pompes\n• 20 squats\n• 12 burpees\n• 200 m course\n📊 Bilan + relance cycle plus dur"
+];
+function buildSportProg(){
+  const el=document.getElementById("sport-prog");if(!el)return;
+  el.innerHTML=SPORT_PROG.map((_,i)=>{const n=i+1,sel=n===curDay,done=DAYDONE[n];
+    return `<div class="s-day ${done?"done":""} ${sel?"cur":""}" onclick="pickDay(${n})">J${n}</div>`;
+  }).join("");
+}
+function pickDay(n){curDay=n;saveSport();buildSportProg();renderDay();}
+function renderDay(){
+  const d=SPORT_PROG[curDay-1];const done=DAYDONE[curDay];
+  document.getElementById("sport-day").innerHTML=`<div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">Jour ${curDay}</div><div class="fiche-c">${d}</div></div><button class="${done?"btn-sm":"btn"}" style="${done?"width:100%":""}" onclick="toggleDay()">${done?"✅ Fait — annuler":"✅ Marquer comme fait (+15 XP)"}</button>`;
+}
+function toggleDay(){
+  if(!DAYDONE[curDay]){DAYDONE[curDay]=true;XP+=15;saveXP();reward();toast("Séance validée ! +15 XP 💪");}else{delete DAYDONE[curDay];}
+  saveSport();buildSportProg();renderDay();buildDash();
+}
+
+// ===== MINUTEUR =====
+let tIv=null,tState="idle",tPhase="work",tRound=0,tLeft=0,tRounds=8,tWork=30,tRest=30;
+function say(txt){const v=document.getElementById("t-voice");if(v&&v.value!=="1")return;try{const u=new SpeechSynthesisUtterance(txt);u.lang="fr-FR";u.rate=1.05;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+function fmt(s){const m=Math.floor(s/60),x=s%60;return (m<10?"0":"")+m+":"+(x<10?"0":"")+x;}
+function tUpd(){
+  document.getElementById("t-display").textContent=fmt(tLeft);
+  const ph=document.getElementById("t-phase");ph.textContent=tPhase==="work"?"💥 EFFORT":"😮‍💨 REPOS";ph.style.color=tPhase==="work"?"var(--terra)":"var(--sage)";
+  document.getElementById("t-info").textContent="Tour "+tRound+" / "+tRounds;
+  const full=tPhase==="work"?tWork:tRest;
+  const bar=document.getElementById("t-bar");bar.style.width=(full>0?(100-tLeft/full*100):0)+"%";bar.style.background=tPhase==="work"?"var(--terra)":"var(--sage)";
+}
+function preset(w,r,n){tWork=w;tRest=r;tRounds=n;document.getElementById("t-work").value=w;document.getElementById("t-rest").value=r;document.getElementById("t-rounds").value=n;timerReset();}
+function timerStart(){
+  if(tState==="running")return;
+  if(tState==="idle"){tWork=parseInt(document.getElementById("t-work").value)||30;tRest=parseInt(document.getElementById("t-rest").value)||30;tRounds=parseInt(document.getElementById("t-rounds").value)||8;tRound=1;tPhase="work";tLeft=tWork;say("Tour 1. Effort !");}
+  else say("On reprend !");
+  tState="running";document.getElementById("t-start").textContent="▶ En cours…";
+  tUpd();tIv=setInterval(tick,1000);
+}
+function tick(){
+  tLeft--;if(tLeft>0&&tLeft<=3)say(String(tLeft));
+  if(tLeft<=0){
+    if(tPhase==="work"){if(tRound>=tRounds){finTim();return;}tPhase="rest";tLeft=tRest;say("Repos");}
+    else{tRound++;tPhase="work";tLeft=tWork;say("Tour "+tRound+". Effort !");}
+  }
+  tUpd();
+}
+function finTim(){clearInterval(tIv);tIv=null;tState="idle";document.getElementById("t-display").textContent="🏁";document.getElementById("t-phase").textContent="Terminé ! 💪";document.getElementById("t-start").textContent="▶ Démarrer";say("Terminé ! Bravo.");toast("Intervalles finis 🏁");}
+function timerPause(){if(tState==="running"){clearInterval(tIv);tIv=null;tState="paused";document.getElementById("t-start").textContent="▶ Reprendre";say("Pause");}}
+function timerReset(){clearInterval(tIv);tIv=null;tState="idle";tRound=0;tWork=parseInt(document.getElementById("t-work").value)||30;tRest=parseInt(document.getElementById("t-rest").value)||30;tRounds=parseInt(document.getElementById("t-rounds").value)||8;tPhase="work";tLeft=tWork;document.getElementById("t-start").textContent="▶ Go";tUpd();}
+
+// ===== FINANCES =====
+let REV=[{k:"Salaire net (après poursuites)",v:2204.60}];
+let CHG=[{k:"Loyer",v:600},{k:"Assurance maladie",v:350},{k:"Téléphone",v:49},{k:"Transports",v:80},{k:"Alimentation",v:91},{k:"Remboursement OP",v:1200}];
+function loadFin(){const sv=localStorage.getItem("fin_v2");if(sv){const o=JSON.parse(sv);REV=o.rev;CHG=o.chg;const bk=document.getElementById("bk-in");if(bk)bk.value=o.bk||900;}renderFin();}
+function renderFin(){
+  document.getElementById("rev-rows").innerHTML=REV.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" value="${r.v}" onchange="REV[${i}].v=parseFloat(this.value)||0;calcFin()"><button onclick="delRev(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:14px;flex-shrink:0">🗑️</button></div>`).join("");
+  document.getElementById("chg-rows").innerHTML=CHG.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" value="${r.v}" onchange="CHG[${i}].v=parseFloat(this.value)||0;calcFin()"><button onclick="delChg(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:14px;flex-shrink:0">🗑️</button></div>`).join("");
+  calcFin();
+}
+function addRev(){REV.push({k:"Nouveau revenu",v:0});renderFin();}
+function addChg(){CHG.push({k:"Nouvelle charge",v:0});renderFin();}
+function delRev(i){REV.splice(i,1);renderFin();}
+function delChg(i){CHG.splice(i,1);renderFin();}
+function calcFin(){
+  const tr=REV.reduce((s,r)=>s+r.v,0),tc=CHG.reduce((s,r)=>s+r.v,0),reste=tr-tc;
+  document.getElementById("t-rev").textContent=tr.toFixed(0)+" CHF";
+  document.getElementById("t-chg").textContent=tc.toFixed(0)+" CHF";
+  document.getElementById("t-reste").textContent=reste.toFixed(0)+" CHF";
+  const bar=document.getElementById("reste-bar"),box=document.getElementById("reste-box"),msg=document.getElementById("reste-msg");
+  const pct=tr>0?Math.max(0,Math.min(100,reste/tr*100)):0;bar.style.width=pct+"%";
+  if(reste<0){box.style.color="var(--red)";bar.style.background="var(--red)";msg.textContent="🚨 Tu dépenses plus que tu gagnes. Action prioritaire : 1 client coaching JJB cette semaine (+240 CHF).";}
+  else if(reste<300){box.style.color="var(--gold)";bar.style.background="var(--gold)";msg.textContent="⚠️ Serré. Objectif : 1 client coaching de plus. Pas d'achat impulsif ce mois.";}
+  else{box.style.color="var(--green)";bar.style.background="var(--sage)";msg.textContent="✅ Marge correcte. Mets "+Math.round(reste*.2)+" CHF de côté ce mois (20% du reste).";}
+  const bkEl=document.getElementById("bk-in");if(bkEl){const bk=parseFloat(bkEl.value)||0;const m=document.getElementById("bk-max");if(m)m.textContent=(bk*0.02).toFixed(2)+" CHF";}
+}
+document.getElementById("bk-in").addEventListener("input",calcFin);
+function saveFin(){const bk=parseFloat(document.getElementById("bk-in").value)||900;localStorage.setItem("fin_v2",JSON.stringify({rev:REV,chg:CHG,bk:bk}));toast("💾 Budget sauvegardé !");}
+
+// ===== TIKTOK STATS =====
+const IDEES=["Montre 1 technique JJB en 20 sec : entrée + finition. Sous-titre chaque étape.","Adapte un exercice boxe pour une personne en fauteuil. Montre que le sport est pour TOUS.","Ta routine journée d'apprenti ASE + sportif : 30 sec accélérée.","« 3 erreurs classiques en garde fermée » → 1 erreur = 1 plan.","Réponds à une question débutant : « Comment ne plus me faire étrangler ? »","Mindset : pourquoi tu te bats pour réussir. 1 phrase forte, regard caméra directement.","Démo échauffement 4 mouvements à faire à la maison, sans matériel.","« Ce que personne ne dit sur la compétition JJB » → ton vécu de champion d'Europe.","Mini-défi : tiens la planche 30 sec avec moi. Filme-toi.","Explication simple : c'est quoi le JJB, pourquoi c'est pour tout le monde.","1 exercice que tu fais pour ta VMA (cardio JJB). Explique pourquoi.","Ton asso sport-handicap : pourquoi tu la crées, quel problème tu résous."];
+const CK_ITEMS=["Les 3 premières secondes accrochent (pas d'intro)","Sous-titres activés","Vertical, lumière sur le visage","1 seule idée par vidéo","Appel à l'action à la fin"];
+function loadTikStats(){
+  const sv=localStorage.getItem("tik_v2");if(!sv)return;
+  const d=JSON.parse(sv);
+  document.getElementById("tik-ab").value=d.ab||"";document.getElementById("tik-vues").value=d.vues||"";document.getElementById("tik-likes").value=d.likes||"";document.getElementById("tik-last").value=d.last||"";
+  renderTikDash(d);
+}
+function saveTik(){
+  const d={ab:parseInt(document.getElementById("tik-ab").value)||0,vues:parseInt(document.getElementById("tik-vues").value)||0,likes:parseInt(document.getElementById("tik-likes").value)||0,last:parseInt(document.getElementById("tik-last").value)||0,date:today()};
+  localStorage.setItem("tik_v2",JSON.stringify(d));renderTikDash(d);toast("Stats TikTok sauvegardées ✅");}
+function renderTikDash(d){
+  const prog=d.ab<500?"→ Cap : 500 abonnés (premiers clients)":d.ab<1000?"→ Cap : 1000 (badge + partenariats)":d.ab<5000?"→ Cap : 5000 (partenaires asso)":"🎯 5000+ atteint ! Tu es une référence.";
+  const er=d.vues>0?((d.likes/d.vues)*100).toFixed(1)+"%":"—";
+  document.getElementById("tik-dashboard").innerHTML=`<div class="card-blue"><div class="title">📊 Mon tableau de bord TikTok</div><div class="sub">Mis à jour : ${d.date||"jamais"}</div><div class="stat-grid"><div class="stat-box"><div class="stat-v">${d.ab||0}</div><div class="stat-l">Abonnés</div></div><div class="stat-box"><div class="stat-v">${d.vues||0}</div><div class="stat-l">Vues</div></div><div class="stat-box"><div class="stat-v">${er}</div><div class="stat-l">Engage.</div></div></div><div class="note" style="margin-top:8px;color:var(--gold)">${prog}</div></div>`;
+}
+function newIdee(){document.getElementById("tik-idee").textContent=IDEES[Math.floor(Math.random()*IDEES.length)];}
+function buildChecklist(){document.getElementById("checklist").innerHTML=CK_ITEMS.map((c,i)=>{const k="ck_"+i,on=localStorage.getItem(k)==="1";return `<div class="row" onclick="toggleCK(${i})" style="cursor:pointer"><span style="font-size:13px">${c}</span><span style="font-size:20px">${on?"✅":"⬜"}</span></div>`;}).join("");}
+function toggleCK(i){const k="ck_"+i;localStorage.setItem(k,localStorage.getItem(k)==="1"?"0":"1");buildChecklist();}
+
+// ===== GARDE-FOUS =====
+let brIv=null,brOn=false,brStep=0,brCyc=0;
+const BR=[{t:"Inspire 🌬️",cls:"in",s:4},{t:"Retiens",cls:"",s:2},{t:"Expire 😮‍💨",cls:"out",s:6}];
+function breatheToggle(){if(brOn){brOn=false;clearTimeout(brIv);document.getElementById("br-btn").textContent="▶ Démarrer";document.getElementById("br-circle").className="breath-circle";document.getElementById("br-circle").textContent="Touche ▶";return;}brOn=true;brStep=0;brCyc=0;document.getElementById("br-btn").textContent="⏹ Arrêter";brTick();}
+function brTick(){if(!brOn)return;const ph=BR[brStep];const c=document.getElementById("br-circle");c.className="breath-circle "+ph.cls;c.textContent=ph.t;brIv=setTimeout(()=>{brStep++;if(brStep>=BR.length){brStep=0;brCyc++;}if(brCyc>=5){brOn=false;c.className="breath-circle";c.textContent="Bravo 💚";document.getElementById("br-btn").textContent="▶ Démarrer";toast("Respiration finie 💚 +5 XP");XP+=5;saveXP();buildDash();return;}brTick();},ph.s*1000);}
+function checkMise(){
+  const bk=parseFloat(document.getElementById("g-bk").value)||0;
+  const m=parseFloat(document.getElementById("g-mise").value)||0;
+  const r=document.getElementById("g-result");
+  if(!bk){r.innerHTML=`<div style="color:var(--gold);font-weight:700;font-size:14px;padding:10px">Saisis ta bankroll d'abord.</div>`;return;}
+  const max=bk*0.02;
+  if(m<=max)r.innerHTML=`<div style="background:#0a2a0a;border:1px solid var(--green);border-radius:12px;padding:12px;font-weight:800;color:var(--green);font-size:15px;text-align:center">✅ OK — Max conseillé : ${max.toFixed(2)} CHF</div>`;
+  else r.innerHTML=`<div style="background:#2a0a0a;border:1px solid var(--red);border-radius:12px;padding:12px;font-weight:800;color:var(--red);font-size:15px;text-align:center">⚠️ Trop élevé — Reste sous ${max.toFixed(2)} CHF</div>`;
+}
+
+// ===== ACCORDION =====
+function tog(id){const el=document.getElementById(id);if(el)el.classList.toggle("on");}
+
+// ===== SCROLL TOP =====
+window.addEventListener("scroll",()=>{const b=document.getElementById("scrolltop");if(b)b.style.display=window.scrollY>300?"flex":"none";});
+
+// ===== INIT =====
+buildCompChips();renderComp();
+buildJeuChips();setJeu("quiz");
+buildSportProg();renderDay();
+timerReset();
+pomoReset();
+buildActs();
+buildMoods();
+buildTip();
+buildQuickTopics();
+loadFin();
+loadTikStats();
+newIdee();
+buildChecklist();
+buildDash();
+</script>
+</body>
+</html>

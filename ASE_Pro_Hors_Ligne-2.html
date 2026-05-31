@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ASE Pro">
+<title>ASE Pro — CFC Révisions Complètes</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0c1220;--card:#111c2e;--bd:#1e3050;--gold:#e8b84b;--green:#22c55e;--red:#f87171;--purple:#a78bfa;--ink:#e8e4df;--mu:#5a6a7a;--sub:#778899}
+  body{background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;max-width:480px;margin:0 auto;padding-bottom:72px;min-height:100vh}
+  /* NAV */
+  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:1px solid var(--bd);display:flex;z-index:99}
+  .nb{flex:1;padding:11px 4px 9px;border:none;background:none;color:var(--sub);font-size:10px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .nb.on{color:var(--gold);font-weight:700}
+  .nb .ic{font-size:18px}
+  /* HEADER */
+  .hdr{padding:26px 16px 12px;border-bottom:1px solid var(--bd);margin-bottom:14px}
+  .ht{font-size:21px;font-weight:700;color:var(--gold)}
+  .hs{font-size:11px;color:var(--sub);margin-top:3px}
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:11px}
+  .card-gold{background:linear-gradient(135deg,#1a1208,#241a08);border:1px solid #e8b84b33;border-radius:14px;padding:15px;margin-bottom:11px}
+  .card-green{background:linear-gradient(135deg,#051808,#0a2810);border:1px solid #22c55e33;border-radius:14px;padding:15px;margin-bottom:11px}
+  /* PAD */
+  .pad{padding:0 16px}
+  /* ROWS */
+  .row{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;background:#1a2840;border-radius:9px;margin-bottom:5px}
+  /* INPUTS */
+  input{background:#1a2840;border:1px solid var(--bd);border-radius:8px;color:var(--ink);padding:8px 11px;font-size:14px;font-family:inherit;outline:none;width:100%}
+  /* BUTTONS */
+  .btn-gold{background:var(--gold);color:#0c1220;border:none;border-radius:9px;padding:9px 18px;font-weight:700;font-family:inherit;cursor:pointer;font-size:13px}
+  .btn-sm{background:#1e3050;color:var(--ink);border:none;border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+  .btn-ico{background:none;border:none;color:var(--mu);cursor:pointer;font-size:15px;padding:3px 6px}
+  /* BARS */
+  .bar-bg{height:7px;background:#1a2840;border-radius:4px;overflow:hidden;margin-top:6px}
+  .bar-fill{height:100%;border-radius:4px;transition:width .5s}
+  /* TAGS */
+  .tag{display:inline-block;border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700}
+  /* GRID */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  /* DIVIDER */
+  .div{height:1px;background:var(--bd);margin:11px 0}
+  /* SCREENS */
+  .screen{display:none}
+  .screen.on{display:block}
+  /* ARABIC */
+  .arabic{font-size:20px;line-height:1.9;text-align:right;direction:rtl;color:var(--gold);font-family:'Amiri',Georgia,serif;margin-bottom:12px}
+  /* COMP BUTTONS */
+  .comp-btn{border-radius:20px;padding:5px 11px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:400;margin:3px;transition:all .2s}
+  /* QUIZ */
+  .ans-box{background:#0d1e10;border:1px solid #22c55e55;border-radius:10px;padding:12px;font-size:14px;line-height:1.75;color:#b8f5c8;white-space:pre-line;display:none}
+  .fiche-content{font-size:14px;line-height:1.85;color:#d4cfc9;white-space:pre-line}
+  /* HADITH */
+  .hadith-item{cursor:pointer;border-radius:12px;padding:12px 14px;margin-bottom:8px;background:var(--card);border:1px solid var(--bd);transition:border-color .2s}
+  .hadith-item.on{border-color:#e8b84b66}
+  /* IDEA */
+  .idea-card{cursor:pointer;border-radius:12px;padding:13px;margin-bottom:9px;background:var(--card);border:1px solid var(--bd)}
+  .idea-body{margin-top:10px;background:#1a2840;border-radius:9px;padding:11px;font-size:14px;line-height:1.75;color:#b8c8d8;display:none}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="ht" id="pg-title">📚 Révisions CFC ASE</div>
+  <div class="hs" id="pg-sub">11 compétences · 38 questions · Careum + Savoir Social</div>
+</div>
+
+<!-- ═══ RÉVISION ═══ -->
+<div id="sc-revision" class="screen on">
+  <div class="pad">
+    <!-- Sélecteur compétences -->
+    <div id="comp-btns" style="flex-wrap:wrap;display:flex;margin-bottom:12px"></div>
+    <!-- Carte compétence -->
+    <div class="card-gold" id="comp-card" style="border-color:#4f46e555">
+      <div style="font-size:17px;font-weight:700;color:var(--gold);margin-bottom:4px" id="comp-title">Chargement...</div>
+      <div style="font-size:11px;color:var(--sub);font-style:italic;margin-bottom:12px" id="comp-source"></div>
+      <div class="g2">
+        <button class="btn-gold" onclick="showFiches()">📖 Voir les fiches</button>
+        <button class="btn-sm" style="padding:9px;font-size:13px;font-weight:700" id="btn-quiz-c" onclick="startQuizComp()">🧠 Quiz compétence</button>
+      </div>
+    </div>
+    <!-- Liste fiches -->
+    <div id="fiche-list"></div>
+    <!-- Fiche détail -->
+    <div id="fiche-detail" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <button class="btn-sm" onclick="hideFiche()">← Retour</button>
+        <span style="font-size:12px;color:var(--sub)" id="fiche-nav-label"></span>
+      </div>
+      <div class="card-gold">
+        <div style="font-size:11px;color:#e8b84b66;letter-spacing:.08em;margin-bottom:8px" id="fiche-meta"></div>
+        <div style="font-size:16px;font-weight:700;color:var(--gold);margin-bottom:12px" id="fiche-titre"></div>
+        <div class="fiche-content" id="fiche-corps"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+        <button class="btn-sm" id="btn-f-prev" onclick="navFiche(-1)">← Préc.</button>
+        <button class="btn-sm" id="btn-f-next" onclick="navFiche(1)">Suiv. →</button>
+      </div>
+    </div>
+    <!-- Quiz -->
+    <div id="quiz-panel" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <button class="btn-sm" onclick="hideQuiz()">← Retour</button>
+        <span class="tag" style="background:#e8b84b22;color:var(--gold);border:1px solid #e8b84b44" id="quiz-score">Score: 0/0</span>
+      </div>
+      <div class="card-gold">
+        <div style="font-size:11px;color:var(--sub);margin-bottom:8px" id="q-meta"></div>
+        <div style="font-size:15px;font-weight:700;line-height:1.65;margin-bottom:14px" id="q-text"></div>
+        <button class="btn-gold" id="btn-voir" onclick="toggleRep()">Voir la réponse</button>
+        <div class="ans-box" id="q-rep"></div>
+        <div style="display:flex;gap:10px;margin-top:12px;display:none" id="q-btns">
+          <button class="btn-sm" style="flex:1;background:#22c55e33" onclick="nextQ(true)">✓ Je savais</button>
+          <button class="btn-sm" style="flex:1;background:#f8717133" onclick="nextQ(false)">✗ À revoir</button>
+        </div>
+      </div>
+    </div>
+    <!-- Quiz global -->
+    <div class="card-gold" style="margin-top:8px" id="quiz-global-btn">
+      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px">🧠 Quiz Global — Toutes compétences</div>
+      <div style="font-size:13px;color:var(--sub);margin-bottom:10px" id="total-q-count"></div>
+      <button class="btn-gold" onclick="startQuizGlobal()">Lancer le quiz complet →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BUDGET ═══ -->
+<div id="sc-budget" class="screen">
+  <div class="pad">
+    <!-- Résumé -->
+    <div class="card-gold" id="budget-summary"></div>
+    <!-- Revenus -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:14px;font-weight:700;color:var(--green)">📥 Revenus</span>
+        <button class="btn-sm" style="background:#22c55e33" onclick="toggleForm('form-rev')">+ Ajouter</button>
+      </div>
+      <div id="rev-list"></div>
+      <div id="form-rev" style="display:none;background:#1a2840;border-radius:9px;padding:10px;margin-top:8px">
+        <input id="nr-l" placeholder="Nom du revenu..." style="margin-bottom:5px">
+        <div style="display:flex;gap:5px">
+          <input id="nr-a" type="number" placeholder="CHF" style="flex:1">
+          <button class="btn-sm" style="background:var(--green)" onclick="addRev()">✓</button>
+          <button class="btn-sm" onclick="toggleForm('form-rev')">✕</button>
+        </div>
+      </div>
+    </div>
+    <!-- Charges -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:14px;font-weight:700;color:var(--red)">📤 Charges fixes</span>
+        <button class="btn-sm" style="background:#f8717133" onclick="toggleForm('form-chg')">+ Ajouter</button>
+      </div>
+      <div id="chg-list"></div>
+      <div id="form-chg" style="display:none;background:#1a2840;border-radius:9px;padding:10px;margin-top:8px">
+        <input id="nc-l" placeholder="Nom de la charge..." style="margin-bottom:5px">
+        <div style="display:flex;gap:5px">
+          <input id="nc-a" type="number" placeholder="CHF" style="flex:1">
+          <button class="btn-sm" style="background:var(--red)" onclick="addChg()">✓</button>
+          <button class="btn-sm" onclick="toggleForm('form-chg')">✕</button>
+        </div>
+      </div>
+    </div>
+    <!-- Objectifs -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:14px;font-weight:700;color:var(--purple)">🎯 Objectifs épargne</span>
+        <button class="btn-sm" style="background:#a78bfa33" onclick="toggleForm('form-goal')">+ Ajouter</button>
+      </div>
+      <div id="goal-list"></div>
+      <div id="form-goal" style="display:none;background:#1a2840;border-radius:9px;padding:10px;margin-top:8px">
+        <input id="ng-l" placeholder="Objectif (ex: Fonds urgence)" style="margin-bottom:5px">
+        <div style="display:flex;gap:5px">
+          <input id="ng-t" type="number" placeholder="Montant CHF" style="flex:1">
+          <button class="btn-sm" style="background:var(--purple)" onclick="addGoal()">✓</button>
+          <button class="btn-sm" onclick="toggleForm('form-goal')">✕</button>
+        </div>
+      </div>
+    </div>
+    <!-- Calculateur -->
+    <div class="card-gold">
+      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px">🧮 Calculateur intérêts composés</div>
+      <label style="font-size:11px;color:var(--sub);display:block;margin-bottom:4px">Épargne mensuelle (CHF)</label>
+      <input type="number" id="calc-m" value="200" oninput="calcCompound()" style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--sub);display:block;margin-bottom:4px">Rendement annuel (%)</label>
+      <input type="number" id="calc-r" value="7" step="0.5" oninput="calcCompound()" style="margin-bottom:8px">
+      <label style="font-size:11px;color:var(--sub);display:block;margin-bottom:4px">Durée (années)</label>
+      <input type="number" id="calc-d" value="10" oninput="calcCompound()" style="margin-bottom:12px">
+      <div style="background:#0c1220;border-radius:12px;padding:14px;text-align:center">
+        <div class="g2">
+          <div><div style="font-size:11px;color:var(--sub);margin-bottom:3px">Capital final</div><div style="font-size:22px;font-weight:700;color:var(--green)" id="calc-total">0 CHF</div></div>
+          <div><div style="font-size:11px;color:var(--sub);margin-bottom:3px">Intérêts gagnés</div><div style="font-size:22px;font-weight:700;color:var(--gold)" id="calc-int">0 CHF</div></div>
+        </div>
+        <div style="font-size:12px;color:var(--sub);margin-top:10px;line-height:1.6" id="calc-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HADITH ═══ -->
+<div id="sc-hadith" class="screen">
+  <div class="pad">
+    <div class="card-gold" id="hadith-big"></div>
+    <div style="font-size:13px;color:var(--gold);font-weight:700;margin-bottom:10px" id="hadith-list-title"></div>
+    <div id="hadith-list"></div>
+  </div>
+</div>
+
+<!-- ═══ RICHESSE ═══ -->
+<div id="sc-richesse" class="screen">
+  <div class="pad">
+    <div style="font-size:13px;color:var(--sub);margin-bottom:12px;font-style:italic" id="richesse-count"></div>
+    <div id="idea-list"></div>
+    <div style="font-size:13px;color:var(--gold);font-weight:700;margin:14px 0 10px">💬 Citations des riches</div>
+    <div id="citations-list"></div>
+    <!-- Roadmap -->
+    <div class="card-gold" style="margin-top:6px">
+      <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px">🗺️ Ta roadmap financière — Élie</div>
+      <div id="roadmap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nb on" onclick="goTab('revision',this)" id="nt-revision"><span class="ic">📚</span>Révision</button>
+  <button class="nb" onclick="goTab('budget',this)" id="nt-budget"><span class="ic">💶</span>Budget</button>
+  <button class="nb" onclick="goTab('hadith',this)" id="nt-hadith"><span class="ic">📖</span>Hadith</button>
+  <button class="nb" onclick="goTab('richesse',this)" id="nt-richesse"><span class="ic">💡</span>Richesse</button>
+</nav>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// DONNÉES COMPLÈTES
+// ══════════════════════════════════════════════════════════════════
+const COMPETENCES = [
+  {id:"A1",label:"A1 — Rôle professionnel",emoji:"👔",couleur:"#4f46e5",
+   source:"Careum A pp.21-25, 56-61, 78-81, 90-98, 102-114 · Champ test A1 CFPSo",
+   fiches:[
+    {titre:"Importance du métier d'ASE (pp.21-25)",contenu:"L'ASE soutient les PA dans leur vie quotidienne, favorise leur autonomie et développement.\nIl travaille en EMS, foyers, structures pour adultes handicapés, UAPE.\nRôle intermédiaire entre soins et éducation — compétences transversales essentielles."},
+    {titre:"Conflits de rôle (pp.90-98)",contenu:"Conflit INTRA-rôle : attentes contradictoires au sein du même rôle (la PA veut X, l'institution veut Y).\nConflit INTER-rôle : tensions entre différents rôles joués simultanément (ASE + parent + citoyen).\nGestion : clarifier les priorités, supervision, CNV, consulter le responsable."},
+    {titre:"Droits et devoirs de l'ASE (pp.56-61)",contenu:"DROITS : salaire conforme OrTra, 5 semaines vacances, encadrement FPP, formation continue, conditions de travail dignes.\nDEVOIRS : ponctualité, discrétion, secret professionnel, respect des protocoles, documentation rigoureuse."},
+    {titre:"Secret professionnel et données (pp.78-81)",contenu:"CP art. 321 — obligation légale de discrétion.\nEXCEPTIONS : danger grave et imminent, accord de la personne, autorisation d'autorité.\nLPD : données PA = confidentielles, accès restreint, conservation limitée.\nNe jamais partager avec famille ou tiers sans accord."},
+    {titre:"Stress — définition et phases (pp.102-109)",contenu:"Eustress (positif) vs Distress (négatif).\nPhases (Selye) : 1. Alarme → 2. Résistance → 3. Épuisement.\nSignes : irritabilité, fatigue, erreurs, troubles du sommeil, maux de tête.\nFacteurs : charge de travail, conflits, manque de reconnaissance."},
+    {titre:"Burn-out — symptômes et prévention (pp.109-114)",contenu:"3 dimensions : épuisement émotionnel + dépersonnalisation + baisse du sentiment d'efficacité.\nPrévention : supervision, groupes d'intervision, activité physique, séparation vie pro/privée, parler à temps."},
+   ],
+   questions:[
+    {q:"Quels sont les 2 types de conflits de rôle de l'ASE ?",r:"Conflit INTRA-rôle (attentes contradictoires dans le même rôle) et conflit INTER-rôle (tensions entre différents rôles joués simultanément). Source: Careum A pp.90-98."},
+    {q:"Citez 3 exceptions légales au secret professionnel (CP art.321).",r:"1. Danger grave et imminent pour la PA ou des tiers.\n2. Accord de la personne concernée.\n3. Autorisation d'une autorité supérieure (APEA, direction)."},
+    {q:"Quelles sont les 3 phases du stress selon Selye ?",r:"1. Phase d'alarme → 2. Phase de résistance → 3. Phase d'épuisement.\nLe burn-out survient quand on reste trop longtemps en phase d'épuisement."},
+    {q:"Quelles sont les 3 dimensions du burn-out ?",r:"1. Épuisement émotionnel.\n2. Dépersonnalisation (cynisme, détachement).\n3. Baisse du sentiment d'efficacité personnelle."},
+   ]},
+  {id:"A4",label:"A4 — Communication",emoji:"💬",couleur:"#0891b2",
+   source:"Careum A pp.234-243 · Champ examen Bloc 3 CFPSo",
+   fiches:[
+    {titre:"Modèles de communication (pp.234-238)",contenu:"UNIDIRECTIONNEL : Émetteur → Message → Récepteur. Sans retour. Risque de malentendu non corrigé.\nBIDIRECTIONNEL : Émetteur ⇄ Récepteur. Avec feedback. Permet de vérifier la compréhension."},
+    {titre:"5 Axiomes de Watzlawick (pp.238-240)",contenu:"1. On ne peut PAS ne pas communiquer (même le silence est un message).\n2. Tout message a un CONTENU + une RELATION (comment on dit > ce qu'on dit).\n3. La nature d'une relation dépend de la ponctuation des séquences.\n4. Communication digitale (mots) + analogique (gestes, ton) sont complémentaires.\n5. La communication est symétrique (égaux) ou complémentaire (hiérarchique)."},
+    {titre:"Fonctions et éléments d'influence (pp.238-243)",contenu:"FONCTIONS : informer, convaincre, créer un lien, réguler, exprimer des émotions.\nÉLÉMENTS D'INFLUENCE : distance interpersonnelle, posture, regard, gestes, voix, ton, débit, intonation."},
+    {titre:"CNV — Communication Non Violente (Rosenberg 1999)",contenu:"4 étapes :\n1. OBSERVATION neutre (sans jugement) : 'J'ai constaté que...'\n2. SENTIMENT ressenti : 'Je me sens...'\n3. BESOIN sous-jacent : '...parce que j'ai besoin de...'\n4. DEMANDE concrète et positive : 'Pourrais-tu...' (accepte un non).\nMessage JE : 'Je me sens frustré quand tu arrives en retard, car j'ai besoin de ponctualité.'"},
+    {titre:"Écoute active — 4 techniques + Rogers",contenu:"A = Attention (contact visuel, posture ouverte, hochements, 'hm').\nB = Paraphraser (reformuler pour vérifier la compréhension).\nC = Verbaliser (nommer les émotions : 'Tu sembles triste').\nD = Questionner (question ouverte pour plus d'informations).\n\n3 conditions de Rogers :\n1. CONGRUENCE (authenticité).\n2. EMPATHIE (comprendre sans juger).\n3. CONSIDÉRATION POSITIVE INCONDITIONNELLE."},
+   ],
+   questions:[
+    {q:"Citez les 5 axiomes de Watzlawick.",r:"1. On ne peut pas ne pas communiquer.\n2. Contenu + relation.\n3. Ponctuation des séquences.\n4. Digital + analogique.\n5. Symétrique ou complémentaire. Source: Careum A pp.238-240."},
+    {q:"Quelles sont les 4 étapes de la CNV de Rosenberg ?",r:"1. Observation neutre.\n2. Sentiment ressenti.\n3. Besoin sous-jacent.\n4. Demande concrète et positive (qui accepte un non). Source: Rosenberg 1999."},
+    {q:"Quelles sont les 3 conditions de Carl Rogers pour la relation d'aide ?",r:"1. Congruence (authenticité).\n2. Empathie (comprendre sans juger).\n3. Considération positive inconditionnelle (accepter la PA telle qu'elle est)."},
+   ]},
+  {id:"B1-B2",label:"B1-B2 — Planification",emoji:"📋",couleur:"#059669",
+   source:"Careum B pp.12-24 · Fiche pédagogique CFPSo 2025 (B1 = 8 cours, janv-mars 2025)",
+   fiches:[
+    {titre:"B1 — Planifier son travail (b1.1.1, b1.1.2)",contenu:"L'ASE planifie ses tâches et les activités du groupe en concertation avec l'équipe.\nIl inclut les PA et les informe de manière adéquate.\nIl assume la responsabilité des tâches déléguées.\nRéférence : Careum B pages 12-24."},
+    {titre:"L'escalier à 6 marches (OUTIL CENTRAL de l'examen !)",contenu:"1. BILAN DU GROUPE : situation actuelle, besoins collectifs.\n2. OBJECTIFS : ce qu'on veut atteindre (SMART).\n3. PLANIFICATION : qui fait quoi, quand, comment, avec quels moyens.\n4. RÉALISATION : mise en œuvre concrète.\n5. ÉVALUATION : les objectifs ont-ils été atteints ?\n6. RÉFLEXION PERSONNELLE : qu'est-ce que j'apprends sur moi-même ?"},
+    {titre:"Formulation d'objectifs SMART (b1.1.2)",contenu:"S = Spécifique (quoi, qui, où exactement)\nM = Mesurable (comment savoir si c'est atteint ?)\nA = Atteignable (réaliste pour la PA)\nR = Relevant/pertinent (lien avec les besoins réels)\nT = Temporel (délai précis)\nExemple : 'D'ici vendredi, M. X sera capable de préparer seul son café du matin.'"},
+    {titre:"Rituels et rythme quotidien",contenu:"5 FONCTIONS des rituels : Sécurité (prévisibilité), Appartenance (groupe), Structuration du temps, Transmission des valeurs, Marquage des transitions.\nRYTHME adapté TDAH : activités courtes (15-20 min), pauses planifiées, transitions annoncées 5 min avant."},
+    {titre:"B2 — Activités inclusives",contenu:"Rôles adaptés à chaque PA selon ses capacités.\nEx : jardinage = PA valide creuse, PA en fauteuil sème, PA avec troubles cognitifs arrose.\nPrincipes : valorisation (Maslow — estime), CDPH Art.3 (autodétermination)."},
+   ],
+   questions:[
+    {q:"Citez les 6 marches de l'escalier de planification.",r:"1. Bilan du groupe → 2. Objectifs → 3. Planification → 4. Réalisation → 5. Évaluation → 6. Réflexion personnelle. Source: Careum B pp.21-23."},
+    {q:"Que signifie SMART pour la formulation d'objectifs ?",r:"S=Spécifique, M=Mesurable, A=Atteignable, R=Relevant (pertinent), T=Temporel (avec délai). Source: Careum B1, b1.1.2."},
+    {q:"Quelles sont les 5 fonctions des rituels en institution ?",r:"Sécurité (prévisibilité), Appartenance (groupe), Structuration du temps, Transmission des valeurs, Marquage des transitions."},
+   ]},
+  {id:"B3/B6",label:"B3/B6 — Repas & Alimentation",emoji:"🍽️",couleur:"#d97706",
+   source:"Careum B pp.160-183 · Champ évaluation B6 (b6.6.1, b6.4.1, b6.6.2)",
+   fiches:[
+    {titre:"Pyramide alimentaire suisse (OSAV/SSN)",contenu:"Niveau 1 — BASE : Boissons : 1-2 litres d'eau/jour.\nNiveau 2 : Légumes et fruits : 5 portions/jour.\nNiveau 3 : Féculents (pain, riz, pâtes) — énergie principale.\nNiveau 4 : Produits laitiers — 3 portions/jour — calcium.\nNiveau 5 : Protéines (viandes, poissons, légumineuses) — 1-2 portions/jour.\nNiveau 6 — SOMMET : Graisses et sucreries — avec modération."},
+    {titre:"Notions de base de la diététique (b6.6.1, pp.160-183)",contenu:"Macronutriments : glucides (énergie), lipides (énergie + vitamines), protéines (construction).\nMicronutriments : vitamines, minéraux, oligo-éléments.\nDénutrition : perte >5% poids en 1 mois → signaler l'infirmière, peser régulièrement, documenter."},
+    {titre:"Pathologies alimentaires (b6.6.2)",contenu:"DIABÈTE : contrôle des glucides, sucres simples limités, repas réguliers.\nDYSPHAGIE : difficulté à avaler → texture IDDSI prescrite par orthophoniste. Signes fausse route : toux, voix mouillée.\nALLERGIE ARACHIDES : urgence anaphylaxie → EpiPen → 144. Protocole strict.\nHALAL/KASHER : pas de porc, viande bénie selon rites."},
+    {titre:"Moyens auxiliaires pour la prise de repas (b6.4.1)",contenu:"• Assiettes à rebord incliné.\n• Couverts adaptés (manches épais, légers, coudés).\n• Verre à encoche nasale (boire sans incliner la tête).\n• Protège-vêtement (tablier) — préserver la dignité.\n• Table réglable en hauteur (fauteuil roulant).\n• Porte-assiette antidérapant."},
+   ],
+   questions:[
+    {q:"Quels sont les objectifs évalués du champ B6 ?",r:"b6.6.1 : notions de base de la diététique. b6.4.1 : utilisation des moyens auxiliaires. b6.6.2 : pathologies spécifiques comme les allergies. Source: Careum B pp.160-183."},
+    {q:"Qu'est-ce que la dysphagie et comment l'ASE la gère-t-il ?",r:"Difficulté à avaler. Texture IDDSI prescrite par orthophoniste. ASE : respecter la texture, surveiller (toux, voix mouillée = fausse route), ne jamais modifier sans prescription."},
+    {q:"Citez 3 moyens auxiliaires pour la prise de repas.",r:"Assiettes à rebord incliné, couverts adaptés (manches épais/coudés), verre à encoche nasale, porte-assiette antidérapant. Source: Careum B6, b6.4.1."},
+   ]},
+  {id:"B8",label:"B8 — Hygiène corporelle",emoji:"🚿",couleur:"#7c3aed",
+   source:"Careum B pp.287-322 · Classification NPUAP/EPUAP 2019",
+   fiches:[
+    {titre:"7 principes de la toilette respectueuse",contenu:"1. FRAPPER + ANNONCER (intimité et dignité).\n2. EXPLIQUER chaque geste : 'Je vais maintenant vous laver le dos'.\n3. DEMANDER L'ACCORD à chaque étape (CDPH Art.3).\n4. COUVRIR les parties non lavées (pudeur + chaleur).\n5. RESPECTER LE RYTHME — la PA fixe le rythme.\n6. PRÉSERVER LA CHALEUR (eau à bonne T°, serviettes chaudes).\n7. DOCUMENTER toute anomalie cutanée → transmission infirmière."},
+    {titre:"Escarre — Classification NPUAP/EPUAP 2019",contenu:"STADE 1 : Rougeur persistante qui NE BLANCHIT PAS à la pression 3 sec sur peau intacte → URGENT !\nSTADE 2 : Ampoule ou abrasion superficielle.\nSTADE 3 : Cratère sans atteinte du fascia.\nSTADE 4 : Atteinte os, tendons, muscles — très grave.\nACTION ASE : documenter (localisation, diamètre), transmettre IMMÉDIATEMENT à l'infirmière, repositionner. NE JAMAIS MASSER une escarre !"},
+    {titre:"Soins bucco-dentaires + ongles",contenu:"Brossage 2x/jour (brosse souple + dentifrice fluoré).\nProthèse dentaire : retirer la nuit, verre d'eau + pastille effervescente.\nSignaler : saignements gingivaux, aphtes, douleurs, difficultés à mâcher.\nOngles pieds : JAMAIS couper si PA diabétique ou artériopathe → infirmière ou pédicure."},
+   ],
+   questions:[
+    {q:"Quels sont les 7 principes de la toilette respectueuse ?",r:"1. Frapper+annoncer. 2. Expliquer chaque geste. 3. Demander l'accord. 4. Couvrir parties non lavées. 5. Respecter le rythme. 6. Préserver la chaleur. 7. Documenter les anomalies. Source: Careum B8."},
+    {q:"Comment reconnaître une escarre stade 1 et quelle est l'action ASE ?",r:"Rougeur persistante qui NE BLANCHIT PAS à la pression 3 sec. Action : documenter (localisation, taille), transmettre IMMÉDIATEMENT à l'infirmière, repositionner. NE JAMAIS MASSER. Source: NPUAP/EPUAP 2019."},
+   ]},
+  {id:"B9",label:"B9 — Urgences & Médicaments",emoji:"🚨",couleur:"#dc2626",
+   source:"Careum B pp.287-322 · Champ évaluation B9 (b9.6.1, b9.3.1)",
+   fiches:[
+    {titre:"Protocole urgence — ABCDE",contenu:"A = Airway : voies aériennes libres ? (parle = OK)\nB = Breathing : respiration présente et efficace ?\nC = Circulation : pouls, saignement, coloration ?\nD = Disability : conscience — AVPU (Alert/Voice/Pain/Unresponsive)\nE = Exposure : examen tête-pieds, température, signes externes"},
+    {titre:"Numéros d'urgence suisses",contenu:"144 = Ambulance (urgence médicale)\n117 = Police\n118 = Pompiers\n143 = La Main Tendue (détresse psychologique)\n147 = Pro Juventute (jeunes en crise)\n112 = Numéro européen universel\n→ Évaluer ABCDE AVANT d'appeler pour donner les bonnes infos."},
+    {titre:"Médicaments — 5 droits (b9.3.1, pp.287-322)",contenu:"1. Bon MÉDICAMENT\n2. Bonne PERSONNE\n3. Bonne DOSE\n4. Bonne VOIE (orale, sublinguale, rectale, patch, injectable)\n5. Bon MOMENT\nRôle ASE : donner STRICTEMENT selon ordonnance. JAMAIS modifier dose/heure sans prescription.\nErreur médicamenteuse : SIGNALER immédiatement à l'infirmière, documenter."},
+    {titre:"Tableaux cliniques — lecture (b9.6.1)",contenu:"Lire les effets secondaires, contre-indications, interactions médicamenteuses.\nSurveiller l'apparition de signes anormaux après prise.\nErreur médicamenteuse : signaler immédiatement, ne pas attendre."},
+    {titre:"Manœuvre de Heimlich (étouffement)",contenu:"Indication : PA ne peut plus tousser/parler — corps étranger obstruant.\n5 CLAQUES dorsales vigoureuses entre les omoplates.\n5 COMPRESSIONS abdominales (poings sous le sternum, vers l'intérieur et le haut).\nAlterner jusqu'à expulsion ou perte de connaissance → RCP.\nFemme enceinte / obèse : compressions THORACIQUES. Source: ILCOR 2021."},
+   ],
+   questions:[
+    {q:"Que signifie ABCDE dans l'évaluation d'urgence ?",r:"A=Airway (voies aériennes), B=Breathing (respiration), C=Circulation (pouls/saignement), D=Disability (conscience AVPU), E=Exposure (examen tête-pieds). Source: protocole PSC1."},
+    {q:"Quels sont les 5 droits pour l'administration de médicaments ?",r:"Bon médicament, bonne personne, bonne dose, bonne voie, bon moment. Source: Careum B pp.287-322, b9.3.1."},
+    {q:"Que faire face à un étouffement (Heimlich) ?",r:"5 claques dorsales entre les omoplates, puis 5 compressions abdominales sous le sternum. Alterner jusqu'à expulsion. Si inconscient → RCP. Femme enceinte/obèse → compressions thoraciques. Source: ILCOR 2021."},
+   ]},
+  {id:"C1",label:"C1 — Participation (Schröder)",emoji:"🤲",couleur:"#0d9488",
+   source:"CareumC_Revision_ASE.docx (CFPSo Genève) · Careum C1 chap.1.2 · Schröder 2010",
+   fiches:[
+    {titre:"Définition et 3 composantes (Careum C1 p.4)",contenu:"La participation = implication d'une personne dans sa propre vie et dans la société.\n3 composantes :\n• ACCÈS (access) : pouvoir accéder à des ressources, activités, lieux.\n• CONTRIBUTION (take part in) : pouvoir apporter quelque chose, participer activement.\n• APPARTENANCE (membership) : faire partie d'un groupe, d'une communauté.\n⚠️ Participation ≠ activité ! Un résident qui fait un puzzle seul PARTICIPE si c'est son CHOIX. Si imposé → pas de participation."},
+    {titre:"9 niveaux de Schröder — INCONTOURNABLE",contenu:"❌ NON-PARTICIPATION :\n1. Détermination par autrui — PA n'a aucun pouvoir.\n2. Décoration — PA semble décider mais sans les infos nécessaires.\n3. Symbolique — avis sans poids réel.\n⚠️ PARTICIPATION PARTIELLE :\n4. Implication — informée APRÈS décision.\n5. Dépendant mais informé — informée AVANT, sans influence réelle.\n✅ VRAIE PARTICIPATION :\n6. Contribution — consultée, peut critiquer.\n7. Cogestion — décisions ENSEMBLE, PA coresponsable.\n✅ AUTONOMIE COMPLÈTE :\n8. Autodétermination — PA décide, ASE soutient uniquement.\n9. Autogestion — PA décide et informe seulement l'ASE."},
+    {titre:"5 conditions pour la participation",contenu:"A. Relation d'égal à égal (la PA est experte de sa propre vie).\nB. Ressources disponibles (temps, espace, matériel, information).\nC. Compétences valorisées (les capacités de la PA sont reconnues).\nD. Droit à l'erreur (la PA peut essayer et se tromper).\nE. Liberté de refus (la PA peut refuser sans conséquences)."},
+    {titre:"Question type examen — identifier le niveau",contenu:"SITUATION : La directrice promet aux résidents de 'voir ce qu'elle peut changer' concernant le menu, mais décide finalement seule.\n\n→ NIVEAU 5 'Dépendant mais informé' : les résidents sont informés qu'une décision sera prise mais n'ont aucun pouvoir réel.\nPour améliorer → niveau 7 (cogestion) : réunion de vote sur le menu.\n\nSource: Careum C1, Tab.1 Schröder 2010."},
+   ],
+   questions:[
+    {q:"Quelles sont les 3 composantes de la participation selon Careum C1 ?",r:"Accès (access) : pouvoir accéder aux ressources/lieux. Contribution (take part in) : participer activement. Appartenance (membership) : faire partie d'une communauté. Source: Careum C1 p.4."},
+    {q:"Décrivez les niveaux 1, 5, 7 et 9 de Schröder.",r:"Niveau 1 : détermination par autrui (PA sans pouvoir). Niveau 5 : dépendant mais informé (informée avant, sans influence). Niveau 7 : cogestion (décisions ensemble). Niveau 9 : autogestion (PA décide seule, informe l'ASE). Source: Tab.1 Schröder 2010."},
+    {q:"Un résident fait un puzzle seul dans sa chambre. Participe-t-il ?",r:"OUI si c'est son CHOIX. La participation ≠ activité. Si c'est imposé → pas de participation. La clé est l'autodétermination (CDPH Art.3). Source: Careum C1."},
+   ]},
+  {id:"D",label:"D — Planification & Admin",emoji:"📊",couleur:"#854d0e",
+   source:"Careum D pp.79-107 · Champ évaluation D5 (d5.1.1, d5.5.2)",
+   fiches:[
+    {titre:"Cycle de planification individuelle — OPEPE",contenu:"O = OBSERVER : collecter des données sur la PA (forces, besoins, ressources, environnement).\nP = PLANIFIER : objectifs SMART avec la PA — co-construction — plan d'accompagnement.\nE = EXÉCUTER : mettre en œuvre les interventions planifiées.\nP = PRENDRE DU RECUL : auto-évaluation de l'ASE.\nE = ÉVALUER : bilan avec la PA et l'équipe.\n→ La PA est CO-AUTEURE de son plan. CDPH Art.3 + Art.19."},
+    {titre:"Rédaction de rapports (d5.1.1, pp.79-84)",contenu:"FACTUEL : décrire ce qu'on OBSERVE, pas ce qu'on pense.\nDATÉ ET SIGNÉ : traçabilité obligatoire.\nNEUTRE : pas de jugement de valeur.\nSTRUCTURE : Observation → Interprétation → Recommandation.\n❌ Mauvais : 'M. X est agressif ce matin.'\n✅ Bon : 'Le 15.05.2025 à 08h30, M. X a frappé la table et crié Non. Son visage était rouge. Il regardait vers la porte. Hypothèse : il attendait une visite.'"},
+    {titre:"Organisation d'une réunion (d5.5.2, pp.97-103)",contenu:"PRÉPARATION : ordre du jour écrit et distribué, salle réservée, matériel prêt.\nTENUE : respect de l'ordre du jour, animateur désigné, secrétaire pour le PV.\nSUIVI : PV rédigé et distribué dans les 48h, suivi des décisions."},
+    {titre:"Procès-verbal (PV) (pp.104-107)",contenu:"En-tête : date, lieu, heure, participants, excusés, animateur, secrétaire.\nCorps : points discutés, décisions prises, actions (qui ? quoi ? quand ?).\nClôture : heure de fin, signatures.\nDistribué dans les 48h — archivé dans le dossier institutionnel."},
+   ],
+   questions:[
+    {q:"Quelles sont les 5 étapes du cycle OPEPE ?",r:"Observer (collecter données), Planifier (objectifs SMART avec la PA), Exécuter (interventions), Prendre du recul (auto-évaluation), Évaluer (bilan avec PA et équipe). La PA est CO-AUTEURE."},
+    {q:"Quels sont les critères d'un bon rapport professionnel (d5.1.1) ?",r:"Factuel (observation sans jugement), daté et signé (traçabilité), neutre (pas de jugement de valeur), structuré (observation → interprétation → recommandation). Source: Careum D pp.79-84."},
+   ]},
+  {id:"F0",label:"F0 — Développement",emoji:"🧬",couleur:"#6d28d9",
+   source:"Careum F pp.1-200 · Erikson 1950 · Piaget 1952 · Bowlby/Ainsworth 1978 · Bronfenbrenner 1979",
+   fiches:[
+    {titre:"Erikson — 8 stades psychosociaux",contenu:"0-1 an : Confiance vs Méfiance → Espoir\n1-3 ans : Autonomie vs Honte → Volonté\n3-6 ans : Initiative vs Culpabilité → But\n6-12 ans : Travail vs Infériorité → Compétence\nAdolescence : Identité vs Confusion → Fidélité\nJeune adulte : Intimité vs Isolement → Amour\nAdulte moyen : Générativité vs Stagnation → Sollicitude\nVieillesse : Intégrité vs Désespoir → Sagesse"},
+    {titre:"Piaget — 4 stades cognitifs",contenu:"0-2 ans : Sensori-moteur (sens + action, permanence de l'objet à 10-12 mois).\n2-7 ans : Pré-opératoire (langage, jeu symbolique, égocentrisme).\n7-11 ans : Opérations concrètes (logique sur objets, conservation).\n11+ ans : Opérations formelles (pensée abstraite, hypothèses).\nAssimilation : intégrer dans un schème existant.\nAccommodation : modifier un schème face au réel."},
+    {titre:"Bowlby & Ainsworth — Attachement",contenu:"SÉCURE : PA disponible → enfant explore en confiance.\nÉVITANT : PA peu disponible → enfant supprime ses émotions.\nAMBIVALENT : PA imprévisible → enfant hypervigile.\nDÉSORGANISÉ : PA = source de peur (maltraitance) → pas de stratégie, risque de trauma.\nSource: Ainsworth (1978), Main & Hesse (1986)."},
+    {titre:"Bronfenbrenner — Modèle écosystémique (1979)",contenu:"MICROSYSTÈME : famille, école, pairs (contact direct).\nMÉSOSYSTÈME : interactions entre microsystèmes.\nEXOSYSTÈME : services qui affectent l'enfant sans contact direct.\nMACROSYSTÈME : culture, lois, valeurs — ENGLOBE TOUT.\nPikler : mouvement autonome — ne pas forcer les étapes motrices."},
+   ],
+   questions:[
+    {q:"Selon Erikson, quelle crise traverse un adolescent de 15 ans ?",r:"Identité vs Confusion des rôles. Qualité adaptative : fidélité. L'ASE soutient l'exploration identitaire sans imposer. Source: Erikson (1950)."},
+    {q:"Quels sont les 4 stades de Piaget ?",r:"0-2 ans Sensori-moteur, 2-7 ans Pré-opératoire, 7-11 ans Opérations concrètes, 11+ Opérations formelles. Mécanismes : assimilation et accommodation. Source: Piaget (1952)."},
+   ]},
+  {id:"F13/F14",label:"F13/F14 — Besoins & Droits",emoji:"⚖️",couleur:"#b45309",
+   source:"Careum F pp.200-320 · Maslow 1943 · Petzold 1993 · CDPH 2006 · CC suisse",
+   fiches:[
+    {titre:"Maslow — Pyramide des besoins (1943)",contenu:"1. PHYSIOLOGIQUES (BASE) : manger, boire, dormir — TOUJOURS couvrir en premier.\n2. SÉCURITÉ : stabilité, protection, environnement prévisible.\n3. APPARTENANCE / AMOUR : liens sociaux, affection.\n4. ESTIME : reconnaissance, confiance en soi.\n5. ACCOMPLISSEMENT DE SOI (SOMMET) : créativité, sens.\n⚠️ Un résident qui a froid (besoin 1) ne peut pas se concentrer sur ses projets (besoin 5)."},
+    {titre:"Petzold — 5 piliers d'identité (1993)",contenu:"1. Corps et santé (intégrité physique, image corporelle).\n2. Réseau social (communication, liens affectifs, appartenance).\n3. Travail et prestations (activités, rôle social, reconnaissance).\n4. Valeurs et significations (spiritualité, sens de la vie).\n5. Espace territorial (sécurité, chez-soi, la chambre en EMS).\nFragilité d'un pilier = risque identitaire."},
+    {titre:"CDPH — Droits des personnes handicapées (ratifiée CH 2014)",contenu:"Art. 3 = AUTODÉTERMINATION — droit de décider sa propre vie.\nArt. 12 = CAPACITÉ JURIDIQUE ÉGALE — pas de discrimination.\nArt. 19 = VIE AUTONOME ET INCLUSION dans la communauté.\nArt. 23 = DROIT AU MARIAGE ET À LA FAMILLE.\nArt. 24 = DROIT À L'ÉDUCATION INCLUSIVE."},
+    {titre:"CDE + Curatelle",contenu:"CDE ratifiée CH 1997 :\nArt. 3 = Intérêt supérieur de l'enfant.\nArt. 19 = Protection contre toute violence physique ou mentale.\nCC suisse art. 307-315 : APEA peut retirer l'enfant si danger.\nCC suisse art. 390-398 : Curatelles décidées par l'APEA UNIQUEMENT.\n(d'accompagnement / de représentation / de gestion des biens)"},
+   ],
+   questions:[
+    {q:"Quels sont les 5 piliers d'identité de Petzold (1993) ?",r:"1. Corps et santé. 2. Réseau social. 3. Travail et prestations. 4. Valeurs et significations. 5. Espace territorial. Source: Petzold (1993)."},
+    {q:"Que disent la CDPH Art.3 et Art.19 ?",r:"Art.3 : autodétermination — droit de décider sa propre vie. Art.19 : droit à la vie autonome et à l'inclusion dans la communauté. Ratifiée par la Suisse en 2014."},
+    {q:"Qui peut décider d'une curatelle en Suisse ?",r:"L'APEA (Autorité de protection de l'enfant et de l'adulte) UNIQUEMENT. L'ASE signale mais ne décide pas. Source: CC suisse art.390-398."},
+   ]},
+  {id:"F15",label:"F15 — Apprentissage & Groupe",emoji:"🧪",couleur:"#047857",
+   source:"Careum F pp.222-279 · Careum_fdeu.docx (CFPSo) · Fiche pédagogique F15 2025-2026",
+   fiches:[
+    {titre:"5 théories de l'apprentissage — synthèse",contenu:"PAVLOV : conditionnement classique. Stimulus neutre → réponse conditionnée. Routines = sécurité.\nTHORNDIKE : loi de l'effet / essais-erreurs. Comportement récompensé = répété.\nSKINNER : conditionnement opérant. Renforcement + / − / Punition. TOUJOURS privilégier le +.\nKÖHLER : insight (compréhension soudaine). Eurêka ! Laisser du temps à la PA.\nBANDURA : apprentissage par observation. L'ASE est un MODÈLE."},
+    {titre:"Thorndike — Essais-erreurs (Careum_fdeu.docx)",contenu:"La conséquence positive augmente la probabilité que le comportement se reproduise.\nPour apprendre → besoin de motivation (la faim pousse le chat à appuyer sur le levier).\nEn ASE : laisser la PA essayer seule, même si elle se trompe.\n'Je l'ai fait tout seul !' = sentiment d'efficacité personnelle.\nSource: Careum F pp.222-246."},
+    {titre:"Skinner — Renforcements détaillés",contenu:"Renforcement POSITIF : AJOUTER agréable → comportement répété. Ex: féliciter.\nRenforcement NÉGATIF : RETIRER désagréable → comportement répété.\nPunition DIRECTE : AJOUTER désagréable → comportement réduit.\nPunition INDIRECTE (time-out) : RETIRER agréable → comportement réduit.\n⚠️ TOUJOURS privilégier le renforcement POSITIF !"},
+    {titre:"Dynamique de groupe — 5 phases (pp.270-276)",contenu:"Phase 1 — FORMATION : membres se découvrent, politesse, incertitude.\nPhase 2 — CONFLIT : tensions, remise en question des rôles.\nPhase 3 — NORMALISATION : règles établies, coopération, confiance.\nPhase 4 — RÉALISATION : performance, efficacité collective.\nPhase 5 — DISSOLUTION : séparation, bilan, rituels d'au revoir."},
+    {titre:"Le jeu — classification (pp.247-264)",contenu:"Jeu FONCTIONNEL : manipulation d'objets, exploration sensorielle (nourrissons).\nJeu SYMBOLIQUE : faire semblant, jouer un rôle (2-6 ans) — imaginaire.\nJeu DE RÈGLES : jeux de société, sport — apprentissage des règles sociales.\nJeu DE CONSTRUCTION : assembler, construire.\nSnoezelen : environnement multisensoriel pour PA avec déficiences sévères ou démence."},
+   ],
+   questions:[
+    {q:"Quelle est la différence entre renforcement positif et négatif (Skinner) ?",r:"Renforcement positif : AJOUTER un stimulus agréable (féliciter). Renforcement négatif : RETIRER un stimulus désagréable. Les deux augmentent la probabilité du comportement. TOUJOURS privilégier le +. Source: Careum F15."},
+    {q:"Décrivez les 5 phases de la dynamique de groupe.",r:"1. Formation (découverte). 2. Conflit (tensions). 3. Normalisation (coopération). 4. Réalisation (performance). 5. Dissolution (séparation). Source: Careum F pp.270-276."},
+    {q:"Qu'est-ce que l'apprentissage par insight selon Köhler ?",r:"Compréhension soudaine (Eurêka !) après une période de réflexion. En ASE : laisser du temps à la PA pour trouver seule → auto-efficacité."},
+   ]},
+  {id:"SS",label:"Savoir Social",emoji:"🏛️",couleur:"#1e40af",
+   source:"Activité révision système social suisse corrigé (CFPSo) · Careum A pp.18-20",
+   fiches:[
+    {titre:"3 niveaux de l'État suisse",contenu:"CONFÉDÉRATION : armée, affaires étrangères, droit civil/pénal (CC/CO/CP), AVS/AI/AC.\nCANTONS (26) : éducation, santé, police, aide sociale, fiscalité cantonale.\nCOMMUNES : état civil, permis de construire, fiscalité locale.\nÀ Genève : l'aide sociale est cantonale (Hospice Général). Source: Cst. art.3."},
+    {titre:"Assurances sociales — situations réelles (corrigé CFPSo)",contenu:"Perte d'emploi → ASSURANCE-CHÔMAGE (AC).\nIncapacité durable de gain → ASSURANCE-INVALIDITÉ (AI) — rente.\nFrais de crèche selon barème → SUBVENTION.\nRetraite après carrière → AVS (rente vieillesse).\nVeuvage → AVS (rente de veuve).\nFin de droits chômage sans travail → AIDE SOCIALE.\nAccident du travail + formation → AI (mesure de réadaptation).\nPA âgée en EMS, actes quotidiens impossibles → AVS + Allocation pour impotent (API)."},
+    {titre:"Les 3 piliers de prévoyance vieillesse",contenu:"1er PILIER (AVS/AI) : obligatoire pour tous, solidarité, minimum vital.\n2e PILIER (LPP) : obligatoire pour salariés >21 500 CHF/an, épargne bloquée. Sur ta fiche de paie : -236.50 CHF/mois.\n3e PILIER (épargne privée) : facultatif, 3a (déductible fiscalement, plafond annuel)."},
+    {titre:"Droits fondamentaux — Constitution suisse",contenu:"Art. 7 : Dignité humaine — inviolable.\nArt. 8 : Égalité — interdiction de discrimination.\nArt. 12 : Aide en situation de détresse — logement, nourriture, soins — POUR TOUS sur le sol suisse.\nArt. 41 : Buts sociaux : sécurité sociale, soins, familles, logement, formation, enfants.\nTaux d'invalidité AI : 40-49%=quart, 50-59%=demi, 60-69%=3/4, ≥70%=entière."},
+    {titre:"PC vs Aide sociale — différence clé",contenu:"PRESTATIONS COMPLÉMENTAIRES (PC) : droit AUTOMATIQUE si rente AVS/AI insuffisante. Sans condition de comportement. Calculées par l'OCAS (Genève).\nAIDE SOCIALE : dernier filet, conditions de ressources + coopération (ORP). Montant adulte seul ~977 CHF/mois + loyer + LAMal.\n→ EN ASE : vérifier TOUJOURS les PC d'abord !"},
+   ],
+   questions:[
+    {q:"Un homme perd son emploi suite à une faillite. Quelle assurance intervient ?",r:"L'assurance-chômage (AC) — indemnité chômage + aide à l'emploi. S'il arrive en fin de droits → aide sociale (Hospice Général à Genève). Source: corrigé révision système social suisse CFPSo."},
+    {q:"Que dit l'art.12 de la Constitution fédérale ?",r:"Droit à l'aide en situation de détresse (logement, nourriture, soins de base). S'applique à TOUTE PERSONNE sur le sol suisse, quelle que soit sa nationalité. Source: Cst. suisse art.12."},
+    {q:"Quelle est la différence entre PC et aide sociale ?",r:"PC = droit automatique si rente AVS/AI insuffisante, sans condition de comportement. Aide sociale = dernier filet, conditions ressources + coopération. Vérifier les PC d'abord !"},
+   ]},
+];
+
+const HADITH_DATA = [
+  {ar:"إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلاً أَنْ يُتْقِنَهُ",fr:"Allah aime que lorsque l'un d'entre vous fait un travail, il le fasse avec excellence (itqân).",src:"Al-Bayhaqi"},
+  {ar:"مَا أَكَلَ أَحَدٌ طَعَامًا قَطُّ خَيْرًا مِنْ أَنْ يَأْكُلَ مِنْ عَمَلِ يَدِهِ",fr:"Personne n'a jamais mangé de meilleure nourriture que celle gagnée par le travail de ses propres mains.",src:"Sahih Al-Bukhari"},
+  {ar:"التَّاجِرُ الصَّدُوقُ الأَمِينُ مَعَ النَّبِيِّينَ وَالصِّدِّيقِينَ وَالشُّهَدَاءِ",fr:"Le commerçant honnête et digne de confiance sera avec les prophètes, les véridiques et les martyrs.",src:"At-Tirmidhi"},
+  {ar:"إِنَّ الله يُحِبُّ الْعَبْدَ الْمُحْتَرِفَ",fr:"Allah aime le serviteur qui maîtrise un métier.",src:"Al-Bayhaqi"},
+  {ar:"الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى",fr:"La main qui donne est supérieure à la main qui reçoit.",src:"Sahih Al-Bukhari"},
+  {ar:"خَيْرُ الصَّدَقَةِ مَا كَانَ عَنْ ظَهْرِ غِنًى",fr:"La meilleure aumône est celle qui vient d'une abondance (après avoir assuré ses besoins).",src:"Sahih Al-Bukhari"},
+  {ar:"مَنْ أَمْسَى كَالاًّ مِنْ عَمَلِ يَدِهِ أَمْسَى مَغْفُورًا لَهُ",fr:"Celui qui, le soir, est épuisé par le travail de ses mains, a ses péchés pardonnés.",src:"Al-Bayhaqi"},
+  {ar:"لَأَنْ يَأْخُذَ أَحَدُكُمْ حَبْلَهُ فَيَحْتَطِبَ خَيْرٌ لَهُ مِنْ أَنْ يَسْأَلَ النَّاسَ",fr:"Qu'il prenne sa corde et coupe du bois vaut mieux pour lui que de mendier auprès des gens.",src:"Sahih Al-Bukhari"},
+  {ar:"اعْمَلْ لِدُنْيَاكَ كَأَنَّكَ تَعِيشُ أَبَدًا وَاعْمَلْ لآخِرَتِكَ كَأَنَّكَ تَمُوتُ غَدًا",fr:"Travaille pour ta vie d'ici-bas comme si tu vivais éternellement, et pour ta vie future comme si tu mourais demain.",src:"Ibn Asakir"},
+  {ar:"مَا مِنْ مُسْلِمٍ يَغْرِسُ غَرْسًا فَيَأْكُلُ مِنْهُ إِنْسَانٌ إِلاَّ كَانَ لَهُ صَدَقَةٌ",fr:"Tout musulman qui plante un arbre dont mange un être humain obtient une aumône (récompense continue).",src:"Sahih Al-Bukhari"},
+];
+
+const RICHESSE_DATA = [
+  {e:"📈",t:"Intérêts composés",d:"200 CHF/mois à 7%/an = 34 000 CHF en 10 ans. Einstein : '8e merveille du monde'. Commence MAINTENANT, même petit."},
+  {e:"💰",t:"Règle des 10% automatique",d:"Le jour du salaire : virement automatique 10% sur compte séparé AVANT de dépenser. Tu vis avec le reste. Simple. Infaillible."},
+  {e:"🎯",t:"Fonds d'urgence d'abord",d:"Objectif 1 : 3 à 6 mois de charges fixes. Pour toi : 1 170 × 6 = 7 020 CHF. Sans ce filet, une urgence te force à l'endettement."},
+  {e:"🏛️",t:"3e pilier — Déduction fiscale",d:"Ouvre un pilier 3a dès que possible (VIAC, Frankly, Finpension). Jusqu'à 7 056 CHF/an déductibles des impôts. Argent gratuit de l'État."},
+  {e:"🚫",t:"Fuir les dettes de consommation",d:"Crédit téléphone, voiture = destroyers de richesse. Ton OP te coûte 1 200 CHF/mois — priorité absolue de remboursement."},
+  {e:"📚",t:"Investir sur soi en continu",d:"CrossFit L1, FISAF, CFC ASE = augmentation de ta valeur marchande. 1 livre/mois sur finance/business = avantage cumulatif."},
+  {e:"🏠",t:"Actifs vs Passifs (Kiyosaki)",d:"Actif = met de l'argent dans ta poche (ETF, immo locatif, business). Passif = en sort (crédit, abonnements). Achète des actifs !"},
+  {e:"💼",t:"Diversifier ses revenus",d:"Salaire ASE + Coaching CrossFit (40-60 CHF/h) + TikTok @weshkaiseur + Investissements. Objectif : 3+ sources de revenus."},
+  {e:"🌍",t:"ETF Monde — simplicité",d:"Un ETF MSCI World = 1 600 entreprises. Rendement historique ~7%/an. Via Neon, Swissquote ou VIAC."},
+  {e:"🔄",t:"Réinvestir les imprévus",d:"Bonus, cadeau, remboursement → 50% en épargne immédiatement. Les gens riches ne dépensent pas les imprévus."},
+];
+
+// ══════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════
+let curComp = 0;
+let curFiche = 0;
+let quizPool = [];
+let quizIdx = 0;
+let quizScore = 0;
+let quizShown = false;
+let hadithIdx = 0;
+
+// Budget state (localStorage)
+function loadData(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch{return d;}}
+function saveData(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+let revenus = loadData('rv3',[
+  {id:1,l:"Salaire ASE (versé UBS)",a:2204.60},
+  {id:2,l:"Coaching CrossFit",a:0},
+  {id:3,l:"TikTok / Content",a:0},
+]);
+let charges = loadData('ch3',[
+  {id:1,l:"Loyer / chambre",a:600},
+  {id:2,l:"Assurance maladie (LAMal)",a:350},
+  {id:3,l:"Téléphone",a:49},
+  {id:4,l:"Transports TPG/CFF",a:80},
+  {id:5,l:"Alimentation de base",a:91},
+]);
+let goals = loadData('gl3',[]);
+
+function fmt(n){return Number(n).toLocaleString('fr-CH',{minimumFractionDigits:2,maximumFractionDigits:2})+' CHF';}
+function fmtK(n){return Math.abs(n)>=1000?(n/1000).toFixed(1)+'K CHF':Math.round(n)+' CHF';}
+
+// ══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════
+const TABS = {
+  revision:{title:"📚 Révisions CFC ASE",sub:`${COMPETENCES.length} compétences · ${COMPETENCES.reduce((s,c)=>s+c.questions.length,0)} questions · Careum + Savoir Social`},
+  budget:{title:"💶 Budget & Finances",sub:""},
+  hadith:{title:"📖 Hadith & Travail",sub:`${HADITH_DATA.length} hadith authentiques sur le travail et la richesse`},
+  richesse:{title:"💡 Richesse & Mindset",sub:`${RICHESSE_DATA.length} stratégies · Citations · Roadmap`},
+};
+
+function goTab(id, btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sc-'+id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('pg-title').textContent = TABS[id].title;
+  document.getElementById('pg-sub').textContent = TABS[id].sub;
+  if(id==='budget'){renderBudget();}
+  if(id==='revision'){resetRevisionView();}
+}
+
+// ══════════════════════════════════════════════════════════════════
+// RÉVISION
+// ══════════════════════════════════════════════════════════════════
+function initRevision(){
+  // Boutons compétences
+  const bc = document.getElementById('comp-btns');
+  bc.innerHTML = '';
+  COMPETENCES.forEach((c,i)=>{
+    const b = document.createElement('button');
+    b.className = 'comp-btn';
+    b.textContent = c.emoji+' '+c.id;
+    b.style.cssText = `background:${i===curComp?c.couleur:'#1a2840'};color:${i===curComp?'#fff':'#778899'};border:1px solid ${i===curComp?c.couleur:'#1e3050'}`;
+    b.onclick = ()=>{ curComp=i; curFiche=0; initRevision(); };
+    bc.appendChild(b);
+  });
+  renderCompCard();
+  renderFicheList();
+  // Compter total questions
+  const tot = COMPETENCES.reduce((s,c)=>s+c.questions.length,0);
+  document.getElementById('total-q-count').textContent = tot+' questions · toutes compétences · ordre aléatoire';
+}
+
+function renderCompCard(){
+  const c = COMPETENCES[curComp];
+  document.getElementById('comp-card').style.borderColor = c.couleur+'66';
+  document.getElementById('comp-title').textContent = c.emoji+' '+c.label;
+  document.getElementById('comp-source').textContent = '📚 '+c.source;
+  document.getElementById('btn-quiz-c').textContent = '🧠 Quiz ('+c.questions.length+'Q)';
+}
+
+function renderFicheList(){
+  const c = COMPETENCES[curComp];
+  const fl = document.getElementById('fiche-list');
+  fl.innerHTML = '';
+  c.fiches.forEach((f,i)=>{
+    const d = document.createElement('div');
+    d.className = 'row';
+    d.style.cursor = 'pointer';
+    d.innerHTML = `<span style="font-size:13px;flex:1">📄 ${f.titre}</span><span style="color:var(--sub)">›</span>`;
+    d.onclick = ()=>{ curFiche=i; showFiches(); };
+    fl.appendChild(d);
+  });
+}
+
+function showFiches(){
+  document.getElementById('fiche-list').style.display = 'none';
+  document.getElementById('comp-card').style.display = 'none';
+  document.getElementById('quiz-global-btn').style.display = 'none';
+  document.getElementById('fiche-detail').style.display = 'block';
+  renderFiche();
+}
+
+function hideFiche(){
+  document.getElementById('fiche-list').style.display = 'block';
+  document.getElementById('comp-card').style.display = 'block';
+  document.getElementById('quiz-global-btn').style.display = 'block';
+  document.getElementById('fiche-detail').style.display = 'none';
+}
+
+function renderFiche(){
+  const c = COMPETENCES[curComp];
+  const f = c.fiches[curFiche];
+  document.getElementById('fiche-meta').textContent = `Fiche ${curFiche+1}/${c.fiches.length} · Source: ${c.source.split('·')[0].trim()}`;
+  document.getElementById('fiche-nav-label').textContent = c.emoji+' '+c.id+' — Fiches';
+  document.getElementById('fiche-titre').textContent = f.titre;
+  document.getElementById('fiche-corps').textContent = f.contenu;
+  document.getElementById('btn-f-prev').disabled = curFiche===0;
+  document.getElementById('btn-f-next').disabled = curFiche===c.fiches.length-1;
+}
+
+function navFiche(d){ curFiche = Math.max(0,Math.min(COMPETENCES[curComp].fiches.length-1, curFiche+d)); renderFiche(); }
+
+// QUIZ
+function buildPool(compOnly){
+  if(compOnly){
+    quizPool = [...COMPETENCES[curComp].questions];
+  } else {
+    quizPool = COMPETENCES.flatMap(c=>c.questions.map(q=>({...q,comp:c.label})));
+    // Fisher-Yates shuffle
+    for(let i=quizPool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[quizPool[i],quizPool[j]]=[quizPool[j],quizPool[i]];}
+  }
+}
+
+function startQuizComp(){ buildPool(true); quizIdx=0; quizScore=0; showQuizPanel(); }
+function startQuizGlobal(){ buildPool(false); quizIdx=0; quizScore=0; showQuizPanel(); }
+
+function showQuizPanel(){
+  document.getElementById('fiche-list').style.display='none';
+  document.getElementById('comp-card').style.display='none';
+  document.getElementById('quiz-global-btn').style.display='none';
+  document.getElementById('fiche-detail').style.display='none';
+  document.getElementById('quiz-panel').style.display='block';
+  renderQuiz();
+}
+
+function hideQuiz(){
+  document.getElementById('quiz-panel').style.display='none';
+  document.getElementById('fiche-list').style.display='block';
+  document.getElementById('comp-card').style.display='block';
+  document.getElementById('quiz-global-btn').style.display='block';
+}
+
+function renderQuiz(){
+  if(quizIdx>=quizPool.length){
+    document.getElementById('quiz-panel').innerHTML = `
+      <div class="card-gold" style="text-align:center">
+        <div style="font-size:3rem;margin-bottom:10px">${quizScore/quizPool.length>=0.8?'🏆':quizScore/quizPool.length>=0.6?'😊':'💪'}</div>
+        <div style="font-size:22px;font-weight:700;color:var(--gold)">${quizScore}/${quizPool.length}</div>
+        <div style="font-size:13px;color:var(--sub);margin:8px 0 16px">${Math.round(quizScore/quizPool.length*100)}%</div>
+        <button class="btn-gold" onclick="hideQuiz();initRevision()">← Retour</button>
+        &nbsp;
+        <button class="btn-sm" onclick="quizIdx=0;quizScore=0;renderQuiz()">🔄 Recommencer</button>
+      </div>`;
+    return;
+  }
+  const q = quizPool[quizIdx];
+  quizShown = false;
+  document.getElementById('quiz-score').textContent = `Score: ${quizScore}/${quizIdx}`;
+  document.getElementById('q-meta').textContent = (q.comp?q.comp+' · ':'')+`Q${quizIdx+1}/${quizPool.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-rep').style.display='none';
+  document.getElementById('q-rep').textContent = q.r;
+  document.getElementById('btn-voir').style.display='inline-block';
+  document.getElementById('q-btns').style.display='none';
+}
+
+function toggleRep(){
+  quizShown=true;
+  document.getElementById('q-rep').style.display='block';
+  document.getElementById('btn-voir').style.display='none';
+  document.getElementById('q-btns').style.display='flex';
+}
+
+function nextQ(knew){ if(knew)quizScore++; quizIdx++; renderQuiz(); }
+
+function resetRevisionView(){
+  document.getElementById('fiche-list').style.display='block';
+  document.getElementById('comp-card').style.display='block';
+  document.getElementById('quiz-global-btn').style.display='block';
+  document.getElementById('fiche-detail').style.display='none';
+  document.getElementById('quiz-panel').style.display='none';
+  initRevision();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BUDGET
+// ══════════════════════════════════════════════════════════════════
+function toggleForm(id){ const el=document.getElementById(id); el.style.display=el.style.display==='none'?'block':'none'; }
+
+function addRev(){
+  const l=document.getElementById('nr-l').value.trim();
+  const a=parseFloat(document.getElementById('nr-a').value)||0;
+  if(!l)return;
+  revenus.push({id:Date.now(),l,a});
+  saveData('rv3',revenus);
+  document.getElementById('nr-l').value='';
+  document.getElementById('nr-a').value='';
+  document.getElementById('form-rev').style.display='none';
+  renderBudget();
+}
+function delRev(id){ revenus=revenus.filter(r=>r.id!==id); saveData('rv3',revenus); renderBudget(); }
+function editRevInline(id){
+  const r=revenus.find(x=>x.id===id);
+  const el=document.getElementById('rev-item-'+id);
+  el.innerHTML=`<div style="background:#1a2840;border-radius:9px;padding:10px">
+    <input id="erl-${id}" value="${r.l}" style="margin-bottom:5px;width:100%">
+    <div style="display:flex;gap:5px">
+      <input id="era-${id}" type="number" value="${r.a}" style="flex:1">
+      <button class="btn-sm" style="background:var(--green)" onclick="saveRevEdit(${id})">✓</button>
+      <button class="btn-sm" onclick="renderBudget()">✕</button>
+    </div>
+  </div>`;
+}
+function saveRevEdit(id){
+  const l=document.getElementById('erl-'+id).value.trim();
+  const a=parseFloat(document.getElementById('era-'+id).value)||0;
+  revenus=revenus.map(r=>r.id===id?{...r,l,a}:r);
+  saveData('rv3',revenus); renderBudget();
+}
+
+function addChg(){
+  const l=document.getElementById('nc-l').value.trim();
+  const a=parseFloat(document.getElementById('nc-a').value)||0;
+  if(!l)return;
+  charges.push({id:Date.now(),l,a});
+  saveData('ch3',charges);
+  document.getElementById('nc-l').value='';
+  document.getElementById('nc-a').value='';
+  document.getElementById('form-chg').style.display='none';
+  renderBudget();
+}
+function delChg(id){ charges=charges.filter(c=>c.id!==id); saveData('ch3',charges); renderBudget(); }
+function editChgInline(id){
+  const c=charges.find(x=>x.id===id);
+  const el=document.getElementById('chg-item-'+id);
+  el.innerHTML=`<div style="background:#1a2840;border-radius:9px;padding:10px">
+    <input id="ecl-${id}" value="${c.l}" style="margin-bottom:5px;width:100%">
+    <div style="display:flex;gap:5px">
+      <input id="eca-${id}" type="number" value="${c.a}" style="flex:1">
+      <button class="btn-sm" style="background:var(--red)" onclick="saveChgEdit(${id})">✓</button>
+      <button class="btn-sm" onclick="renderBudget()">✕</button>
+    </div>
+  </div>`;
+}
+function saveChgEdit(id){
+  const l=document.getElementById('ecl-'+id).value.trim();
+  const a=parseFloat(document.getElementById('eca-'+id).value)||0;
+  charges=charges.map(c=>c.id===id?{...c,l,a}:c);
+  saveData('ch3',charges); renderBudget();
+}
+
+function addGoal(){
+  const l=document.getElementById('ng-l').value.trim();
+  const t=parseFloat(document.getElementById('ng-t').value)||0;
+  if(!l||!t)return;
+  goals.push({id:Date.now(),l,t,s:0});
+  saveData('gl3',goals);
+  document.getElementById('ng-l').value='';
+  document.getElementById('ng-t').value='';
+  document.getElementById('form-goal').style.display='none';
+  renderBudget();
+}
+function delGoal(id){ goals=goals.filter(g=>g.id!==id); saveData('gl3',goals); renderBudget(); }
+function updateGoal(id,v){ goals=goals.map(g=>g.id===id?{...g,s:Math.max(0,Math.min(g.t,parseFloat(v)||0))}:g); saveData('gl3',goals); renderGoals(); }
+
+function renderBudget(){
+  const totalR=revenus.reduce((s,r)=>s+(+r.a||0),0);
+  const totalC=charges.reduce((s,c)=>s+(+c.a||0),0);
+  const marge=totalR-totalC;
+  const pct=totalR>0?Math.min(100,(totalC/totalR)*100):0;
+  const barColor=pct>85?'var(--red)':pct>65?'#f59e0b':'var(--green)';
+
+  document.getElementById('budget-summary').innerHTML=`
+    <div style="font-size:11px;color:#e8b84b99;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Résumé du mois</div>
+    <div class="g2">
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:3px">💰 Revenus</div><div style="font-size:20px;font-weight:700;color:var(--green)">${fmt(totalR)}</div></div>
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:3px">📤 Charges</div><div style="font-size:20px;font-weight:700;color:var(--red)">${fmt(totalC)}</div></div>
+    </div>
+    <div class="div"></div>
+    <div style="text-align:center">
+      <div style="font-size:11px;color:var(--sub);margin-bottom:3px">✨ Marge disponible</div>
+      <div style="font-size:28px;font-weight:700;color:${marge>=0?'var(--gold)':'var(--red)'}">${fmt(marge)}</div>
+    </div>
+    <div class="bar-bg" style="margin-top:10px"><div class="bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+    <div style="font-size:11px;color:var(--sub);margin-top:4px">${Math.round(pct)}% du budget utilisé</div>
+  `;
+  document.getElementById('pg-sub').textContent=`Marge : ${fmt(marge)} · Calculateur · Objectifs`;
+
+  // Revenus
+  const rl=document.getElementById('rev-list');
+  rl.innerHTML='';
+  revenus.forEach(r=>{
+    const d=document.createElement('div');
+    d.id='rev-item-'+r.id;
+    d.innerHTML=`<div class="row">
+      <span style="font-size:13px;flex:1">${r.l}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--green);margin-right:6px">+${fmt(r.a)}</span>
+      <button class="btn-ico" onclick="editRevInline(${r.id})">✏️</button>
+      <button class="btn-ico" onclick="delRev(${r.id})">🗑</button>
+    </div>`;
+    rl.appendChild(d);
+  });
+
+  // Charges
+  const cl=document.getElementById('chg-list');
+  cl.innerHTML='';
+  charges.forEach(c=>{
+    const d=document.createElement('div');
+    d.id='chg-item-'+c.id;
+    d.innerHTML=`<div class="row">
+      <span style="font-size:13px;flex:1">${c.l}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--red);margin-right:6px">-${fmt(c.a)}</span>
+      <button class="btn-ico" onclick="editChgInline(${c.id})">✏️</button>
+      <button class="btn-ico" onclick="delChg(${c.id})">🗑</button>
+    </div>`;
+    cl.appendChild(d);
+  });
+
+  renderGoals();
+  calcCompound();
+}
+
+function renderGoals(){
+  const gl=document.getElementById('goal-list');
+  gl.innerHTML='';
+  goals.forEach(g=>{
+    const p=g.t>0?Math.min(100,Math.round((g.s/g.t)*100)):0;
+    const d=document.createElement('div');
+    d.style.cssText='background:#1a2840;border-radius:9px;padding:10px;margin-bottom:8px';
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:5px">
+      <span style="font-size:13px;font-weight:700">${g.l}</span>
+      <button class="btn-ico" onclick="delGoal(${g.id})">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:5px">
+      <input type="number" value="${g.s}" min="0" max="${g.t}" style="width:85px;font-size:13px" onchange="updateGoal(${g.id},this.value)">
+      <span style="font-size:12px;color:var(--sub)">/ ${g.t} CHF</span>
+      <span class="tag" style="margin-left:auto;background:${p>=100?'#22c55e22':'#a78bfa22'};color:${p>=100?'var(--green)':'var(--purple)'};border:1px solid ${p>=100?'#22c55e44':'#a78bfa44'}">${p}%${p>=100?' 🎉':''}</span>
+    </div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${p}%;background:${p>=100?'var(--green)':'var(--purple)'}"></div></div>`;
+    gl.appendChild(d);
+  });
+}
+
+function calcCompound(){
+  const m=parseFloat(document.getElementById('calc-m')?.value)||200;
+  const r=parseFloat(document.getElementById('calc-r')?.value)/100/12||0.07/12;
+  const n=parseInt(document.getElementById('calc-d')?.value)*12||120;
+  const total=r===0?m*n:m*((Math.pow(1+r,n)-1)/r)*(1+r);
+  const verse=m*(n);
+  const int=total-verse;
+  const tf=document.getElementById('calc-total');
+  const ti=document.getElementById('calc-int');
+  const tm=document.getElementById('calc-msg');
+  if(tf)tf.textContent=fmtK(Math.round(total));
+  if(ti)ti.textContent=fmtK(Math.round(int));
+  if(tm)tm.textContent=`Tu verses ${fmtK(Math.round(verse))} — les intérêts t'apportent ${fmtK(Math.round(int))} supplémentaires.`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// HADITH
+// ══════════════════════════════════════════════════════════════════
+function initHadith(){
+  renderHadithBig();
+  const lt=document.getElementById('hadith-list-title');
+  lt.textContent=`📖 Tous les hadith (${HADITH_DATA.length})`;
+  const hl=document.getElementById('hadith-list');
+  hl.innerHTML='';
+  HADITH_DATA.forEach((h,i)=>{
+    const d=document.createElement('div');
+    d.id='hd-'+i;
+    d.className='hadith-item'+(i===hadithIdx?' on':'');
+    d.innerHTML=`<div style="font-size:13px;color:${i===hadithIdx?'var(--gold)':'#9aa'}">${i===hadithIdx?'▶ ':''}${h.fr.slice(0,85)}...</div><span class="tag" style="margin-top:6px;background:#e8b84b22;color:var(--gold);border:1px solid #e8b84b44">${h.src}</span>`;
+    d.onclick=()=>{hadithIdx=i;initHadith();};
+    hl.appendChild(d);
+  });
+}
+function renderHadithBig(){
+  const h=HADITH_DATA[hadithIdx];
+  document.getElementById('hadith-big').innerHTML=`
+    <div style="font-size:11px;color:#e8b84b66;letter-spacing:.1em;margin-bottom:10px">${hadithIdx+1} / ${HADITH_DATA.length} · ${h.src}</div>
+    <div class="arabic">${h.ar}</div>
+    <div style="height:1px;background:#e8b84b22;margin:12px 0"></div>
+    <div style="font-size:15px;line-height:1.8;color:#d4cfc9;font-style:italic;margin-bottom:14px">« ${h.fr} »</div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn-sm" onclick="hadithIdx=(hadithIdx-1+${HADITH_DATA.length})%${HADITH_DATA.length};initHadith()">← Préc.</button>
+      <button class="btn-gold" onclick="hadithIdx=(hadithIdx+1)%${HADITH_DATA.length};initHadith()">Suivant →</button>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// RICHESSE
+// ══════════════════════════════════════════════════════════════════
+function initRichesse(){
+  document.getElementById('richesse-count').textContent=`${RICHESSE_DATA.length} stratégies — touche pour développer`;
+  const il=document.getElementById('idea-list');
+  il.innerHTML='';
+  RICHESSE_DATA.forEach((r,i)=>{
+    const d=document.createElement('div');
+    d.className='idea-card';
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:10px;align-items:center;flex:1">
+        <span style="font-size:20px">${r.e}</span>
+        <span style="font-size:14px;font-weight:700">${r.t}</span>
+      </div>
+      <span style="color:var(--sub)" id="idea-arrow-${i}">▼</span>
+    </div>
+    <div class="idea-body" id="idea-body-${i}">${r.d}</div>`;
+    d.onclick=()=>{
+      const b=document.getElementById('idea-body-'+i);
+      const a=document.getElementById('idea-arrow-'+i);
+      const open=b.style.display==='block';
+      b.style.display=open?'none':'block';
+      a.textContent=open?'▼':'▲';
+    };
+    il.appendChild(d);
+  });
+
+  const cl=document.getElementById('citations-list');
+  cl.innerHTML='';
+  [
+    {q:"Ne travaille pas pour l'argent. Fais en sorte que l'argent travaille pour toi.",a:"Robert Kiyosaki"},
+    {q:"Les gens riches achètent des actifs. Les gens pauvres achètent des passifs.",a:"Robert Kiyosaki"},
+    {q:"Investir sur toi-même est le meilleur investissement que tu puisses faire.",a:"Warren Buffett"},
+    {q:"La meilleure période pour planter un arbre était il y a 20 ans. La deuxième, c'est maintenant.",a:"Proverbe chinois"},
+    {q:"Devenir riche est simple : dépense moins, investis la différence, sois patient.",a:"Morgan Housel"},
+    {q:"Un revenu actif te nourrit. Un revenu passif te libère.",a:"Anonyme"},
+  ].forEach(c=>{
+    const d=document.createElement('div');
+    d.className='card';
+    d.innerHTML=`<div style="font-size:14px;line-height:1.7;font-style:italic;color:#d4cfc9;margin-bottom:6px">« ${c.q} »</div><div style="font-size:12px;color:#e8b84b88">— ${c.a}</div>`;
+    cl.appendChild(d);
+  });
+
+  document.getElementById('roadmap').innerHTML=[
+    {n:1,c:'var(--gold)',t:'Maintenant — CFC 2027',d:"Épargner 200 CHF/mois. Rembourser l'OP progressivement. Lancer le coaching CrossFit dès maintenant."},
+    {n:2,c:'var(--green)',t:'2027-2028 — Post CFC',d:"Salaire ASE diplômé 4 800-5 500 CHF brut. TikTok business. Ouvrir un pilier 3a."},
+    {n:3,c:'var(--purple)',t:'2028-2030 — Construction',d:"Fonds urgence 6 mois (7 020 CHF). Investir dans un ETF monde via VIAC. Business sport/bien-être."},
+    {n:4,c:'var(--red)',t:'2030+ — Liberté financière',d:"Actifs qui génèrent des revenus passifs. Travailler par choix, pas par obligation."},
+  ].map(s=>`<div style="display:flex;gap:12px;margin-bottom:12px">
+    <div style="background:${s.c};color:#0c1220;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">${s.n}</div>
+    <div><div style="font-size:13px;font-weight:700;color:${s.c};margin-bottom:3px">${s.t}</div><div style="font-size:12px;color:var(--sub);line-height:1.6">${s.d}</div></div>
+  </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  initRevision();
+  renderBudget();
+  initHadith();
+  initRichesse();
+  // Interception des clics nav pour initialiser les onglets
+  document.getElementById('nt-hadith').addEventListener('click',initHadith);
+  document.getElementById('nt-richesse').addEventListener('click',initRichesse);
+});
+</script>
+</body>
+</html>

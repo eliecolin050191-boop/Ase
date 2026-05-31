@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Careum C — Participation & Sexualité | CFC ASE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+:root{
+  --bleu:#1A5276;--bleu2:#2874A6;--bleu3:#AED6F1;
+  --orange:#E67E22;--orange2:#F39C12;
+  --vert:#1E8449;--vert2:#27AE60;
+  --rouge:#922B21;--rouge2:#E74C3C;
+  --violet:#6C3483;--violet2:#8E44AD;
+  --rose:#E91E8C;--rose2:#F06292;
+  --fond:#F0F4F8;--blanc:#fff;--gris:#7F8C8D;--texte:#1A2340;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:var(--fond);color:var(--texte);min-height:100vh}
+
+/* PIN */
+#pin-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0D1B2A,#6C3483);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:14px}
+#pin-screen h1{font-family:'Fredoka One',cursive;color:#fff;font-size:2rem;text-align:center}
+#pin-display{display:flex;gap:14px;margin:6px 0}
+.pdot{width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);transition:all .2s}
+.pdot.f{background:var(--orange2);border-color:var(--orange2)}
+#pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:200px}
+.pb{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:1.3rem;font-weight:700;border-radius:50%;width:58px;height:58px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+.pb:hover{background:rgba(255,255,255,.3);transform:scale(1.05)}
+.pb:active{transform:scale(.95)}
+#perr{color:var(--rouge2);font-weight:700;display:none;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.nav{background:linear-gradient(135deg,var(--violet),var(--bleu));padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.nav-t{font-family:'Fredoka One',cursive;color:#fff;font-size:1.1rem}
+.nav-s{background:var(--orange2);color:#fff;font-weight:800;padding:4px 12px;border-radius:20px;font-size:.82rem}
+
+/* MENU */
+#menu{padding:18px 14px;max-width:520px;margin:0 auto}
+.salut{text-align:center;margin-bottom:16px}
+.salut h2{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--violet)}
+.salut p{color:var(--gris);margin-top:4px;font-size:.9rem}
+.prog-box{background:#fff;border-radius:14px;padding:14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-bar{background:#E8EDF2;border-radius:8px;height:12px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--violet2),var(--rose2));border-radius:8px;transition:width .5s}
+.sec-t{font-weight:900;color:var(--violet);margin:16px 0 10px;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.card{background:#fff;border-radius:14px;padding:15px 12px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);border:3px solid transparent;position:relative}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.card.done{border-color:var(--vert2)}
+.card.done::after{content:"✅";position:absolute;top:7px;right:7px;font-size:.85rem}
+.card-emoji{font-size:1.7rem;margin-bottom:5px}
+.card-titre{font-weight:800;font-size:.8rem;line-height:1.3}
+.card-nb{color:var(--gris);font-size:.7rem;margin-top:3px}
+.card[data-c="violet"]{background:linear-gradient(135deg,#F4ECF7,#E8DAEF)}
+.card[data-c="rose"]{background:linear-gradient(135deg,#FCE4EC,#F8BBD0)}
+.card[data-c="bleu"]{background:linear-gradient(135deg,#EBF5FB,#D6EAF8)}
+.card[data-c="vert"]{background:linear-gradient(135deg,#EAFAF1,#D5F5E3)}
+.card[data-c="orange"]{background:linear-gradient(135deg,#FEF9E7,#FDEBD0)}
+.btn-big{width:100%;border:none;border-radius:14px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:10px;transition:all .2s}
+.btn-big:hover{transform:translateY(-2px)}
+.btn-quiz{background:linear-gradient(135deg,var(--violet),#4A148C);color:#fff;box-shadow:0 4px 12px rgba(108,52,131,.4)}
+.btn-cas{background:linear-gradient(135deg,var(--rose),var(--rose2));color:#fff;box-shadow:0 4px 12px rgba(233,30,140,.4)}
+.btn-flash{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 12px rgba(230,126,34,.4)}
+.btn-src{background:linear-gradient(135deg,var(--bleu),var(--bleu2));color:#fff;box-shadow:0 4px 12px rgba(26,82,118,.4)}
+
+/* FICHE */
+#fiche-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.fhdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.btn-back{background:#fff;border:2px solid var(--bleu3);color:var(--bleu);border-radius:10px;padding:7px 11px;cursor:pointer;font-weight:700;font-size:.82rem;font-family:'Nunito',sans-serif}
+.fiche-h{font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--violet)}
+.idee{background:linear-gradient(135deg,#FEF9E7,#FDEBD0);border-left:5px solid var(--orange2);border-radius:12px;padding:11px 14px;margin-bottom:12px;font-weight:700;color:#784212;font-size:.87rem;line-height:1.4}
+.sec-h{font-weight:800;font-size:.9rem;color:var(--violet);margin:14px 0 7px;padding-bottom:3px;border-bottom:2px solid #E8DAEF}
+.t{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:.78rem}
+.t th{background:var(--violet);color:#fff;padding:7px 8px;text-align:left;font-weight:700}
+.t td{padding:7px 8px;border-bottom:1px solid #E8EDF2;vertical-align:top;line-height:1.4}
+.t tr:nth-child(even) td{background:#F9F5FC}
+.cle{background:linear-gradient(135deg,#EAFAF1,#D5F5E3);border-left:5px solid var(--vert2);border-radius:12px;padding:10px 14px;margin:10px 0;color:var(--vert);font-weight:700;font-size:.85rem}
+.alrt{background:linear-gradient(135deg,#FDEDEC,#FADBD8);border-left:5px solid var(--rouge2);border-radius:12px;padding:10px 14px;margin:10px 0;color:var(--rouge);font-weight:700;font-size:.85rem}
+.src{background:#F0F4F8;border-radius:10px;padding:8px 12px;margin:8px 0;color:var(--gris);font-size:.78rem;font-style:italic;border-left:3px solid var(--bleu3)}
+.qbox{background:linear-gradient(135deg,#F4ECF7,#E8DAEF);border-radius:12px;padding:12px 14px;margin:12px 0}
+.qbox .q{font-weight:800;color:var(--violet);font-size:.87rem;margin-bottom:6px}
+.qbox .r{color:var(--texte);font-size:.83rem;line-height:1.5;margin-bottom:6px}
+.qbox .comp{color:var(--bleu);font-size:.8rem;line-height:1.4;font-style:italic;border-top:1px solid #D7BDE2;padding-top:6px;margin-top:6px}
+.btn-qf{width:100%;background:linear-gradient(135deg,var(--violet2),var(--violet));color:#fff;border:none;border-radius:12px;padding:12px;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:8px;font-family:'Nunito',sans-serif}
+
+/* QUIZ */
+#quiz-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.qtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.qdots{display:flex;gap:3px;flex:1}
+.qdot{height:5px;flex:1;border-radius:3px;background:#E8EDF2;transition:all .3s}
+.qdot.a{background:var(--violet2)}
+.qdot.ok{background:var(--vert2)}
+.qdot.ko{background:var(--rouge2)}
+.qcard{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.1);border-top:5px solid var(--violet2)}
+.qtext{font-weight:700;font-size:.97rem;line-height:1.5}
+.qinfo{color:var(--gris);font-size:.75rem;margin-top:5px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{background:#fff;border:3px solid #E8EDF2;border-radius:11px;padding:12px 13px;cursor:pointer;transition:all .15s;font-weight:600;font-size:.85rem;font-family:'Nunito',sans-serif;text-align:left}
+.opt:hover{border-color:var(--violet2);background:#F4ECF7}
+.opt.correct{border-color:var(--vert2);background:#EAFAF1;color:var(--vert)}
+.opt.incorrect{border-color:var(--rouge2);background:#FDEDEC;color:var(--rouge)}
+.fb{border-radius:11px;padding:12px;margin-top:10px;font-weight:700;display:none;font-size:.85rem;line-height:1.5}
+.fb.correct{background:#EAFAF1;color:var(--vert);border:2px solid var(--vert2)}
+.fb.incorrect{background:#FDEDEC;color:var(--rouge);border:2px solid var(--rouge2)}
+.fb .fb-comp{font-size:.8rem;font-weight:400;font-style:italic;border-top:1px solid rgba(0,0,0,.1);padding-top:6px;margin-top:6px}
+.btn-next{width:100%;background:var(--violet2);color:#fff;border:none;border-radius:12px;padding:12px;font-size:.9rem;font-weight:800;cursor:pointer;margin-top:10px;display:none;font-family:'Nunito',sans-serif}
+
+/* CAS PRATIQUES */
+#cas-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.cas-card{background:#fff;border-radius:16px;padding:17px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.1);border-top:5px solid var(--rose)}
+.cas-t{font-family:'Fredoka One',cursive;color:var(--rose);font-size:1.05rem;margin-bottom:7px}
+.cas-txt{font-size:.86rem;line-height:1.6;margin-bottom:12px}
+.cas-q{font-weight:800;color:var(--violet2);font-size:.88rem;margin-bottom:9px}
+.cas-ta{width:100%;border:2px solid #E8EDF2;border-radius:10px;padding:11px;font-family:'Nunito',sans-serif;font-size:.85rem;min-height:90px;resize:vertical;margin-bottom:9px}
+.cas-ta:focus{outline:none;border-color:var(--violet2)}
+.btn-rep{background:var(--violet2);color:#fff;border:none;border-radius:11px;padding:10px;font-size:.87rem;font-weight:800;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;margin-bottom:9px}
+.cas-rep{background:linear-gradient(135deg,#F4ECF7,#E8DAEF);border-radius:11px;padding:12px;font-size:.83rem;line-height:1.5;display:none;margin-bottom:8px}
+.cas-rep strong{color:var(--violet);display:block;margin-bottom:4px}
+.cas-src{color:var(--bleu2);font-size:.76rem;font-style:italic;margin-top:6px;border-top:1px solid #D7BDE2;padding-top:5px}
+
+/* FLASHCARDS */
+#flash-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.flash-card{background:#fff;border-radius:20px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,.15);cursor:pointer;margin-bottom:14px;border:4px solid #E8DAEF;transition:all .3s;position:relative}
+.flash-front{font-weight:800;font-size:1rem;color:var(--violet);margin-bottom:6px}
+.flash-back{font-size:.87rem;color:var(--texte);line-height:1.5;display:none}
+.flash-src{font-size:.74rem;color:var(--gris);font-style:italic;display:none;margin-top:6px}
+.flash-hint{color:var(--gris);font-size:.72rem;position:absolute;bottom:9px;right:12px}
+.flash-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.fbtn{border:none;border-radius:11px;padding:11px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.82rem}
+.fbtn.r{background:var(--rouge2);color:#fff}
+.fbtn.v{background:var(--vert2);color:#fff}
+.fbtn.b{background:var(--violet2);color:#fff}
+.flash-prog{text-align:center;color:var(--gris);font-size:.8rem;margin-bottom:10px}
+
+/* SOURCES */
+#src-view{padding:14px;max-width:520px;margin:0 auto;display:none}
+.src-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);border-left:4px solid var(--bleu2)}
+.src-title{font-weight:800;color:var(--bleu);font-size:.9rem;margin-bottom:6px}
+.src-item{font-size:.82rem;color:var(--texte);margin-bottom:4px;padding-left:12px;line-height:1.4}
+.src-item::before{content:"• ";color:var(--bleu2)}
+
+/* RÉSULTATS */
+#result-view{padding:16px;max-width:520px;margin:0 auto;display:none;text-align:center}
+.res-emoji{font-size:3.5rem;margin:16px 0}
+.res-t{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--violet)}
+.res-s{font-size:2.5rem;font-weight:900;margin:12px 0;color:var(--violet)}
+.res-msg{color:var(--gris);font-size:.9rem;margin-bottom:18px;line-height:1.5}
+.res-btns{display:flex;flex-direction:column;gap:9px}
+.btn-retry{background:var(--orange);color:#fff;border:none;border-radius:12px;padding:12px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.btn-mr{background:#fff;color:var(--violet);border:3px solid var(--violet);border-radius:12px;padding:11px;font-size:.9rem;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.det{background:#fff;border-radius:12px;padding:12px;text-align:left;margin-bottom:9px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.det .dq{font-weight:700;font-size:.82rem;margin-bottom:3px}
+.det.ok{border-left:4px solid var(--vert2)}
+.det.ko{border-left:4px solid var(--rouge2)}
+.det .dr{font-size:.78rem;color:var(--gris)}
+</style>
+</head>
+<body>
+
+<!-- PIN -->
+<div id="pin-screen">
+  <div style="font-size:2.5rem">🌍</div>
+  <h1>Careum C<br>Participation & Sexualité</h1>
+  <p style="color:#D7BDE2">Entre ton code à 4 chiffres</p>
+  <div id="pin-display">
+    <div class="pdot" id="p0"></div><div class="pdot" id="p1"></div>
+    <div class="pdot" id="p2"></div><div class="pdot" id="p3"></div>
+  </div>
+  <div id="perr">❌ Code incorrect !</div>
+  <div id="pin-pad">
+    <button class="pb" onclick="pp('1')">1</button><button class="pb" onclick="pp('2')">2</button><button class="pb" onclick="pp('3')">3</button>
+    <button class="pb" onclick="pp('4')">4</button><button class="pb" onclick="pp('5')">5</button><button class="pb" onclick="pp('6')">6</button>
+    <button class="pb" onclick="pp('7')">7</button><button class="pb" onclick="pp('8')">8</button><button class="pb" onclick="pp('9')">9</button>
+    <button class="pb" onclick="pc()">✕</button><button class="pb" onclick="pp('0')">0</button><button class="pb" onclick="pd()">⌫</button>
+  </div>
+  <p style="color:#D7BDE2;font-size:.75rem;margin-top:6px">Code: 1234</p>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="nav">
+  <span class="nav-t">🌍 Careum C — ASE</span>
+  <span class="nav-s" id="nscore">⭐ 0 pts</span>
+</div>
+
+<!-- MENU -->
+<div id="menu">
+  <div class="salut">
+    <h2>Careum C 💪</h2>
+    <p>Participation • Espace social • Sexualité & Identité</p>
+  </div>
+  <div class="prog-box">
+    <div class="prog-row">
+      <span style="font-weight:800;color:var(--violet)">📊 Progression</span>
+      <span id="prog-txt" style="color:var(--vert2);font-weight:800">0 / 8 fiches</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="sec-t">🌍 C1 — Participation & Espace social</div>
+  <div class="grid">
+    <div class="card" data-c="violet" onclick="showFiche(0)" id="card-0"><div class="card-emoji">🤝</div><div class="card-titre">Définition<br>Participation</div><div class="card-nb">Accès, contribution, appartenance</div></div>
+    <div class="card" data-c="bleu" onclick="showFiche(1)" id="card-1"><div class="card-emoji">📊</div><div class="card-titre">9 Niveaux<br>de Participation</div><div class="card-nb">Schröder</div></div>
+    <div class="card" data-c="vert" onclick="showFiche(2)" id="card-2"><div class="card-emoji">🔑</div><div class="card-titre">Conditions<br>de Participation</div><div class="card-nb">5 conditions clés</div></div>
+    <div class="card" data-c="orange" onclick="showFiche(3)" id="card-3"><div class="card-emoji">🌐</div><div class="card-titre">Bronfenbrenner<br>Espace Social</div><div class="card-nb">4 systèmes</div></div>
+  </div>
+
+  <div class="sec-t">🌸 C — Développement sexuel & Identité</div>
+  <div class="grid">
+    <div class="card" data-c="rose" onclick="showFiche(4)" id="card-4"><div class="card-emoji">🧬</div><div class="card-titre">Identité Sexuelle<br>Définitions</div><div class="card-nb">Genre, orientation...</div></div>
+    <div class="card" data-c="violet" onclick="showFiche(5)" id="card-5"><div class="card-emoji">📈</div><div class="card-titre">Freud + Erikson<br>Stades parallèles</div><div class="card-nb">Développement psychosexuel</div></div>
+    <div class="card" data-c="rose" onclick="showFiche(6)" id="card-6"><div class="card-emoji">👶</div><div class="card-titre">Accompagnement<br>Sexualité</div><div class="card-nb">Enfants, ados, handicap, PA âgées</div></div>
+    <div class="card" data-c="orange" onclick="showFiche(7)" id="card-7"><div class="card-emoji">⚖️</div><div class="card-titre">Dilemmes<br>Éthiques</div><div class="card-nb">Aide vs contrôle</div></div>
+  </div>
+
+  <div class="sec-t">🎮 Modes de jeu</div>
+  <button class="btn-big btn-quiz" onclick="startQuiz()">🎯 QUIZ — 30 questions style examen fédéral</button>
+  <button class="btn-big btn-cas" onclick="showCas()">📝 CAS PRATIQUES — Questions ouvertes</button>
+  <button class="btn-big btn-flash" onclick="startFlash()">🃏 FLASHCARDS — 40 cartes Careum C</button>
+  <button class="btn-big btn-src" onclick="showSrc()">📚 SOURCES & RÉFÉRENCES</button>
+</div>
+
+<!-- FICHE -->
+<div id="fiche-view"></div>
+
+<!-- QUIZ -->
+<div id="quiz-view">
+  <div class="qtop">
+    <button class="btn-back" onclick="showMenu()">← Menu</button>
+    <div class="qdots" id="qdots"></div>
+    <span style="color:var(--gris);font-size:.8rem;font-weight:700" id="qnb">1/30</span>
+  </div>
+  <div class="qcard"><div class="qtext" id="qtext"></div><div class="qinfo" id="qinfo"></div></div>
+  <div class="opts" id="qopts"></div>
+  <div class="fb" id="qfb"></div>
+  <button class="btn-next" id="btnNext" onclick="nextQ()">Suivant →</button>
+</div>
+
+<!-- CAS -->
+<div id="cas-view"></div>
+
+<!-- FLASH -->
+<div id="flash-view">
+  <div class="qtop">
+    <button class="btn-back" onclick="showMenu()">← Menu</button>
+    <span style="font-family:'Fredoka One',cursive;color:var(--orange);font-size:1rem">🃏 Flashcards</span>
+    <span style="color:var(--gris);font-size:.8rem;font-weight:700" id="fnb">1/40</span>
+  </div>
+  <p class="flash-prog" id="fprog">✅ 0 sues | ❌ 0 à revoir</p>
+  <div class="flash-card" id="fcard" onclick="flipF()">
+    <div class="flash-front" id="ffront"></div>
+    <div class="flash-back" id="fback"></div>
+    <div class="flash-src" id="fsrc"></div>
+    <span class="flash-hint">👆 Cliquer pour retourner</span>
+  </div>
+  <div class="flash-nav">
+    <button class="fbtn r" onclick="fResult(false)">❌ À revoir</button>
+    <button class="fbtn b" onclick="flipF()">🔄 Retourner</button>
+    <button class="fbtn v" onclick="fResult(true)">✅ Je sais !</button>
+  </div>
+</div>
+
+<!-- SOURCES -->
+<div id="src-view">
+  <div class="qtop">
+    <button class="btn-back" onclick="showMenu()">← Menu</button>
+    <span style="font-family:'Fredoka One',cursive;color:var(--bleu);font-size:1rem">📚 Sources</span>
+  </div>
+  <div class="src-card">
+    <div class="src-title">📖 Textes officiels Careum</div>
+    <div class="src-item">Careum C1 — Compétence opérationnelle C1: Participation sociale et culturelle</div>
+    <div class="src-item">Careum C — Compétence opérationnelle C: Développement sexuel et identité</div>
+    <div class="src-item">Careum F0 — Psychologie du développement (Erikson, Piaget)</div>
+    <div class="src-item">Careum D — Organisation et collaboration</div>
+    <div class="src-item">Careum A2 — Identité culturelle, migration</div>
+  </div>
+  <div class="src-card">
+    <div class="src-title">⚖️ Bases légales</div>
+    <div class="src-item">Convention ONU relative aux droits de l'enfant (CDE, 1989) — ratifiée par la Suisse</div>
+    <div class="src-item">Convention ONU relative aux droits des personnes handicapées, article 3</div>
+    <div class="src-item">Code civil suisse (CC) — Protection de l'adulte (Art. 360-456, dès 2013)</div>
+    <div class="src-item">Code de déontologie du travail social suisse (AvenirSocial, 2010)</div>
+    <div class="src-item">TPAE Genève — Tribunal de protection de l'adulte et de l'enfant</div>
+  </div>
+  <div class="src-card">
+    <div class="src-title">🔬 Théories et auteurs</div>
+    <div class="src-item">Bronfenbrenner, U. (1981) — Modèle écologique: micro/méso/exo/macrosystème</div>
+    <div class="src-item">Schröder, R. (2010) — 9 niveaux de participation</div>
+    <div class="src-item">Erikson, E.H. (1902-1994) — 8 crises psychosociales</div>
+    <div class="src-item">Freud, S. (1856-1939) — Stades psychosexuels</div>
+    <div class="src-item">Ainsworth, M. (1913-1999) — Théorie de l'attachement</div>
+    <div class="src-item">Saarni, C. (2002) — 8 compétences émotionnelles</div>
+    <div class="src-item">Tuider et al. (2012) — Éducation à la diversité sexuelle</div>
+  </div>
+  <div class="src-card">
+    <div class="src-title">🏫 Formation ASE Genève</div>
+    <div class="src-item">CFPSo / CEFPSO Genève — Centre de formation professionnelle sociale</div>
+    <div class="src-item">OfTra Genève — Office de la formation professionnelle</div>
+    <div class="src-item">ORTRA — Organisation du monde du travail (examen fédéral ASE)</div>
+    <div class="src-item">Plan de formation ASE 2019 — Variante généraliste</div>
+  </div>
+</div>
+
+<!-- RÉSULTATS -->
+<div id="result-view">
+  <div class="res-emoji" id="rEmoji">🎉</div>
+  <div class="res-t" id="rTitre">Bravo !</div>
+  <div class="res-s" id="rScore"></div>
+  <div class="res-msg" id="rMsg"></div>
+  <div id="rDet"></div>
+  <div class="res-btns">
+    <button class="btn-retry" onclick="retryQ()">🔄 Réessayer</button>
+    <button class="btn-mr" onclick="showMenu()">🏠 Menu</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============ PIN ============
+const PIN="1234";let pin="";
+function pp(n){if(pin.length>=4)return;pin+=n;upDots();if(pin.length===4)setTimeout(chkPin,200)}
+function pd(){pin=pin.slice(0,-1);upDots()}
+function pc(){pin="";upDots()}
+function upDots(){for(let i=0;i<4;i++)document.getElementById('p'+i).classList.toggle('f',i<pin.length)}
+function chkPin(){
+  if(pin===PIN){document.getElementById('pin-screen').style.display='none';document.getElementById('app').style.display='block';upProg()}
+  else{const e=document.getElementById('perr');e.style.display='block';e.style.animation='none';setTimeout(()=>e.style.animation='shake .4s',10);pin="";upDots()}
+}
+
+// ============ STATE ============
+let score=0,done=new Set(),qList=[],qIdx=0,qScore=0,qAnswered=false;
+let fCards=[],fIdx=0,fFlipped=false,fOk=0,fKo=0;
+
+// ============ FICHES ============
+const fiches=[
+  {
+    id:0,titre:"🤝 Définition de la Participation",
+    idee:"La participation = droit fondamental. Elle se compose de 3 éléments indissociables.",
+    sections:[
+      {t:"Les 3 composantes (Careum C1, p.4)",tab:{h:["COMPOSANTE","SIGNIFICATION","EXEMPLE ASE"],r:[
+        ["Accès (access)","Pouvoir accéder à des ressources, activités","Aider un résident à aller au musée"],
+        ["Contribution (take part in)","Apporter quelque chose, participer activement","Organiser la décoration de la fête"],
+        ["Appartenance (membership)","Faire partie d'un groupe, d'une communauté","Membre d'un club de sport du quartier"]
+      ]}}
+    ],
+    cle:"Participation ≠ activité imposée. Si c'est imposé → pas de participation !",
+    alerte:"La participation est inscrite dans: Convention ONU droits de l'enfant (1989) + Convention ONU droits des personnes handicapées, art.3.",
+    src:"Careum C1, chap.1.2 + Strassburger & Rieger (2016): 'La participation commence par l'écoute et non par la mise sous tutelle.'",
+    qs:[{q:"Citez les 3 composantes de la participation et illustrez chacune.",r:"1) Accès: pouvoir accéder à des ressources (ex: accompagner Mme Liechti voir son amie dans l'autre EMS). 2) Contribution: apporter quelque chose (ex: laisser les résidents proposer des activités pour le programme de la semaine). 3) Appartenance: faire partie d'un groupe (ex: intégrer un résident dans un club de sport du quartier).",comp:"Careum C1 précise que ces 3 composantes 'exigent un contact avec d'autres personnes. La participation a toujours lieu dans le cadre d'un échange social.'"}]
+  },
+  {
+    id:1,titre:"📊 Les 9 Niveaux de Participation (Schröder)",
+    idee:"Plus la différence de pouvoir entre l'ASE et la PA est faible → plus le niveau de participation est élevé.",
+    sections:[
+      {t:"Les 9 niveaux (Schröder, Tab.1 Careum C1)",tab:{h:["NIV","NOM","DESCRIPTION","CATÉGORIE"],r:[
+        ["9","Autogestion","PA décide entièrement, informe l'ASE","✅ Autonomie complète"],
+        ["8","Autodétermination","PA formule idées, décide, ASE soutient","✅ Autonomie complète"],
+        ["7","Cogestion","Décisions prises ensemble, PA coresponsable","✅ Vraie participation"],
+        ["6","Contribution","PA consultée, peut critiquer, décision reste ASE","✅ Vraie participation"],
+        ["5","Informé mais dépendant","PA informée avant décision, sans réelle influence","⚠️ Partielle"],
+        ["4","Implication","PA informée après décision, exprime ses intérêts","⚠️ Partielle"],
+        ["3","Symbolique","PA présente mais avis sans poids réel","❌ Non-participation"],
+        ["2","Décoration","PA semble décider sans informations nécessaires","❌ Non-participation"],
+        ["1","Détermination par autrui","ASE décide tout. PA = 0 pouvoir.","❌ Non-participation"]
+      ]}}
+    ],
+    cle:"Vraie participation = niveaux 6 à 9. Non-participation = niveaux 1 à 3.",
+    alerte:"À l'examen: identifier le niveau + justifier + proposer une amélioration vers un niveau supérieur.",
+    src:"Careum C1, Tab.1: 'Les niveaux de participation', d'après Schröder (2010). Également: modèle de Martin Kühn (non-information/manipulation/information/concertation/codécision/autodétermination).",
+    qs:[{q:"La directrice promet aux résidents de 'voir ce qu'elle peut changer' concernant le menu, mais décide seule avec le cuisinier. Quel niveau est-ce ? Proposez une amélioration.",r:"Niveau 5 'Informé mais dépendant': les résidents expriment leur mécontentement et sont informés qu'une décision sera prise, mais n'ont aucune influence réelle. Amélioration: niveau 7 (cogestion) = organiser une réunion hebdomadaire où les résidents votent sur les changements du menu. Ou niveau 8: un groupe de résidents choisit lui-même le menu de la semaine.",comp:"Schröder (Careum C1) précise que les niveaux 4 et 5 ne constituent qu'une participation partielle. La vraie participation exige que la PA ait un POUVOIR de décision réel (niveaux 6-7-8)."}]
+  },
+  {
+    id:2,titre:"🔑 Les 5 Conditions de la Participation",
+    idee:"Permettre la participation n'est pas automatique. Il faut créer les conditions pour qu'elle soit possible.",
+    sections:[
+      {t:"Les 5 conditions (Careum C1, chap.1.2.2)",tab:{h:["CONDITION","DESCRIPTION","EXEMPLE CONCRET"],r:[
+        ["A. Relation d'égal à égal","La PA est experte de ce qui la concerne. L'ASE écoute activement.","S'agenouiller à côté de Max (5 ans): 'Qu'est-ce que tu veux faire ?'"],
+        ["B. Espaces d'apprentissage","La participation s'apprend. Donner des espaces pour pratiquer.","Laisser les résidents prendre le rôle de DJ à la soirée dansante."],
+        ["C. Réduire la différence de pouvoir","Accepter que la PA décide différemment de soi.","M. Ziegler (82 ans) garde ses habitudes de sieste même si ça perturbe."],
+        ["D. Structures institutionnelles","L'institution prévoit des espaces de participation (conseil des résidents, etc.).","Règles du jardin d'enfants établies AVEC les enfants, pas imposées."],
+        ["E. Transparence sur les limites","L'ASE communique clairement ce qui peut/ne peut pas être décidé par la PA.","Expliquer à Michael (39 ans) que c'est son représentant légal qui gère les finances."]
+      ]}},
+      {t:"3 compétences clés du travail participatif (Careum C1, Tab.2)",tab:{h:["COMPÉTENCE","CONTENU"],r:[
+        ["1. Accepter les points de vue","Demander l'opinion, accueillir les résultats inattendus sans jugement."],
+        ["2. Identifier les forces","Considérer l'expérience de vie de la PA comme un 'trésor'."],
+        ["3. Encourager l'autonomie","Aider à s'aider soi-même. Ne pas faire à leur place."]
+      ]}}
+    ],
+    cle:"Travail participatif = travailler AVEC la PA, pas POUR elle. La PA est experte de sa propre vie.",
+    alerte:"Tension éthique typique: aide vs contrôle / liberté vs sécurité / épanouissement vs responsabilité pour la collectivité.",
+    src:"Careum C1, chap.1.2.2 + Tab.2 'Compétences clés du travail participatif' + CO A3 'Approche centrée sur la personne'.",
+    qs:[{q:"Décrivez les 3 compétences clés du travail participatif avec un exemple concret pour chacune.",r:"1) Accepter les points de vue: laisser un groupe de résidents organiser la fête d'été autrement que prévu par l'ASE. 2) Identifier les forces: M. Studer (28 ans) connait bien le quartier → lui confier la recherche d'activités culturelles. 3) Encourager l'autonomie: plutôt que de gérer l'argent de Michael, l'accompagner à s'exercer avec son argent de poche dans les commerces.",comp:"Careum C1 insiste: 'Permettre aux PA d'examiner leur situation et de prendre leurs propres décisions.' L'ASE doit 'faire le moins possible à leur place' (aide à s'aider soi-même, pas de démarche de substitution)."}]
+  },
+  {
+    id:3,titre:"🌐 Bronfenbrenner — Espace Social",
+    idee:"Chaque personne évolue dans plusieurs systèmes qui s'influencent mutuellement. L'ASE comprend ces systèmes pour mieux accompagner.",
+    sections:[
+      {t:"Les 4 systèmes (Bronfenbrenner, 1981)",tab:{h:["SYSTÈME","DÉFINITION","EXEMPLE"],r:[
+        ["Microsystème","Relations directes de la PA dans un environnement donné","Famille, résidence, club de sport, école"],
+        ["Mésosystème","Relations ENTRE les microsystèmes de la PA","Relation parents ↔ éducateurs de la crèche"],
+        ["Exosystème","Domaines où la PA n'est pas active mais qui l'influencent","Perte d'emploi du père → impact sur l'enfant"],
+        ["Macrosystème","Valeurs culturelles et normes supérieures","Loi suisse sur les curatelles, normes de genre, religion"]
+      ]}}
+    ],
+    cle:"Rôle ASE: aider la PA à accéder à de NOUVEAUX MICROSYSTÈMES pour élargir ses possibilités de développement et de participation.",
+    alerte:"Migration: une personne migrante peut vivre dans des macrosystèmes très différents (pays d'origine vs Suisse) → tensions identitaires possibles.",
+    src:"Bronfenbrenner (1981), cité dans Careum C1, Fig.1 + Tab.3. Careum A2 chap.2.3.3 'Migration'.",
+    qs:[{q:"Expliquez le mésosystème selon Bronfenbrenner et son importance pour le travail de l'ASE.",r:"Le mésosystème = relations ENTRE les différents microsystèmes d'une personne. Ex: la relation entre les parents (famille) et le personnel éducatif (résidence). Plus ces relations sont positives et nombreuses, meilleur est le développement. Rôle ASE: 1) Favoriser des liens positifs entre microsystèmes (inviter les parents aux activités). 2) Maintenir les contacts de Mme Liechti avec son amie dans l'autre EMS. 3) Aider un résident à rejoindre un club de sport du quartier.",comp:"Careum C1: 'De nombreuses relations positives entre différents microsystèmes ont un effet bénéfique sur le développement d'une personne.' L'ASE peut créer des ponts entre les microsystèmes en organisant des sorties, maintenant les liens familiaux."}]
+  },
+  {
+    id:4,titre:"🧬 Identité Sexuelle — Définitions",
+    idee:"Identité sexuelle = ensemble complexe. Ne pas confondre genre biologique, psychologique, social et orientation sexuelle.",
+    sections:[
+      {t:"Définitions essentielles (Careum C, Tab.34-35)",tab:{h:["TERME","DÉFINITION","IMPORTANT POUR L'ASE"],r:[
+        ["Genre biologique","Sexe anatomique (XX/XY)","Déterminé dès la 12e semaine de grossesse"],
+        ["Genre psychologique","Ressenti intérieur de son genre","Peut différer du genre biologique → respecter l'autodétermination"],
+        ["Genre social","Rôle social attendu selon le genre","Construit socialement → éviter les stéréotypes"],
+        ["Orientation sexuelle","Vers qui on est attiré","Ne PAS confondre avec l'identité de genre"],
+        ["Transgenre","Genre psychologique ≠ genre biologique","Respecter prénom et genre choisi"],
+        ["Agender","Refus d'une seule catégorie sexuelle","Accepter sans jugement"],
+        ["Bisexualité","Attiré par hommes ET femmes","Mieux acceptée socialement que l'homosexualité (Careum C)"],
+        ["Pansexualité","Attiré indépendamment du genre","Diversité croissante des orientations"]
+      ]}}
+    ],
+    cle:"Ne JAMAIS confondre: orientation sexuelle (vers qui on est attiré) ≠ identité de genre (comment on se sent).",
+    alerte:"La compréhension de la diversité = accepter toutes les identités sans jugement. L'ASE remet en question ses propres stéréotypes.",
+    src:"Careum C, Tab.34 'Formes d'orientation sexuelle' + Tab.35 'Stades du développement de l'identité sexuelle'. Tuider et al. (2012).",
+    qs:[{q:"Quelle est la différence entre genre biologique, genre psychologique et orientation sexuelle ?",r:"Genre biologique = sexe anatomique (homme/femme sur le plan physique). Genre psychologique = comment la personne SE SENT intérieurement (peut différer du biologique → transgenre). Orientation sexuelle = vers qui on est attiré (hétéro, homo, bi, pan...). Ces 3 éléments sont INDÉPENDANTS: une femme biologique peut se sentir homme (genre psycho) et être attirée par des femmes (orientation homo).",comp:"Careum C précise que 'les orientations sexuelles qui ne sont pas hétérosexuelles sont souvent des tabous à l'adolescence.' L'ASE doit créer un espace sûr pour que chaque PA puisse 'découvrir, gérer et vivre la diversité de sa propre identité' (chap.3.6.2)."}]
+  },
+  {
+    id:5,titre:"📈 Freud + Erikson — Développement Psychosexuel",
+    idee:"Freud décrit les stades psychosexuels. Erikson les relie aux crises psychosociales. Ils se développent EN PARALLÈLE.",
+    sections:[
+      {t:"Les stades parallèles (Careum C, Tab.35 + Careum F0)",tab:{h:["ÂGE","FREUD","ERIKSON","CARACTÉRISTIQUES CLÉS"],r:[
+        ["0-1 an","Stade ORAL","Confiance vs Méfiance","Bouche = plaisir. Tétée = lien d'attachement. Contact peau-à-peau vital."],
+        ["1-2 ans","Stade ANAL","Autonomie vs Honte","Zone anale. Contrôle du corps. Apprentissage propreté. Ne pas réagir avec honte."],
+        ["3-5 ans","Stade PHALLIQUE","Initiative vs Culpabilité","Découverte organes génitaux. Curiosité différences anatomiques. Jeux papa-maman."],
+        ["6-12 ans","Période de LATENCE","Travail vs Infériorité","Intérêt sexuel moins visible. Exploration entre pairs. Masturbation normale. Curiosité sur sexualité adulte."],
+        ["Adolescence","Stade GÉNITAL","Identité vs Confusion","Puberté, premières relations. 4 ans en moyenne entre maturité et 1er rapport."],
+        ["Âge adulte","(Freud s'arrête ici)","Intimité / Générativité / Intégrité","Changements physiques (ménopause). Personnes âgées restent des êtres sexués."]
+      ]}}
+    ],
+    cle:"Stade phallique (3-5 ans) = 'petite puberté'. Répondre aux questions avec naturel. Ne pas créer de honte autour du corps.",
+    alerte:"Freud s'arrête à la puberté → ce qui fait l'objet de critiques. Le développement sexuel se poursuit tout au long de la vie.",
+    src:"Careum C, Tab.35 'Stades du développement de l'identité sexuelle selon Freud'. Careum F0 (Erikson). Freud (1856-1939).",
+    qs:[{q:"Décrivez le stade phallique selon Freud. Comment l'ASE accompagne-t-il/elle un enfant de 4 ans qui explore son corps ?",r:"Stade phallique (3-5 ans): l'enfant s'intéresse à ses organes génitaux, découvre les différences anatomiques, joue à papa-maman. L'attention se tourne vers le parent du sexe opposé. Rôle ASE: 1) Répondre aux questions avec naturel et sans gêne. 2) Utiliser les vrais mots anatomiques. 3) Ne pas réagir avec honte → cela crée de la culpabilité. 4) Informer les parents de la conversation. 5) Permettre les jeux de rôle (papa-maman) qui sont développementalement normaux.",comp:"Careum C précise: 'Les réactions et l'attitude des personnes de référence influencent la perception du corps de l'enfant.' Si on réagit avec naturel, 'son rôle sexué et son estime de soi seront renforcés' (Careum C, stade phallique)."}]
+  },
+  {
+    id:6,titre:"👶 Accompagnement de la Sexualité",
+    idee:"Chaque PA a des besoins sexuels. L'ASE accompagne sans juger, en respectant l'autodétermination et la dignité.",
+    sections:[
+      {t:"Accompagnement selon les populations (Careum C, chap.3.6.2)",tab:{h:["POPULATION","SPÉCIFICITÉS","RÔLE DE L'ASE"],r:[
+        ["Enfants (0-12 ans)","Sexualité motivée par la CURIOSITÉ, pas l'excitation. Jeux du docteur = normal jusqu'à 12 ans.","Répondre naturellement. Nommer correctement les parties du corps. ATTENTION: contact sexuel avec autrui avant 12 ans = possible abus."],
+        ["Adolescents","4 ans entre maturité sexuelle et 1er rapport. Pression sociale pour 'la première fois'.","Espace sûr pour parler. Contraception, MST, consentement. Ne pas juger les identités non-hétérosexuelles."],
+        ["Personnes en situation de handicap","Développement biologique normal mais moins d'espaces privés. Proches peuvent limiter les expériences.","Garantir un espace privé. Respecter les relations amoureuses. Accompagner si besoin. Ne pas infantiliser."],
+        ["Personnes âgées","Restent des êtres sexués. Pression sociale à se voir comme 'asexués'. Démence peut entraîner désinhibition.","Ne pas renforcer le stéréotype 'les PA âgées n'ont pas de sexualité'. Gérer les situations de désinhibition avec respect."]
+      ]}}
+    ],
+    cle:"La sexualité = énergie de vie plaisante et non quelque chose de menaçant ou de honteux (Careum C, chap.3.6.2).",
+    alerte:"Abus sexuel: toute expérience sexuelle avec autrui AVANT 12 ANS doit alerter l'ASE (signal possible d'abus).",
+    src:"Careum C, chap.3.6.2 'Le soutien aux PA en ce qui concerne leur sexualité' + Tab.36 'Objectifs et possibilités d'accompagnement'.",
+    qs:[{q:"Un résident adulte avec des troubles cognitifs (25 ans) se masturbe dans l'espace commun. Comment réagissez-vous ?",r:"1) Réaction immédiate: accompagner calmement dans un espace PRIVÉ, sans cri ni honte. 2) Expliquer simplement que c'est normal mais que ça se fait en privé. 3) En équipe: vérifier qu'il dispose d'un espace privé suffisant dans sa chambre. 4) Considérer son stade de développement: développement biologique adulte, développement cognitif différent. 5) Respecter son autodétermination et sa dignité.",comp:"Careum C: 'La personne accompagnée en situation de handicap manque souvent d'un lieu privé où elle peut s'isoler pour explorer son corps.' L'ASE doit créer ces conditions plutôt que de punir. La sexualité est 'une énergie de vie plaisante et non quelque chose de menaçant' (chap.3.6.2)."}]
+  },
+  {
+    id:7,titre:"⚖️ Dilemmes Éthiques",
+    idee:"L'ASE est souvent confronté à des tensions entre valeurs contradictoires. Il n'y a pas de 'bonne réponse' unique → travailler en équipe.",
+    sections:[
+      {t:"Tensions éthiques typiques (Careum C1 + Careum C)",tab:{h:["TENSION","EXEMPLE","RÉFLEXION"],r:[
+        ["Aide vs Contrôle","Mme Zehnder (démence) se déshabille en public","Limiter la liberté pour protéger sa dignité et celle des autres. Décision d'équipe."],
+        ["Liberté vs Sécurité","Catherine Renard veut partir seule malgré l'épilepsie","Chercher une solution qui respecte l'autodétermination ET assure la sécurité."],
+        ["Épanouissement vs Responsabilité","Adulte handicapé veut une relation amoureuse, proches s'y opposent","Respecter les droits de la PA adulte. Accompagner les proches dans leurs craintes."],
+        ["Autodétermination vs Protection","Michael veut gérer son argent malgré ses dettes","Expliquer les limites légales. Proposer des alternatives (exercices avec argent de poche)."]
+      ]}}
+    ],
+    cle:"Face à un dilemme: 1) Identifier la tension. 2) En parler en équipe/supervision. 3) Maximiser l'autodétermination TOUT EN garantissant la sécurité.",
+    alerte:"CO A1 'Dilemmes éthiques' précise: l'ASE doit s'intéresser de manière CIBLÉE à ces zones de tension. L'échange avec des professionnels est utile car il n'y a souvent pas de solution claire.",
+    src:"Careum C1, chap.1.2.2 F 'Étude active des dilemmes éthiques' + Careum C, chap.3.6.2. CO A1 'Principes éthiques pour l'action professionnelle'.",
+    qs:[{q:"Décrivez une situation de dilemme éthique lié à la participation et expliquez comment vous le gérez.",r:"Situation: M. Ziegler (82 ans, EMS) veut continuer à faire sa sieste l'après-midi (habitude de toute sa vie) mais cela signifie qu'il ne participe jamais aux activités prévues par l'institution. Tension: épanouissement (respecter ses habitudes) vs responsabilité pour la collectivité (participer aux activités de groupe). Gestion: 1) Écouter M. Ziegler et reconnaître son droit à ses habitudes. 2) En équipe: adapter le programme pour inclure des activités en dehors de l'heure de sieste. 3) Proposer à M. Ziegler de choisir UNE activité qui lui convient. 4) Documenter la décision.",comp:"Careum C1 précise que 'permettre la participation peut placer le personnel socio-éducatif dans une situation de tension entre différentes valeurs.' La solution n'est pas toujours claire et 'doit à chaque fois être renégociée' (chap.1.2.2 F)."}]
+  }
+];
+
+// ============ QUESTIONS QUIZ ============
+const questions=[
+  {fi:0,q:"La participation se compose de 3 éléments. Lesquels ?",opts:["Accès, contribution, appartenance","Information, décision, action","Liberté, égalité, fraternité","Autonomie, dépendance, intégration"],c:0,exp:"Accès (access) + Contribution (take part in) + Appartenance (membership). Ces 3 composantes exigent un contact avec d'autres personnes.",comp:"Source: Careum C1, p.4"},
+  {fi:0,q:"Selon Careum C1, la participation est inscrite dans...",opts:["La loi suisse sur les EMS","La Convention ONU droits de l'enfant ET la Convention droits des personnes handicapées","Le Code civil suisse uniquement","Le Code de déontologie AvenirSocial"],c:1,exp:"La participation est un DROIT FONDAMENTAL inscrit dans: Convention ONU droits de l'enfant (1989) + Convention ONU droits des personnes handicapées, article 3.",comp:"Source: Careum C1, chap.1.2"},
+  {fi:1,q:"Quel niveau de participation correspond à: 'La PA formule ses idées, décide et agit majoritairement de façon autonome' ?",opts:["Niveau 6 (Contribution)","Niveau 9 (Autogestion)","Niveau 8 (Autodétermination)","Niveau 7 (Cogestion)"],c:2,exp:"Niveau 8 = AUTODÉTERMINATION. La PA formule ses idées, décide et agit. L'ASE n'intervient que pour soutenir.",comp:"Schröder (Careum C1, Tab.1): niveau 9=autogestion (PA communique seulement). Niveau 8=autodétermination (PA décide, ASE soutient)."},
+  {fi:1,q:"À quel niveau correspond: 'La PA peut participer aux décisions mais son avis n'a aucun poids' ?",opts:["Niveau 4 (Implication)","Niveau 3 (Participation symbolique)","Niveau 2 (Décoration)","Niveau 5 (Informé mais dépendant)"],c:1,exp:"Niveau 3 = PARTICIPATION SYMBOLIQUE. La PA est présente dans les décisions mais son avis n'a aucun poids réel.",comp:"Careum C1: les niveaux 1, 2, 3 = NON-PARTICIPATION. C'est une forme de 'non-participation déguisée'."},
+  {fi:1,q:"La VRAIE participation commence à partir de quel niveau ?",opts:["Niveau 3","Niveau 5","Niveau 6","Niveau 9 seulement"],c:2,exp:"La vraie participation commence au NIVEAU 6 (Contribution): la PA est consultée, peut critiquer et formuler ses idées. Niveaux 6, 7, 8 = vraie participation.",comp:"Schröder (Careum C1): niveaux 1-3 = non-participation. Niveaux 4-5 = participation partielle. Niveaux 6-9 = participation réelle."},
+  {fi:2,q:"Selon la condition C (Careum C1), l'ASE doit...",opts:["Toujours imposer ses décisions","Accepter que la PA puisse décider différemment de lui/elle","Consulter la direction avant chaque décision","Informer les proches de toutes les décisions"],c:1,exp:"Condition C = Réduire la différence de pouvoir. L'ASE accepte que la PA décide différemment. Ex: M. Ziegler garde ses habitudes de sieste même si cela perturbe le programme.",comp:"Careum C1 chap.1.2.2 C: 'L'ASE doit être disposé à s'écarter de ses idées habituelles et à accepter les réalités quotidiennes des PA.'"},
+  {fi:2,q:"Quelle est la 1ère compétence clé du travail participatif selon Careum C1 ?",opts:["Encourager l'autonomie","Identifier les forces de la PA","Accepter les points de vue des PA","Réduire la différence de pouvoir"],c:2,exp:"Compétence 1 = Accepter les points de vue et intérêts des PA. Cela inclut: demander l'opinion, accueillir les résultats inattendus, permettre les stratégies de résolution propres à la PA.",comp:"Careum C1, Tab.2: 3 compétences clés: 1) Accepter les points de vue. 2) Identifier les forces. 3) Encourager la collaboration et l'autonomie."},
+  {fi:3,q:"Le mésosystème selon Bronfenbrenner correspond à...",opts:["Les relations directes de la PA dans un environnement donné","Les relations ENTRE les différents microsystèmes de la PA","Les domaines où la PA n'est pas active","Les valeurs culturelles supérieures"],c:1,exp:"Mésosystème = relations ENTRE les microsystèmes. Ex: relation entre les parents (famille) et le personnel éducatif (résidence/crèche).",comp:"Bronfenbrenner (1981), Careum C1, Tab.3. Plus ces relations sont positives, meilleur est le développement de la PA."},
+  {fi:3,q:"Un enfant éprouve les conséquences de la perte d'emploi de son père sans y participer directement. C'est quel système ?",opts:["Microsystème","Mésosystème","Exosystème","Macrosystème"],c:2,exp:"Exosystème = domaines de la vie qui n'appartiennent pas au champ d'action direct de la personne mais qui l'influencent. La perte d'emploi du père est dans l'exosystème de l'enfant.",comp:"Careum C1, Tab.3: 'Les changements dans l'exosystème ont néanmoins des conséquences pour la personne concernée.'"},
+  {fi:3,q:"Pour aider Mme Liechti (89 ans, EMS) qui a perdu le contact avec son amie, l'ASE peut...",opts:["Lui trouver de nouveaux amis dans l'EMS uniquement","L'aider à accéder à de nouveaux microsystèmes ET maintenir ses anciens liens","Lui dire qu'elle doit s'adapter à sa nouvelle vie","Informer les proches et attendre"],c:1,exp:"L'ASE aide la PA à accéder à de NOUVEAUX MICROSYSTÈMES et à maintenir ses anciens liens. Ex: organiser une visite à son amie Marguerite dans l'autre EMS, maintenir un contact téléphonique régulier.",comp:"Careum C1: 'Le personnel socio-éducatif doit aider les PA à avoir accès à de nouveaux microsystèmes (musée, bibliothèque, groupe de musique, etc.)'"},
+  {fi:4,q:"Quelle est la différence entre genre biologique et genre psychologique ?",opts:["Ce sont des synonymes","Bio = sexe anatomique / Psycho = ressenti intérieur (peut différer)","Bio = orientation sexuelle / Psycho = rôle social","Bio = inné / Psycho = acquis uniquement"],c:1,exp:"Genre biologique = sexe anatomique (corps). Genre psychologique = comment la personne SE SENT intérieurement. Ils peuvent différer → c'est le cas des personnes transgenres.",comp:"Careum C: ces éléments sont INDÉPENDANTS. L'ASE respecte le genre psychologique et l'autodétermination de la PA."},
+  {fi:4,q:"La compréhension de la diversité sexuelle implique pour l'ASE...",opts:["Accepter uniquement les orientations hétérosexuelles","Remettre en question ses propres stéréotypes et accepter toutes les identités sans jugement","Orienter toutes les PA LGBT vers un psychologue","Ne jamais parler de sexualité avec les PA"],c:1,exp:"Compréhension de la diversité = remettre en question ses propres stéréotypes et accepter toutes les identités sexuelles sans jugement ni comparaison.",comp:"Careum C, chap.3.6.2: 'L'ASE doit préalablement identifier et remettre en question les catégories mentales (stéréotypes) dans lesquelles elle classe les personnes.'"},
+  {fi:4,q:"À quel moment le genre biologique est-il déterminé pendant la grossesse ?",opts:["Dès la conception","Après le 3e mois (12e semaine)","À la naissance uniquement","Au 6e mois"],c:1,exp:"Jusqu'à la 12e semaine de grossesse, l'embryon possède les deux sexes. C'est seulement après le 3e mois que l'embryon appartient à une catégorie sexuelle biologique déterminée.",comp:"Careum C, Tab.35 'Phase prénatale': 'L'embryon humain possède les deux sexes sur le plan biologique jusqu'à la 12e semaine de grossesse.'"},
+  {fi:5,q:"Dans le stade oral (0-1 an) selon Freud, la bouche est...",opts:["Uniquement un organe pour se nourrir","Le principal organe de plaisir ET un moyen de créer un lien d'attachement","Un symbole d'agressivité","Un organe secondaire pour le développement"],c:1,exp:"Stade oral: la bouche = principal organe de plaisir (tétée) + lien d'attachement intense (rapport sein-peau). La tendre attention lors des soins corporels aide l'enfant à développer une confiance fondamentale.",comp:"Careum C + Erikson: le stade oral correspond à la crise 'Confiance vs Méfiance'. La satisfaction des besoins oraux construit la confiance fondamentale."},
+  {fi:5,q:"Au stade phallique (3-5 ans), l'enfant...",opts:["N'a aucun intérêt pour la sexualité","Découvre ses organes génitaux, s'intéresse aux différences anatomiques, joue à papa-maman","Se concentre uniquement sur l'apprentissage","Développe son identité de genre définitive"],c:1,exp:"Stade phallique (3-5 ans): l'enfant s'intéresse à ses organes génitaux, découvre les différences (fille/garçon), joue à papa-maman. C'est la 'petite puberté'. L'identité de genre est en construction mais pas encore fixée.",comp:"Careum C: 'L'enfant fait face à d'importantes tâches de développement physiques et mentales, c'est pourquoi cette phase est également appelée petite puberté.'"},
+  {fi:5,q:"La période de latence (6-12 ans) selon Freud signifie...",opts:["L'enfant n'a plus aucun intérêt sexuel","L'intérêt sexuel est moins visible extérieurement mais existe (masturbation normale, curiosité)","L'enfant développe sa sexualité adulte","L'enfant n'explore plus son corps"],c:1,exp:"Période de LATENCE: l'intérêt sexuel est moins visible de l'extérieur (exploration surtout avec les pairs, même sexe) mais existe: masturbation normale, curiosité sur la sexualité adulte (règles, grossesse, rapports).",comp:"Careum C: 'Cela ne signifie pas que les enfants sont des êtres asexués à cet âge. Ils explorent et approfondissent leur rôle sexué surtout en contact avec des enfants du même âge.'"},
+  {fi:6,q:"Un enfant de 10 ans qui a une expérience sexuelle avec un adulte, c'est...",opts:["Un développement normal de la curiosité","Un signe de maturité précoce","Un signe possible d'abus sexuel","Une situation à ignorer si l'enfant ne se plaint pas"],c:2,exp:"SIGNAL D'ALARME: toute expérience sexuelle avec UNE AUTRE PERSONNE avant 12 ans doit alerter l'ASE. C'est un signe possible d'abus sexuel.",comp:"Careum C: 'Les expériences sexuelles avant la puberté qui ne se limitent pas à leur propre personne avant 12 ans résultent généralement d'un abus sexuel.'"},
+  {fi:6,q:"Concernant la sexualité des personnes âgées, l'ASE doit...",opts:["Considérer qu'elles n'ont plus de besoins sexuels","Respecter qu'elles restent des êtres sexués et ne pas renforcer le stéréotype 'asexué'","Traiter toute manifestation sexuelle comme pathologique","Informer systématiquement les proches"],c:1,exp:"Les PA âgées restent des êtres sexués. Certaines peuvent se considérer comme 'asexuées' sous pression sociale. L'ASE ne renforce pas ce stéréotype et respecte leur vie intime.",comp:"Careum C: 'Les personnes vieillissantes se considèrent de plus en plus comme des êtres asexués [sous pression sociale]. Cela peut les conduire à ignorer leurs besoins sexuels.'"},
+  {fi:6,q:"Pour une personne en situation de handicap, l'ASE doit EN PRIORITÉ...",opts:["Demander aux proches si c'est approprié","Garantir un espace PRIVÉ pour qu'elle puisse explorer son corps","Orienter systématiquement vers un médecin","Interdire toute relation amoureuse par mesure de protection"],c:1,exp:"L'ASE garantit un espace privé adapté. Les PA handicapées ont souvent moins d'espaces pour explorer leur corps. C'est un droit fondamental lié à la dignité et à l'autodétermination.",comp:"Careum C: 'La PA en situation de handicap manque souvent d'un lieu privé où elle peut s'isoler pour explorer son corps et satisfaire ses besoins sexuels.'"},
+  {fi:7,q:"Face à un dilemme éthique, l'ASE doit d'abord...",opts:["Prendre une décision immédiate seul","Demander aux proches","Identifier la tension éthique et en parler en équipe/supervision","Appliquer systématiquement les règles institutionnelles"],c:2,exp:"Face à un dilemme: 1) Identifier la tension (quelle valeur contre quelle valeur). 2) En parler en équipe ou en supervision. 3) Chercher la solution qui maximise l'autodétermination TOUT EN garantissant la sécurité.",comp:"Careum C1, chap.1.2.2 F: 'L'échange avec d'autres professionnels peut être utile car il n'existe pas de solution claire et celle-ci doit à chaque fois être renégociée.'"},
+  {fi:7,q:"Mme Zehnder (démence) se déshabille en public. La tension éthique est...",opts:["Information vs Décision","Aide vs Contrôle","Liberté vs Sécurité","Épanouissement vs Responsabilité pour la collectivité"],c:3,exp:"Tension: l'épanouissement de Mme Zehnder (liberté de se déshabiller = manifestation de sa démence) vs responsabilité pour la collectivité (protéger sa dignité et celle des autres résidents). Solution: limitation temporaire de la liberté, décision d'équipe.",comp:"Careum C1: 'Les possibilités de participation peuvent être réduites par la mission du personnel socio-éducatif (assurer la protection).'"},
+  {fi:0,q:"Selon Careum C1, la participation est une relation...",opts:["Unilatérale (ASE décide pour la PA)","D'expert à patient","D'égal à égal où la PA est experte de ce qui la concerne","De supérieur à subordonné"],c:2,exp:"La participation exige une relation d'ÉGAL À ÉGAL. La PA est experte de ce qui la concerne. L'ASE doit solliciter activement les PA et s'intéresser à leurs préoccupations.",comp:"Careum C1 chap.1.2.2 A: 'La participation présuppose une relation d'égal à égal.' 'La participation commence par l'écoute et non par la mise sous tutelle.' (Strassburger & Rieger, 2016)"},
+  {fi:2,q:"La condition D (structures institutionnelles) signifie que...",opts:["L'ASE décide seul des règles","L'institution doit prévoir des espaces de participation (conseil des résidents, procédures de plainte)","Les PA doivent s'adapter aux structures existantes","La direction prend toutes les décisions importantes"],c:1,exp:"Condition D: l'institution elle-même doit créer des espaces de participation (conseil des résidents, conseil des enfants, procédures de participation et de plainte ancrées). La culture institutionnelle est déterminante.",comp:"Careum C1 chap.1.2.2 D: 'Lorsque la différence de pouvoir entre les collaborateurs est très marquée, la marge de participation des PA est généralement aussi très réduite.'"},
+  {fi:3,q:"Le macrosystème selon Bronfenbrenner correspond à...",opts:["Les relations directes de la PA","Les liens entre les microsystèmes","Les domaines indirects qui influencent la PA","Les valeurs et normes culturelles supérieures"],c:3,exp:"Macrosystème = valeurs et normes culturelles supérieures. Ex: loi suisse sur les curatelles, normes de genre, religion. Elles influencent tous les autres systèmes.",comp:"Careum C1, Tab.3: 'Le macrosystème désigne les valeurs et normes culturelles supérieures. Si le cadre culturel sert d'orientation, il peut engendrer des problèmes si la PA évolue dans des macrosystèmes très différents.'"},
+  {fi:5,q:"Quel est le lien entre le stade anal de Freud et la crise d'Erikson ?",opts:["Stade anal = Confiance vs Méfiance","Stade anal = Autonomie vs Honte","Stade anal = Initiative vs Culpabilité","Stade anal = Travail vs Infériorité"],c:1,exp:"Stade ANAL (1-2 ans) de Freud = crise AUTONOMIE vs HONTE d'Erikson. L'enfant découvre qu'il contrôle son corps (autonomie). Un apprentissage de la propreté trop sévère peut provoquer de la honte.",comp:"Careum C, Tab.35: 'Un enseignement de la propreté trop sévère peut nuire à l'autonomie et à l'autodétermination. Les réactions des parents peuvent déclencher des sentiments de honte ou de doute.'"},
+  {fi:4,q:"Stephan (14 ans) se sent fille dans un corps de garçon. Comment qualifier cela ?",opts:["Homosexualité","Bisexualité","Transidentité (transgenre)","Phase normale de l'adolescence"],c:2,exp:"Stephan est TRANSGENRE: son genre psychologique (se sent fille) diffère de son genre biologique (corps de garçon). Ce n'est pas lié à l'orientation sexuelle.",comp:"Careum C: 'En raison de la différence entre leur genre biologique et leur identité sexuelle psychologique, bon nombre de transgenres souhaitent également changer de genre biologique.' L'ASE écoute sans jugement et oriente vers des professionnels spécialisés si nécessaire."},
+  {fi:1,q:"La cogestion (niveau 7) signifie...",opts:["La PA décide seule","L'ASE décide seul","Décisions prises ensemble, PA coresponsable","La PA est seulement informée"],c:2,exp:"Cogestion (niveau 7) = décisions prises ENSEMBLE de façon démocratique. La PA est coresponsable. L'idée vient souvent de l'ASE mais la décision et la mise en œuvre se font en partenariat.",comp:"Careum C1, Tab.1: 'Les décisions sont prises de façon démocratique (la majorité des voix l'emporte). Les PA ont un droit de participation.'"},
+  {fi:6,q:"Concernant la masturbation d'un enfant de 8 ans, l'ASE doit...",opts:["L'interdire immédiatement","Informer les parents que c'est un comportement déviant","Ne pas réagir avec honte ou punition — c'est développementalement normal","L'orienter vers un psychologue"],c:2,exp:"La masturbation dans la période de latence (6-12 ans) est développementalement NORMALE. L'ASE ne réagit pas avec honte ou punition. Important: ne pas présenter la masturbation comme anormale ou mal car cela crée de la culpabilité.",comp:"Careum C, période de latence: 'Il est important que les adultes de référence ne présentent pas la masturbation comme quelque chose d'anormal ou de mal, car cela peut susciter une grande culpabilité chez l'enfant.'"},
+  {fi:7,q:"La tension éthique principale dans le cas Catherine Renard (épilepsie, veut partir seule) est...",opts:["Aide vs Contrôle","Liberté vs Sécurité","Épanouissement vs Responsabilité","Information vs Décision"],c:1,exp:"Tension LIBERTÉ (Catherine veut décider seule, autodétermination) vs SÉCURITÉ (risque de crise d'épilepsie sans accompagnement). La solution doit chercher un équilibre: ex. bracelet GPS, accompagnement d'une amie formée.",comp:"Careum C1: 'La véritable participation fait de la PA un expert en ce qui la concerne.' Il faut chercher une solution en collaboration interprofessionnelle (médecin, ASE, Catherine elle-même)."},
+  {fi:2,q:"La condition E (transparence sur les limites) signifie...",opts:["Cacher à la PA les raisons des décisions","Communiquer clairement à la PA ce qui peut et ne peut pas être décidé par elle","Laisser la PA décider de tout","Consulter les proches à la place de la PA"],c:1,exp:"Condition E: L'ASE communique CLAIREMENT et OUVERTEMENT les limites de la participation. Ex: expliquer à Michael (39 ans) que son représentant légal gère ses finances, puis proposer des alternatives (exercices avec argent de poche).",comp:"Careum C1 chap.1.2.2 E: 'Les possibilités de participation peuvent être réduites par la mission du personnel socio-éducatif (protection). L'ASE doit aborder ces limites ouvertement avec les PA.'"}
+];
+
+// ============ FLASHCARDS ============
+const flashData=[
+  {r:"Accès + Contribution + Appartenance",v:"Les 3 composantes de la participation",src:"Careum C1, p.4"},
+  {r:"Convention ONU droits de l'enfant + Convention droits des personnes handicapées art.3",v:"Bases légales de la participation",src:"Careum C1, chap.1.2"},
+  {r:"9 = Autogestion | 8 = Autodétermination | 7 = Cogestion",v:"Niveaux 7-8-9 de participation (Schröder)",src:"Careum C1, Tab.1"},
+  {r:"Niveaux 6 à 9 = vraie participation | 1 à 3 = non-participation",v:"Catégories de participation (Schröder)",src:"Careum C1, Tab.1"},
+  {r:"A: Relation d'égal à égal | B: Espaces d'apprentissage | C: Réduire la différence de pouvoir",v:"Conditions A, B, C de la participation",src:"Careum C1, chap.1.2.2"},
+  {r:"D: Structures institutionnelles | E: Transparence sur les limites",v:"Conditions D, E de la participation",src:"Careum C1, chap.1.2.2"},
+  {r:"1) Accepter les points de vue | 2) Identifier les forces | 3) Encourager l'autonomie",v:"3 compétences clés du travail participatif",src:"Careum C1, Tab.2"},
+  {r:"Microsystème: relations directes (famille, résidence, club)",v:"Microsystème selon Bronfenbrenner",src:"Careum C1, Tab.3"},
+  {r:"Mésosystème: relations ENTRE les microsystèmes (parents ↔ éducateurs)",v:"Mésosystème selon Bronfenbrenner",src:"Careum C1, Tab.3"},
+  {r:"Exosystème: domaines indirects qui influencent la PA (perte d'emploi du père)",v:"Exosystème selon Bronfenbrenner",src:"Careum C1, Tab.3"},
+  {r:"Macrosystème: valeurs et normes culturelles supérieures (loi, religion)",v:"Macrosystème selon Bronfenbrenner",src:"Careum C1, Tab.3"},
+  {r:"Aide vs Contrôle / Liberté vs Sécurité / Épanouissement vs Responsabilité pour la collectivité",v:"Les 3 tensions éthiques principales (Careum C1)",src:"Careum C1, chap.1.2.2 F"},
+  {r:"Genre biologique (corps) ≠ Genre psychologique (ressenti) ≠ Orientation sexuelle (attraction)",v:"Différence des 3 composantes de l'identité sexuelle",src:"Careum C, Tab.34-35"},
+  {r:"Transgenre: genre psychologique ≠ genre biologique",v:"Définition transgenre",src:"Careum C"},
+  {r:"Agender: refuse d'appartenir à une seule catégorie sexuelle",v:"Définition agender",src:"Careum C"},
+  {r:"Après la 12e semaine de grossesse (3e mois)",v:"À quel moment le genre biologique est-il déterminé ?",src:"Careum C, Tab.35"},
+  {r:"Stade ORAL (0-1 an) — Bouche = plaisir. Tétée = lien d'attachement.",v:"Stade de Freud à 0-1 an",src:"Careum C, Tab.35"},
+  {r:"Confiance vs Méfiance (Erikson)",v:"Crise d'Erikson correspondant au stade oral",src:"Careum F0 + Careum C"},
+  {r:"Stade ANAL (1-2 ans) — Zone anale. Contrôle du corps. Propreté.",v:"Stade de Freud à 1-2 ans",src:"Careum C, Tab.35"},
+  {r:"Autonomie vs Honte (Erikson)",v:"Crise d'Erikson correspondant au stade anal",src:"Careum F0 + Careum C"},
+  {r:"Stade PHALLIQUE (3-5 ans) — Organes génitaux. Différences anatomiques. Papa-maman.",v:"Stade de Freud à 3-5 ans = 'petite puberté'",src:"Careum C, Tab.35"},
+  {r:"Initiative vs Culpabilité (Erikson)",v:"Crise d'Erikson correspondant au stade phallique",src:"Careum F0 + Careau C"},
+  {r:"Période de LATENCE (6-12 ans) — Intérêt moins visible. Masturbation normale. Curiosité sexualité adulte.",v:"Stade de Freud à 6-12 ans",src:"Careum C, Tab.35"},
+  {r:"Travail vs Infériorité (Erikson)",v:"Crise d'Erikson correspondant à la période de latence",src:"Careum F0 + Careum C"},
+  {r:"Stade GÉNITAL (Adolescence) — Puberté. 4 ans entre maturité et 1er rapport.",v:"Stade de Freud à l'adolescence",src:"Careum C, Tab.35"},
+  {r:"Identité vs Confusion d'identité (Erikson)",v:"Crise d'Erikson correspondant à l'adolescence",src:"Careum F0 + Careum C"},
+  {r:"Motivée par la CURIOSITÉ (pas l'excitation). Jeux du docteur = normal jusqu'à 12 ans.",v:"Caractéristiques de la sexualité de l'enfant",src:"Careum C, chap.3.6.2"},
+  {r:"SIGNAL D'ALARME: contact sexuel avec autrui avant 12 ans = possible abus sexuel",v:"Que signifie une expérience sexuelle d'un enfant avec une autre personne avant 12 ans ?",src:"Careum C"},
+  {r:"4 ans en moyenne entre la maturité sexuelle et les premiers rapports sexuels",v:"Délai moyen entre maturité et 1er rapport (adolescence)",src:"Careum C"},
+  {r:"Créer un espace PRIVÉ. Respecter les relations amoureuses. Ne pas infantiliser.",v:"Rôle ASE pour la sexualité des personnes en situation de handicap",src:"Careum C, chap.3.6.2"},
+  {r:"Elles restent des êtres SEXUÉS. Ne pas renforcer le stéréotype 'asexué'.",v:"Sexualité des personnes âgées — principe clé",src:"Careum C"},
+  {r:"La sexualité = énergie de vie plaisante et NON quelque chose de menaçant ou de honteux",v:"Principe fondamental du Careum C sur la sexualité",src:"Careum C, chap.3.6.2"},
+  {r:"Remettre en question ses stéréotypes. Accepter toutes les identités sans jugement ni comparaison.",v:"Compréhension de la diversité: définition pour l'ASE",src:"Careum C, chap.3.6.2 + Tuider et al. 2012"},
+  {r:"Niveau 7 (Cogestion): décisions prises ensemble, PA coresponsable",v:"Quel niveau permet à la PA d'être coresponsable des décisions ?",src:"Schröder, Careum C1, Tab.1"},
+  {r:"Travailler AVEC la PA, pas POUR elle. La PA est experte de sa propre vie.",v:"Principe fondamental du travail participatif",src:"Careum C1, p.7"},
+  {r:"Niveau 1 (Détermination par autrui) = toutes décisions par l'ASE",v:"Quel est le niveau le plus bas de participation ?",src:"Schröder, Careum C1, Tab.1"},
+  {r:"L'ASE aide la PA à accéder à de NOUVEAUX MICROSYSTÈMES",v:"Rôle de l'ASE par rapport à l'espace social (Bronfenbrenner)",src:"Careum C1"},
+  {r:"Aide vs Contrôle — Mme Zehnder (démence + désinhibition sexuelle)",v:"Exemple de dilemme 'aide vs contrôle'",src:"Careum C1, chap.1.2.2 F"},
+  {r:"Liberté vs Sécurité — Catherine Renard (épilepsie + week-end seule)",v:"Exemple de dilemme 'liberté vs sécurité'",src:"Careum C1 + Careum D2"},
+  {r:"1) Identifier la tension. 2) Parler en équipe/supervision. 3) Maximiser l'autodétermination ET garantir la sécurité.",v:"3 étapes pour gérer un dilemme éthique",src:"Careum C1 + CO A1"}
+];
+
+// ============ CAS PRATIQUES ============
+const cas=[
+  {
+    t:"Cas 1 — La soirée dansante à la Fondation Horizon",
+    txt:"Dario Clerc, ASE en formation, joue le rôle de DJ lors des soirées dansantes mensuelles (c'est son hobby). Après une soirée, plusieurs résidentes et résidents expriment le souhait de jouer eux aussi le rôle de DJ.",
+    q:"1. Quel niveau de participation illustre la situation actuelle? 2. Comment Dario pourrait-il améliorer la participation? 3. Quelle condition du Careum C1 est concernée?",
+    r:"1. Niveau 1 (Détermination par autrui): Dario décide seul de tout le contenu musical. Les résidents n'ont aucun pouvoir de décision.\n\n2. Améliorations possibles: Niveau 6: consulter les résidents sur le programme musical et intégrer leurs suggestions. Niveau 8: laisser un groupe de résidents choisir et animer entièrement une soirée. Niveau 7: co-programmer la soirée ensemble (Dario + résidents).\n\n3. Condition B (espaces d'apprentissage): Dario ne croit pas les résidents capables d'assumer la tâche. Il doit créer un espace pour qu'ils puissent apprendre et exercer cette compétence.",
+    src:"Careum C1, exemple p.8: 'Non-participation si Dario refuse de déléguer le rôle de DJ ou considère d'emblée les résidents incapables.' Condition B: 'Souvent, on ne croit pas d'emblée les personnes capables de participer.'"
+  },
+  {
+    t:"Cas 2 — Max ne veut pas s'asseoir en cercle",
+    txt:"Max (5 ans), au jardin d'enfants, refuse de s'asseoir en cercle avec les autres enfants. Carine Revaz note qu'il ne peut pas se concentrer plus de 10 minutes. Mais Brigitte Senn, la responsable, observe que Max peut rester 30 min immobile à observer une fourmi, et que sa mère dit qu'il se plonge dans ses livres pendant des heures à la maison.",
+    q:"1. Expliquez ce que révèle cette situation sur le concept d'espace social (Bronfenbrenner). 2. Quel niveau de participation illustre l'obligation pour Max de s'asseoir en cercle? 3. Que propose Careum C1 comme approche alternative?",
+    r:"1. Max évolue dans différents MICROSYSTÈMES (jardin d'enfants, maison) avec des comportements différents. Le jardin d'enfants (espace structuré) ne correspond pas à ses besoins d'apprentissage. Sa maison (espace libre) lui permet de se concentrer longuement sur ce qui l'intéresse. L'ASE doit comprendre la PA dans son environnement social total (mésosystème famille ↔ JDE).\n\n2. Niveau 1 (Détermination par autrui): si Max est obligé de s'asseoir en cercle sans que son avis soit pris en compte. C'est de la non-participation.\n\n3. Careum C1 propose: s'isoler avec Max, s'agenouiller à son niveau, lui demander ce qu'il veut faire. Reconnaître ses besoins ET ses forces (capacité de concentration sur ce qui l'intéresse). Adapter l'environnement du JDE pour permettre des espaces d'apprentissage différents.",
+    src:"Careum C1, Situation B: 'On parlerait de non-participation si l'ASE n'écoutait pas Max et l'obligeait à s'asseoir en cercle.' Condition A: 'La participation commence par l'écoute.'"
+  },
+  {
+    t:"Cas 3 — Stephan (14 ans) et son identité de genre",
+    txt:"Stephan (14 ans) se sent fille depuis l'enfance. Il joue avec les vêtements de son amie, se présente parfois comme 'Stéphanie'. Maintenant la puberté est là: voix grave, moustache, grande taille. Il lit sur Internet qu'il peut prendre des hormones et changer de sexe. Il est désespéré mais a peur des complications physiques.",
+    q:"1. Comment qualifiez-vous la situation de Stephan (concept identitaire)? 2. Comment réagissez-vous si Stephan vous confie cela? 3. Quel principe du Careum C s'applique?",
+    r:"1. Stephan est TRANSGENRE: son genre psychologique (se sent fille) diffère de son genre biologique (corps de garçon). Cela n'est pas lié à son orientation sexuelle. C'est une situation qui génère une grande souffrance, surtout avec les changements de la puberté.\n\n2. Réaction ASE: Écouter sans jugement et remercier sa confiance. Valider son ressenti sans remettre en question. Ne pas chercher d'explication ou de 'cause'. L'informer qu'il n'est pas seul (associations LGBT+ à Genève). Respecter la confidentialité sauf si danger. En équipe: attitude commune de respect. Pour les démarches médicales: orienter vers des professionnels spécialisés (médecins, psy) car ce n'est pas de la compétence de l'ASE.\n\n3. Compréhension de la diversité (Careum C, chap.3.6.2): accepter toutes les identités sexuelles sans jugement. Remettre en question ses propres stéréotypes. Permettre à Stephan de 'découvrir, gérer et vivre la diversité de sa propre identité'.",
+    src:"Careum C: 'Les adolescents qui ne sont pas hétérosexuels se sentent très désorientés dans leur identité sexuelle.' Careum C, chap.3.6.2 'Compréhension de la diversité'."
+  },
+  {
+    t:"Cas 4 — Mme Zehnder et la désinhibition sexuelle",
+    txt:"Mme Zehnder (92 ans) souffre d'une démence frontotemporale qui entraîne une désinhibition sexuelle. Elle se comporte de façon désinhibée avec des inconnus et se déshabille en public. Quand l'ASE tente de l'en empêcher, elle hurle et donne des coups. L'équipe décide de limiter temporairement ses déplacements à l'extérieur.",
+    q:"1. Identifiez la tension éthique principale. 2. La décision de l'équipe est-elle justifiée? 3. Quel processus de décision respecte le Careum C1?",
+    r:"1. Tension: ÉPANOUISSEMENT de Mme Zehnder (liberté de se déplacer, autodétermination) vs RESPONSABILITÉ pour la collectivité (protéger sa dignité, celle des autres, éviter les situations difficiles liées à sa maladie).\n\n2. Oui, la décision est justifiée: la démence frontotemporale enlève à Mme Zehnder la capacité de comprendre les conséquences de ses actes. L'ASE a le devoir de protection. La décision est temporaire, prise en équipe, et ne vise pas à punir mais à protéger.\n\n3. Processus Careum C1: 1) Identifier la tension éthique clairement. 2) Discussion collective en équipe. 3) Décision partagée et documentée. 4) Communication ouverte avec les proches. 5) Réévaluation régulière de la mesure. La transparence est essentielle: limites communiquées clairement.",
+    src:"Careum C1, exemple p.9: 'L'équipe décide d'interdire temporairement à Mme Zehnder de quitter le site.' CO A1 'Dilemmes éthiques' + chap.1.2.2 F 'Étude active des dilemmes éthiques'."
+  },
+  {
+    t:"Cas 5 — Alfred, Hülya et Guido se plaignent du menu",
+    txt:"Plusieurs résidents de la Fondation Horizon (Alfred, 28 ans; Hülya, 47 ans; Guido, 52 ans) viennent voir la directrice: le riz au lait toutes les semaines, c'est de la nourriture pour enfants, et on ne peut se resservir qu'une fois. La directrice promet de 'parler au cuisinier et de voir ce qui peut changer', puis prend la décision seule avec lui.",
+    q:"1. Quel est le niveau de participation dans cette situation? 2. Identifiez 2 conditions manquantes (Careum C1). 3. Proposez une transformation vers une vraie participation.",
+    r:"1. Niveau 5 (Informé mais dépendant): les résidents peuvent exprimer leur mécontentement, la directrice promet d'écouter, mais la décision finale leur échappe complètement. Ils n'ont aucune influence réelle.\n\n2. Conditions manquantes: Condition A (relation d'égal à égal): la directrice ne traite pas les résidents comme des experts de leur propre vie quotidienne. Condition D (structures institutionnelles): il n'existe pas de structure de participation pour les décisions concernant le menu (pas de conseil des résidents, pas de procédure de plainte formelle).\n\n3. Transformation vers vraie participation: Niveau 7 (Cogestion): créer une réunion mensuelle 'menu' avec des représentants des résidents. Ils proposent, discutent, votent ensemble avec le cuisinier. Niveau 8: un comité de résidents gère entièrement le choix du menu du mois. Structure institutionnelle: créer un conseil des résidents avec des compétences réelles sur les questions du quotidien.",
+    src:"Careum C1, Situation A. Schröder Tab.1: 'La vraie participation commence au niveau 6-7.' Condition D: 'L'institution doit proposer et élargir la marge de participation de manière ciblée.'"
+  }
+];
+
+// ============ FONCTIONS ============
+function showMenu(){
+  document.getElementById('menu').style.display='block';
+  ['fiche-view','quiz-view','cas-view','flash-view','src-view','result-view'].forEach(id=>document.getElementById(id).style.display='none');
+  upProg();window.scrollTo(0,0);
+}
+function upProg(){
+  const pct=Math.round((done.size/8)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent=done.size+' / 8 fiches';
+  document.getElementById('nscore').textContent='⭐ '+score+' pts';
+  fiches.forEach(f=>{const c=document.getElementById('card-'+f.id);if(c)c.classList.toggle('done',done.has(f.id))});
+}
+function bTab(h,r){
+  let s='<table class="t"><tr>';
+  h.forEach(c=>s+='<th>'+c+'</th>');s+='</tr>';
+  r.forEach((row,i)=>{s+='<tr>';row.forEach(c=>s+='<td>'+c+'</td>');s+='</tr>'});
+  return s+'</table>';
+}
+function showFiche(idx){
+  const f=fiches.find(x=>x.id===idx);
+  let h='<div class="fhdr"><button class="btn-back" onclick="showMenu()">← Menu</button><span class="fiche-h">'+f.titre+'</span></div>';
+  h+='<div class="idee">💡 '+f.idee+'</div>';
+  f.sections.forEach(s=>{
+    h+='<div class="sec-h">'+s.t+'</div>';
+    if(s.tab)h+=bTab(s.tab.h,s.tab.r);
+  });
+  if(f.cle)h+='<div class="cle">🔑 '+f.cle+'</div>';
+  if(f.alerte)h+='<div class="alrt">⚠️ '+f.alerte+'</div>';
+  if(f.src)h+='<div class="src">📚 '+f.src+'</div>';
+  f.qs.forEach(q=>{
+    h+='<div class="qbox"><div class="q">❓ Question d\'examen: '+q.q+'</div><div class="r">✅ '+q.r+'</div>';
+    if(q.comp)h+='<div class="comp">📖 Complément Careum: '+q.comp+'</div>';
+    h+='</div>';
+  });
+  h+='<button class="btn-qf" onclick="startQuizFiche('+idx+')">🎯 Quiz sur cette fiche</button>';
+  document.getElementById('fiche-view').innerHTML=h;
+  document.getElementById('menu').style.display='none';
+  document.getElementById('fiche-view').style.display='block';
+  window.scrollTo(0,0);
+  done.add(idx);score+=5;upProg();
+}
+function startQuiz(fi=-1){
+  qList=fi===-1?[...questions].sort(()=>Math.random()-.5):[...questions.filter(q=>q.fi===fi)].sort(()=>Math.random()-.5);
+  if(qList.length===0)qList=[...questions].sort(()=>Math.random()-.5).slice(0,10);
+  qIdx=0;qScore=0;
+  showQ();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('fiche-view').style.display='none';
+  document.getElementById('quiz-view').style.display='block';
+  document.getElementById('result-view').style.display='none';
+  window.scrollTo(0,0);
+}
+function startQuizFiche(fi){startQuiz(fi)}
+function showQ(){
+  const q=qList[qIdx];qAnswered=false;
+  let dots='';qList.forEach((_,i)=>{const c=i<qIdx?'qdot ok':i===qIdx?'qdot a':'qdot';dots+='<div class="'+c+'"></div>'});
+  document.getElementById('qdots').innerHTML=dots;
+  document.getElementById('qnb').textContent=(qIdx+1)+'/'+qList.length;
+  document.getElementById('qtext').textContent=q.q;
+  const f=fiches.find(x=>x.id===q.fi);
+  document.getElementById('qinfo').textContent=f?'📌 '+f.titre:'';
+  let opts='';q.opts.forEach((o,i)=>opts+='<button class="opt" onclick="answer('+i+')">'+o+'</button>');
+  document.getElementById('qopts').innerHTML=opts;
+  document.getElementById('qfb').style.display='none';
+  document.getElementById('btnNext').style.display='none';
+}
+function answer(idx){
+  if(qAnswered)return;qAnswered=true;
+  const q=qList[qIdx];
+  const opts=document.querySelectorAll('.opt');
+  opts.forEach(o=>o.disabled=true);
+  opts[q.c].classList.add('correct');
+  const fb=document.getElementById('qfb');
+  if(idx===q.c){opts[idx].classList.add('correct');fb.className='fb correct';fb.innerHTML='✅ Bravo ! '+q.exp+(q.comp?'<div class="fb-comp">📚 '+q.comp+'</div>':'');qScore++;score+=10;}
+  else{opts[idx].classList.add('incorrect');fb.className='fb incorrect';fb.innerHTML='❌ '+q.exp+(q.comp?'<div class="fb-comp">📚 '+q.comp+'</div>':'');}
+  fb.style.display='block';document.getElementById('btnNext').style.display='block';upProg();
+}
+function nextQ(){qIdx++;if(qIdx>=qList.length)showResult();else showQ();}
+function showResult(){
+  const pct=Math.round((qScore/qList.length)*100);
+  let emoji,titre,msg;
+  if(pct>=80){emoji='🏆';titre='Excellent !';msg='Tu maîtrises le Careum C ! L\'examen fédéral, c\'est dans la poche !';}
+  else if(pct>=60){emoji='💪';titre='Bien joué !';msg='Tu progresses bien ! Relis les fiches où tu as eu des difficultés.';}
+  else{emoji='📚';titre='Continue à réviser !';msg='Pas de panique ! Relis les fiches et réessaie. Chaque erreur = une chance d\'apprendre !';}
+  document.getElementById('rEmoji').textContent=emoji;
+  document.getElementById('rTitre').textContent=titre;
+  document.getElementById('rScore').textContent=qScore+' / '+qList.length+' ('+pct+'%)';
+  document.getElementById('rMsg').textContent=msg;
+  let det='';
+  qList.forEach((q,i)=>{
+    const ok=i<qScore;
+    det+='<div class="det '+(ok?'ok':'ko')+'"><div class="dq">'+(ok?'✅':'❌')+' '+q.q+'</div><div class="dr">'+q.exp+'</div></div>';
+  });
+  document.getElementById('rDet').innerHTML=det;
+  document.getElementById('quiz-view').style.display='none';
+  document.getElementById('result-view').style.display='block';
+  window.scrollTo(0,0);
+}
+function retryQ(){startQuiz(-1)}
+
+// CAS
+function showCas(){
+  let h='<div class="qtop"><button class="btn-back" onclick="showMenu()">← Menu</button><span style="font-family:\'Fredoka One\',cursive;color:var(--rose);font-size:1rem">📝 Cas Pratiques</span></div>';
+  cas.forEach((c,i)=>{
+    h+='<div class="cas-card"><div class="cas-t">'+c.t+'</div><div class="cas-txt">'+c.txt+'</div><div class="cas-q">❓ '+c.q+'</div>';
+    h+='<textarea class="cas-ta" placeholder="Écris ta réponse..." id="cta-'+i+'"></textarea>';
+    h+='<button class="btn-rep" onclick="togRep('+i+')">👁️ Voir la réponse type</button>';
+    h+='<div class="cas-rep" id="crep-'+i+'"><strong>✅ Réponse type :</strong>'+c.r.replace(/\n/g,'<br>')+'<div class="cas-src">📚 '+c.src+'</div></div></div>';
+  });
+  document.getElementById('cas-view').innerHTML=h;
+  document.getElementById('menu').style.display='none';
+  document.getElementById('cas-view').style.display='block';
+  window.scrollTo(0,0);
+}
+function togRep(i){
+  const el=document.getElementById('crep-'+i);
+  el.style.display=el.style.display==='block'?'none':'block';
+  score+=3;upProg();
+}
+
+// FLASH
+function startFlash(){
+  fCards=[...flashData].sort(()=>Math.random()-.5);
+  fIdx=0;fOk=0;fKo=0;fFlipped=false;
+  showFlash();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('flash-view').style.display='block';
+  window.scrollTo(0,0);
+}
+function showFlash(){
+  if(fIdx>=fCards.length){
+    if(fKo>0){fCards=fCards.filter((_,i)=>i<fKo);fIdx=0;fOk=0;fKo=0;}
+    else{showMenu();return;}
+  }
+  fFlipped=false;
+  const c=fCards[fIdx];
+  document.getElementById('fcard').style.borderColor='#E8DAEF';
+  document.getElementById('ffront').style.display='block';
+  document.getElementById('fback').style.display='none';
+  document.getElementById('fsrc').style.display='none';
+  document.getElementById('ffront').textContent=c.v;
+  document.getElementById('fback').textContent=c.r;
+  document.getElementById('fsrc').textContent='📚 '+c.src;
+  document.getElementById('fnb').textContent=(fIdx+1)+'/'+fCards.length;
+  document.getElementById('fprog').textContent='✅ '+fOk+' sues | ❌ '+fKo+' à revoir';
+}
+function flipF(){
+  fFlipped=!fFlipped;
+  document.getElementById('ffront').style.display=fFlipped?'none':'block';
+  document.getElementById('fback').style.display=fFlipped?'block':'none';
+  document.getElementById('fsrc').style.display=fFlipped?'block':'none';
+}
+function fResult(ok){
+  if(ok){fOk++;score+=8;}
+  else{fKo++;const c=fCards[fIdx];fCards.push(c);}
+  fIdx++;upProg();showFlash();
+}
+
+// SOURCES
+function showSrc(){
+  document.getElementById('menu').style.display='none';
+  document.getElementById('src-view').style.display='block';
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

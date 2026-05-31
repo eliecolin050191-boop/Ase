@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ASE Pro 2026 — Élie</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+--bg:#f5f0e8;--card:#ffffff;--bd:#e6ddd0;--sage:#8a9a7e;--sage-d:#6b7c5f;
+--terra:#c97b5a;--terra-d:#b5664a;--gold:#d9a441;--ink:#3a3631;--sub:#8a8278;
+--inp:#f5f0e8;--green:#5a9a6e;--red:#c95a5a;--blue:#5a7a9a;--purple:#8a6e9a;--teal:#5a9a92}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+max-width:480px;margin:0 auto;padding-bottom:78px;min-height:100vh;line-height:1.5}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;
+background:var(--card);border-top:1px solid var(--bd);display:flex;z-index:99;box-shadow:0 -2px 12px rgba(0,0,0,.05)}
+.nb{flex:1;padding:9px 1px 8px;border:none;background:none;color:var(--sub);font-size:9px;cursor:pointer;
+display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}
+.nb.on{color:var(--terra);font-weight:700}
+.nb .ic{font-size:17px}
+.sc{display:none;padding:0 14px}
+.sc.on{display:block}
+.hdr{padding:26px 14px 12px;position:relative}
+.ht{font-size:22px;font-weight:800;color:var(--terra)}
+.hs{font-size:12px;color:var(--sub);margin-top:3px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:15px;padding:15px;margin-bottom:11px;box-shadow:0 1px 6px rgba(0,0,0,.03)}
+.card-sage{background:#eef1ea;border:1px solid #d5ddca;border-radius:15px;padding:15px;margin-bottom:11px}
+.card-terra{background:#f7e9e2;border:1px solid #e8cdbf;border-radius:15px;padding:15px;margin-bottom:11px}
+.card-gold{background:#faf2dd;border:1px solid #ecdcae;border-radius:15px;padding:15px;margin-bottom:11px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--inp);border-radius:10px;margin-bottom:6px}
+.row b{font-size:14px}
+input,select,textarea{background:var(--card);border:1px solid var(--bd);border-radius:9px;color:var(--ink);
+padding:9px 11px;font-size:15px;font-family:inherit;outline:none;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--sage)}
+textarea{min-height:90px;resize:vertical;line-height:1.6}
+.btn{background:var(--terra);color:#fff;border:none;border-radius:11px;padding:11px 18px;font-weight:700;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-sage{background:var(--sage);color:#fff;border:none;border-radius:11px;padding:11px 18px;font-weight:700;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-sm{background:var(--inp);color:var(--ink);border:1px solid var(--bd);border-radius:9px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600}
+.title{font-size:16px;font-weight:800;margin-bottom:4px}
+.sub{font-size:12px;color:var(--sub);margin-bottom:10px}
+.bar-bg{height:9px;background:var(--inp);border-radius:5px;overflow:hidden;margin-top:7px}
+.bar-fill{height:100%;border-radius:5px;transition:width .5s;background:var(--sage)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.div{height:1px;background:var(--bd);margin:12px 0}
+.tag{display:inline-block;border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;color:#fff}
+.chip{border-radius:20px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid var(--bd);background:var(--card);color:var(--sub);font-weight:600;white-space:nowrap}
+.chip.on{color:#fff;border-color:transparent}
+.scroll-x{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch}
+.scroll-x::-webkit-scrollbar{display:none}
+.fiche{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--sage);border-radius:12px;padding:13px;margin-bottom:9px}
+.fiche-t{font-size:14px;font-weight:800;margin-bottom:5px}
+.fiche-c{font-size:13.5px;line-height:1.65;color:#4a463f;white-space:pre-line}
+.quiz-q{font-size:14.5px;font-weight:700;margin-bottom:9px;line-height:1.5}
+.quiz-a{background:#eef1ea;border:1px solid #d5ddca;border-radius:11px;padding:12px;font-size:13.5px;line-height:1.65;color:#3f4a37;white-space:pre-line;margin-top:9px;display:none}
+.flash{background:linear-gradient(135deg,#f7e9e2,#faf2dd);border:1px solid #e8cdbf;border-radius:18px;padding:22px;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;margin-bottom:13px}
+.fc-q{font-size:17px;font-weight:800;line-height:1.5}
+.fc-a{font-size:14px;line-height:1.7;color:#5a7a5e;display:none;margin-top:12px;white-space:pre-line}
+.fc-hint{font-size:11px;color:var(--terra);margin-top:9px;font-weight:600}
+.jeu-head{background:linear-gradient(135deg,#8a9a7e,#6b7c5f);color:#fff;border-radius:15px;padding:14px;margin-bottom:12px}
+.xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.xp-lvl{font-size:15px;font-weight:800}
+.xp-pts{font-size:13px;font-weight:700;background:rgba(255,255,255,.25);padding:3px 11px;border-radius:20px}
+.xp-bar-bg{height:9px;background:rgba(255,255,255,.3);border-radius:5px;overflow:hidden}
+.xp-bar-fill{height:100%;background:#faf2dd;border-radius:5px;transition:width .4s}
+.prog-mini{font-size:11.5px;color:var(--sub);margin-bottom:8px;font-weight:600}
+.assess{display:flex;gap:8px;margin-top:10px}
+.btn-knew{flex:1;background:var(--green);color:#fff;border:none;border-radius:11px;padding:11px;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px}
+.btn-rev{flex:1;background:var(--gold);color:#fff;border:none;border-radius:11px;padding:11px;font-weight:800;font-family:inherit;cursor:pointer;font-size:14px}
+.card.done{opacity:.6}
+.done-badge{display:inline-block;font-size:12px;font-weight:800;color:var(--green);margin-top:8px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:30px;font-weight:800;font-size:15px;z-index:300;opacity:0;transition:.3s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.confetti{position:fixed;top:-12px;width:10px;height:14px;z-index:350;pointer-events:none;border-radius:2px;animation:cfall linear forwards}
+@keyframes cfall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+.levelup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:340;pointer-events:none;opacity:0;transition:.25s}
+.levelup.show{opacity:1}
+.levelup .box{background:#fff;border-radius:24px;padding:26px 30px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.3);transform:scale(.7);transition:.3s;border:3px solid var(--gold)}
+.levelup.show .box{transform:scale(1)}
+.levelup .big{font-size:46px}
+.levelup .lvtxt{font-size:22px;font-weight:900;color:var(--terra);margin-top:4px}
+.levelup .lvsub{font-size:14px;color:var(--sub);margin-top:2px}
+.celebrate{background:linear-gradient(135deg,#faf2dd,#f7e9e2);border:2px solid var(--gold);border-radius:15px;padding:18px;text-align:center;margin-bottom:12px}
+.celebrate .big-emo{font-size:40px}
+.breath-circle{width:150px;height:150px;border-radius:50%;margin:14px auto;background:radial-gradient(circle,#a9c0a0,#8a9a7e);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;transition:transform 4s ease-in-out,background 1s;box-shadow:0 6px 24px rgba(138,154,126,.4)}
+.breath-circle.in{transform:scale(1.45)}
+.breath-circle.out{transform:scale(0.85)}
+.mcq-opt{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--bd);border-radius:12px;padding:13px;margin-bottom:8px;font-size:14.5px;font-family:inherit;cursor:pointer;font-weight:600;color:var(--ink);transition:.15s}
+.mcq-opt:active{transform:scale(.99)}
+.mcq-opt.good{background:#e3f0e7;border-color:var(--green);color:var(--green)}
+.mcq-opt.bad{background:#f5e0e0;border-color:var(--red);color:var(--red)}
+.mcq-opt.dim{opacity:.5}
+.stars{font-size:34px;text-align:center;letter-spacing:4px}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:4px}
+.badge{text-align:center;background:var(--inp);border-radius:13px;padding:11px 4px}
+.badge .be{font-size:26px;filter:grayscale(1);opacity:.35}
+.badge.on .be{filter:none;opacity:1}
+.badge .bl{font-size:9.5px;color:var(--sub);margin-top:3px;font-weight:700;line-height:1.2}
+.badge.on .bl{color:var(--ink)}
+.big{font-size:30px;font-weight:800}
+.coach-big{font-size:24px;font-weight:900;text-align:center;padding:16px;border-radius:13px;margin:12px 0}
+.coach-ok{background:#e3f0e7;color:var(--green);border:2px solid #b8d8c2}
+.coach-no{background:#f5e0e0;color:var(--red);border:2px solid #e0b8b8}
+.coach-rule{background:var(--inp);border-left:3px solid var(--terra);padding:10px 13px;border-radius:0 10px 10px 0;margin-bottom:7px;font-size:12.5px;line-height:1.55}
+.fin-row{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;margin-bottom:7px}
+.fin-row label{font-size:13px;font-weight:600}
+.fin-row input{text-align:right;padding:7px 9px;font-size:14px}
+.fin-tot{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:11px;margin-top:6px;font-weight:700}
+.mood-btn{flex:1;font-size:26px;background:var(--inp);border:2px solid transparent;border-radius:12px;padding:9px 0;cursor:pointer}
+.mood-btn.on{border-color:var(--terra);background:#f7e9e2}
+.arabic{font-size:19px;line-height:1.9;text-align:right;direction:rtl;color:var(--sage-d);margin-bottom:8px;font-weight:600}
+.note{font-size:11.5px;color:var(--sub);line-height:1.5}
+/* --- Gamification jeux --- */
+.score-bar{display:flex;gap:8px;margin-bottom:12px}
+.score-box{flex:1;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:9px 8px;text-align:center}
+.score-box .lbl{font-size:10px;color:var(--sub);text-transform:uppercase;font-weight:700;letter-spacing:.5px}
+.score-box .val{font-size:20px;font-weight:800;color:var(--terra);margin-top:2px}
+.score-box.streak .val{color:var(--gold)}
+.score-box.best .val{color:var(--sage-d)}
+.qcm-btn{display:block;width:100%;text-align:left;padding:13px 15px;margin-bottom:8px;background:var(--card);border:2px solid var(--bd);border-radius:13px;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer;line-height:1.5;font-weight:500;transition:all .2s}
+.qcm-btn:hover{border-color:var(--sage)}
+.qcm-btn.good{background:#e3f0e7;border-color:var(--green);color:var(--green);font-weight:700}
+.qcm-btn.bad{background:#f5e0e0;border-color:var(--red);color:var(--red);font-weight:700}
+.qcm-btn.dim{opacity:.5}
+.qcm-feedback{padding:13px;border-radius:12px;margin-top:10px;font-size:13.5px;line-height:1.6;animation:pop .3s ease}
+.qcm-feedback.ok{background:#e3f0e7;border:1px solid #b8d8c2;color:#2d5a3a}
+.qcm-feedback.no{background:#f5e0e0;border:1px solid #e0b8b8;color:#7a2d2d}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.acc{background:var(--card);border:1px solid var(--bd);border-radius:13px;margin-bottom:10px;overflow:hidden}
+.acc-h{padding:13px 15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px}
+.acc-h .ar{transition:transform .2s;color:var(--sub)}
+.acc.on .acc-h .ar{transform:rotate(180deg)}
+.acc-b{display:none;padding:0 15px 14px;font-size:13.5px;line-height:1.7;color:#4a463f;white-space:pre-line}
+.acc.on .acc-b{display:block}
+.warn-card{background:#fff4e8;border:1px solid #f0d8b8;border-left:4px solid #d97a2f;border-radius:13px;padding:13px;margin-bottom:10px}
+.warn-card .tt{color:#a8541f;font-weight:800;font-size:14px;margin-bottom:5px}
+.warn-card .ct{font-size:13.5px;line-height:1.65;color:#4a3a2a;white-space:pre-line}
+.tip-card{background:#eef1ea;border:1px solid #d5ddca;border-left:4px solid var(--sage);border-radius:13px;padding:13px;margin-bottom:10px}
+.tip-card .tt{color:var(--sage-d);font-weight:800;font-size:14px;margin-bottom:5px}
+.tip-card .ct{font-size:13.5px;line-height:1.65;color:#3f4a37;white-space:pre-line}
+</style>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div class="sc on" id="sc-accueil">
+  <div class="hdr"><div class="ht">Salut Élie 👋</div><div class="hs">CFC ASE · Champion d'Europe JJB · Moniteur Sport-Handicap</div></div>
+
+  <div class="jeu-head" id="dash" style="margin:0 0 11px">
+    <div class="xp-row"><span class="xp-lvl">⭐ Niveau <span id="d-lvl">1</span></span><span class="xp-pts"><span id="d-xp">0</span> XP</span></div>
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="d-bar" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:9px;font-size:11.5px;text-align:center">
+      <div style="flex:1"><div style="font-size:17px;font-weight:800" id="d-sport">0</div>jours sport</div>
+      <div style="flex:1"><div style="font-size:17px;font-weight:800" id="d-acts">0/4</div>cases du jour</div>
+      <div style="flex:1"><div style="font-size:17px;font-weight:800" id="d-notes">0</div>notes</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">🏅 Mes badges</div>
+    <div class="sub">Débloque-les en avançant. Comme dans un jeu.</div>
+    <div class="badge-grid" id="badge-grid"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🎯 Mon cap</div>
+    <div style="font-size:13.5px;line-height:1.6">Réussir mon <b>CFC ASE</b> · gérer mon argent · lancer mon <b>asso sport-handicap</b> (boxe · golf · JJB). Un pas chaque jour.</div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💡 L'astuce du jour</div>
+    <div class="fiche-c" id="tip-txt" style="margin-top:2px">…</div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🔥 Mon pourquoi</div>
+    <div style="font-size:13.5px;line-height:1.7">Tu es <b>champion d'Europe de JJB</b>. Tu sais ce que c'est de souffrir, de répéter, de gagner. Cette discipline-là, tu la mets dans ton <b>CFC</b>.<br><br>
+    Ton parcours est atypique — soins, sport, handisport, veilleur de nuit. C'est pas un défaut : c'est ta force. Tu comprends les gens de l'intérieur.<br><br>
+    Ton cap : ton <b>CFC ASE</b>, ton argent en ordre, et ton <b>asso sport-handicap</b> (boxe · golf · JJB) pour aider ton prochain. Chaque case cochée ici te rapproche de ça. 🥋</div>
+  </div>
+
+  <div class="card">
+    <div class="title">📖 Comment ça marche (mode d'emploi)</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-c">🏠 <b>Accueil</b> : tes cases du jour, ton humeur, l'astuce, tes onglets perso.\n📚 <b>Révise</b> : les fiches CFC + culture générale. Lis tranquille.\n🎮 <b>Jeux</b> : teste-toi (quiz + flashcards). Tu gagnes de l'XP et tu montes de niveau.\n💪 <b>Sport</b> : ton programme 14 jours + le minuteur qui parle.\n💰 <b>Argent</b> : ta feuille de calcul + comment gagner/économiser.\n🛡️ <b>Garde-fous</b> : pour rester maître quand l'impulsivité monte.</div></div>
+    <div class="note">Conseil TDAH : fais 1 seule chose à la fois. Ouvre 1 onglet, finis, ferme.</div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🧩 Mes points faibles → mes parades</div>
+    <div class="sub">On ne se cache rien. Pour chaque faiblesse, l'appli a un outil. C'est ça, ton cerveau externe.</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">⚡ Impulsivité (argent, envies)</div><div class="fiche-c">→ Règle des 24 h + Garde-fous 🛡️ + feuille Argent 💰. Avant d'agir : je respire, je vérifie ici.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">🌀 Organisation / oublis (TDAH)</div><div class="fiche-c">→ Mes cases du jour ✅ + Notes 📝 + alarmes du téléphone. Je sors tout de ma tête, je le mets ici.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">📚 Mémoire / révisions</div><div class="fiche-c">→ Jeux 🎮 (quiz + flashcards + XP). Petites doses tous les jours, pas un gros bloc d'un coup.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">🍺 Alcool / cannabis</div><div class="fiche-c">→ Garde-fous 🛡️ : le réflexe des 20 min + remplacer par une dopamine saine (sport, +XP).</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">🧠 « Je me trouve pas assez intelligent »</div><div class="fiche-c">FAUX. Tu es champion d'Europe : ça demande une intelligence ÉNORME (stratégie, discipline, lecture de l'adversaire). On la transfère au CFC et au business. Culture G 🧠 t'entraîne un peu chaque jour.</div></div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🔥 Pourquoi je me bats</div>
+    <div style="font-size:13.5px;line-height:1.7">Je suis <b>Élie</b>. Parcours atypique, et j'en ai fait une force. Champion d'Europe de JJB : la discipline qui m'a mené là, je la mets dans mon <b>CFC</b>.<br><br>
+    Mon moteur : <b>aimer mon prochain</b>, aider les plus fragiles. Mon but : une <b>asso sport-handicap</b> (boxe · golf · JJB) et devenir un homme d'affaires <b>éthique</b>, libre de mes dettes.<br><br>
+    Ma règle : la stratégie avant l'impulsion. Un pas chaque jour. Je me relève toujours.</div>
+  </div>
+
+  <div class="card">
+    <div class="title">📖 Mode d'emploi (simple)</div>
+    <div class="sub">Ce que fait chaque onglet, en 1 phrase.</div>
+    <div class="row"><span style="font-size:13px"><b>📚 Révise</b> — mes fiches CFC (A→F0, lois)</span></div>
+    <div class="row"><span style="font-size:13px"><b>🎮 Jeux</b> — quiz + flashcards, je gagne des XP</span></div>
+    <div class="row"><span style="font-size:13px"><b>💪 Sport</b> — mon programme 14 j + minuteur vocal</span></div>
+    <div class="row"><span style="font-size:13px"><b>💰 Argent</b> — mon budget + gagner/économiser</span></div>
+    <div class="row"><span style="font-size:13px"><b>🌍 Culture</b> — culture générale + me défendre par les mots</span></div>
+    <div class="row"><span style="font-size:13px"><b>🛡️ Coach</b> — mes garde-fous (impulsivité)</span></div>
+    <div class="note" style="margin-top:6px">👉 Règle d'or : 1 chose à la fois. Je touche un onglet, je fais une action, je coche. C'est tout.</div>
+  </div>
+
+  <div class="card">
+    <div class="title">✅ Mes cases du jour</div>
+    <div class="sub">Coche ce que tu as fait aujourd'hui. Chaque case = +5 XP.</div>
+    <div id="acts"></div>
+    <div class="note" id="acts-msg" style="margin-top:6px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Ton humeur aujourd'hui</div>
+    <div class="sub">Un appui pour suivre ta forme (TDAH, énergie, motivation).</div>
+    <div style="display:flex;gap:7px" id="moods"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🎯 Focus du jour</div>
+    <div class="sub" id="focus-txt">1 compétence par jour. Pas plus.</div>
+    <button class="btn-sage" onclick="go('revise')">Réviser maintenant</button>
+  </div>
+
+  <div class="card">
+    <div class="title">⏰ À ne pas oublier</div>
+    <div class="row"><span style="font-size:13px">Déclaration impôts 2025</span><span class="tag" style="background:var(--red)">échéance 30 avr.</span></div>
+    <div class="row"><span style="font-size:13px">Rembourser les poursuites (OP)</span><span class="tag" style="background:var(--gold)">priorité</span></div>
+    <div class="row"><span style="font-size:13px">Fin de contrat apprentissage</span><span class="tag" style="background:var(--sage)">18.08.2027</span></div>
+  </div>
+
+  <div class="card">
+    <div class="title">📲 Mettre l'appli sur mon écran d'accueil</div>
+    <div class="sub">Pour l'ouvrir comme une vraie appli, même sans internet.</div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">📱 iPhone (Safari)</div><div class="fiche-c">1. Ouvre cette page dans Safari\n2. Touche le bouton Partager (carré avec flèche ↑, en bas)\n3. Fais défiler → « Sur l'écran d'accueil »\n4. Touche « Ajouter » en haut à droite</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">🤖 Android (Chrome)</div><div class="fiche-c">1. Ouvre cette page dans Chrome\n2. Touche les 3 points ⋮ (en haut à droite)\n3. Touche « Ajouter à l'écran d'accueil »\n4. Confirme « Ajouter »</div></div>
+    <div class="note" style="margin-top:6px">⚠️ Astuce : si tu as ouvert le fichier depuis un message ou un mail, le bouton « écran d'accueil » n'apparaît pas. Il faut d'abord l'ouvrir dans Safari/Chrome (l'app navigateur), pas dans l'aperçu du fichier.</div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">📁 Mes dossiers & documents</div>
+    <div class="sub">Classe par dossier (école, révisions, admin…). Importe un fichier texte ou colle ton cours. Tout reste sur ton téléphone, hors-ligne.</div>
+    <input id="tab-folder" placeholder="Dossier (ex : École, Compétence C, Admin…)" style="margin-bottom:7px">
+    <input id="tab-name" placeholder="Titre (ex : Résumé pages 47-77)" style="margin-bottom:7px">
+    <textarea id="tab-content" placeholder="Colle ton cours / ta note ici…" style="min-height:70px;margin-bottom:7px"></textarea>
+    <div style="display:flex;gap:8px;margin-bottom:7px;align-items:center;flex-wrap:wrap">
+      <label class="btn-sm" style="cursor:pointer">📄 Importer un texte<input type="file" accept=".txt,.md,.csv,text/*" onchange="importTxt(this)" style="display:none"></label>
+      <label class="btn-sm" style="cursor:pointer">📎 Joindre un doc<input type="file" onchange="attachDoc(this)" style="display:none"></label>
+    </div>
+    <div class="note" id="attach-info" style="margin-bottom:7px"></div>
+    <button class="btn" onclick="addTab()">💾 Enregistrer dans mes dossiers</button>
+    <div id="custom-tabs" style="margin-top:11px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">➕ Ajouter mes propres révisions</div>
+    <div class="sub">Crée des cartes Question / Réponse. Elles apparaissent dans 📚 Révise et 🎮 Jeux (thème « Perso »), avec XP.</div>
+    <input id="perso-q" placeholder="Question (ex : Les 5 principes éthiques ?)" style="margin-bottom:7px">
+    <textarea id="perso-a" placeholder="Réponse…" style="min-height:55px;margin-bottom:7px"></textarea>
+    <button class="btn-sage" onclick="addPerso()">Ajouter la carte</button>
+    <div class="note" id="perso-count" style="margin-top:7px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">📅 Mon agenda</div>
+    <div class="sub">Note tes échéances. Le bouton « Ajouter à mon agenda » crée un fichier que tu ouvres dans ton Google/Apple Agenda — c'est ça, le lien avec ton agenda.</div>
+    <input id="ev-title" placeholder="Quoi ? (ex : Réviser compétence C)" style="margin-bottom:7px">
+    <div class="g2" style="margin-bottom:7px">
+      <input id="ev-date" type="date">
+      <input id="ev-time" type="time">
+    </div>
+    <button class="btn" onclick="addEvent()">Ajouter au planning</button>
+    <div id="ev-list" style="margin-top:11px"></div>
+  </div>
+</div>
+
+<!-- REVISE -->
+<div class="sc" id="sc-revise">
+  <div class="hdr"><div class="ht">📚 Révise</div><div class="hs">CFC (A→Lois) + Culture G (Stratégie · Suisse · Business · Monde)</div></div>
+  <div class="note" style="margin-bottom:8px">👉 Touche une pastille pour changer de thème. Lis les fiches, puis teste-toi dans 🎮 Jeux.</div>
+
+  <div class="card-terra">
+    <div class="title">⏱️ Minuteur focus (Pomodoro TDAH)</div>
+    <div class="sub">25 min concentré, 5 min pause. La méthode n°1 contre la dispersion.</div>
+    <div id="p-display" style="text-align:center;font-size:40px;font-weight:900;color:var(--terra-d);margin:4px 0">25:00</div>
+    <div id="p-phase" style="text-align:center;font-weight:800;margin-bottom:6px">📚 Prêt à réviser ?</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn" id="p-start" onclick="pomoStart()">▶ Démarrer</button>
+      <button class="btn-sm" onclick="pomoReset()" style="flex:0 0 auto">↺</button>
+    </div>
+  </div>
+  <div class="scroll-x" id="comp-chips"></div>
+  <div id="comp-head"></div>
+  <div id="fiches"></div>
+</div>
+
+<!-- JEUX -->
+<div class="sc" id="sc-jeux">
+  <div class="hdr"><div class="ht">🎮 Jeux</div><div class="hs">Quiz & flashcards pour ancrer</div><button id="sound-btn" onclick="toggleSound()" style="position:absolute;right:0;top:0;background:none;border:none;font-size:22px;cursor:pointer">🔊</button></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="chip on" id="tab-quiz" onclick="setJeu('quiz')" style="flex:1;text-align:center;background:var(--terra);color:#fff;border-color:transparent">Quiz</button>
+    <button class="chip" id="tab-flash" onclick="setJeu('flash')" style="flex:1;text-align:center">Flashcards</button>
+    <button class="chip" id="tab-defi" onclick="setJeu('defi')" style="flex:1;text-align:center">⚡ Défi</button>
+  </div>
+  <div class="scroll-x" id="jeu-chips"></div>
+  <div id="jeu-zone"></div>
+</div>
+
+<!-- SPORT -->
+<div class="sc" id="sc-sport">
+  <div class="hdr"><div class="ht">💪 Sport — 14 jours</div><div class="hs">Cross-training · tractions · vélo · course · pompes</div></div>
+
+  <div class="card-terra">
+    <div class="title">⏱️ Minuteur d'intervalles (voix)</div>
+    <div class="sub">Il compte tout seul à voix haute : « Effort ! », « Repos », 3-2-1.</div>
+    <div class="g2" style="margin-bottom:8px">
+      <div><label class="note">Effort (sec)</label><input id="t-work" type="number" inputmode="numeric" value="30"></div>
+      <div><label class="note">Repos (sec)</label><input id="t-rest" type="number" inputmode="numeric" value="30"></div>
+    </div>
+    <div class="g2" style="margin-bottom:8px">
+      <div><label class="note">Nb de tours</label><input id="t-rounds" type="number" inputmode="numeric" value="8"></div>
+      <div><label class="note">Voix audio</label><select id="t-voice"><option value="1">Activée 🔊</option><option value="0">Coupée 🔇</option></select></div>
+    </div>
+    <div id="t-display" style="text-align:center;font-size:46px;font-weight:900;margin:6px 0;color:var(--terra-d)">00:30</div>
+    <div id="t-phase" style="text-align:center;font-weight:800;margin-bottom:4px;font-size:15px">Prêt ?</div>
+    <div id="t-info" style="text-align:center" class="note">Tour 0 / 8</div>
+    <div class="bar-bg"><div class="bar-fill" id="t-bar" style="width:0%;background:var(--terra)"></div></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" id="t-start" onclick="timerStart()">▶ Démarrer</button>
+      <button class="btn-sm" onclick="timerPause()" style="flex:0 0 auto">⏸</button>
+      <button class="btn-sm" onclick="timerReset()" style="flex:0 0 auto">↺</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:9px">
+      <button class="btn-sm" onclick="preset(30,30,8)" style="flex:1">VMA 30/30</button>
+      <button class="btn-sm" onclick="preset(30,15,10)" style="flex:1">30/15</button>
+      <button class="btn-sm" onclick="preset(60,30,6)" style="flex:1">MetCon</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="title">📅 Le programme</div>
+    <div class="sub">14 jours. Touche un jour. Coche quand c'est fait (+15 XP).</div>
+    <div class="scroll-x" id="sport-chips"></div>
+    <div id="sport-day"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🏅 Principes compétition</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">VMA — c'est quoi</div><div class="fiche-c">Vitesse Maximale Aérobie : l'allure la plus rapide que tu tiens en endurance. On l'améliore avec des intervalles courts et intenses (30/30, 30/15). C'est ton moteur pour les WOD longs.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Règle d'or</div><div class="fiche-c">Échauffe-toi TOUJOURS (5-10 min). Qualité avant quantité. 1 à 2 jours de repos/mobilité par semaine = tu progresses PLUS, pas moins.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Sommeil + eau</div><div class="fiche-c">Le muscle se construit la nuit. Vise 7-8 h. Bois bien. Sans alcool/cannabis la veille : récup et VMA bien meilleures.</div></div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">🧠 Cerveau TDAH & sport</div>
+    <div class="fiche-c" style="margin-top:2px">Une seule chose à la fois : soit le programme du jour, soit le minuteur, soit cocher un jour. Pas tout en même temps. Le sport libère une dopamine SAINE — c'est ton meilleur allié.</div>
+  </div>
+</div>
+
+<!-- ARGENT -->
+<div class="sc" id="sc-argent">
+  <div class="hdr"><div class="ht">💰 Mon argent</div><div class="hs">Feuille de calcul · pré-remplie · garde-fous</div></div>
+
+  <div class="card">
+    <div class="title">📥 Mes revenus (par mois)</div>
+    <div class="sub">Modifie si ça change. Tout se recalcule tout seul.</div>
+    <div id="rev-rows"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">📤 Mes charges fixes (par mois)</div>
+    <div class="sub">Ce qui part chaque mois, obligatoire.</div>
+    <div id="chg-rows"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="fin-tot" style="background:#fff"><span>Total revenus</span><span id="t-rev" style="color:var(--green)">0 CHF</span></div>
+    <div class="fin-tot" style="background:#fff"><span>Total charges</span><span id="t-chg" style="color:var(--red)">0 CHF</span></div>
+    <div class="fin-tot" id="reste-box" style="background:#eef1ea;font-size:17px"><span>Reste à vivre</span><span id="t-reste">0 CHF</span></div>
+    <div class="bar-bg"><div class="bar-fill" id="reste-bar" style="width:0%"></div></div>
+    <div class="note" id="reste-msg" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🛡️ Tirelire paris & règle des 2%</div>
+    <div class="fin-row" style="margin-top:8px"><label>Ma bankroll (CHF)</label><input id="bk-in" type="number" inputmode="decimal" value="900"></div>
+    <div class="fin-tot" style="background:#fff;font-size:17px"><span>Mise MAX par ticket</span><span id="bk-max" style="color:var(--terra-d)">18.00 CHF</span></div>
+    <div class="note" style="margin-top:7px">2% de la bankroll. C'est le plafond. Aucune exception.</div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="btn-sage" onclick="saveFin()">💾 Sauvegarder</button>
+    <button class="btn-sm" onclick="resetFin()" style="flex:0 0 auto">Réinit.</button>
+  </div>
+  <div class="note" style="text-align:center;margin-bottom:6px">TikTok boxe/JJB : @wesheliejjb · objectif asso sport-handicap 💪</div>
+
+  <div class="div"></div>
+
+  <div class="card-gold">
+    <div class="title">💸 Devenir riche — la vraie méthode</div>
+    <div class="sub">Pas de magie. Pas de pari. De l'ordre, étape par étape.</div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Étape 1 — Éteindre la dette</div><div class="fiche-c">Rembourse les poursuites (OP) AVANT tout. Une dette à 0, c'est déjà de l'argent gagné. Tant que tu dois, tu n'es pas libre.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Étape 2 — Coussin de sécurité</div><div class="fiche-c">Mets de côté 1 000 à 2 000 CHF sur un compte à part « JE N'Y TOUCHE PAS ». C'est ton parachute (dentiste, panne, imprévu). Ça t'évite de replonger dans les dettes.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Étape 3 — Te payer en premier</div><div class="fiche-c">Le jour du salaire : un virement automatique vers l'épargne AVANT de dépenser. Même 50 CHF/mois. Ce que tu ne vois pas, tu ne le claques pas. (Idéal pour un cerveau TDAH : automatique = pas de décision.)</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Étape 4 — Ta plus grosse richesse = TOI</div><div class="fiche-c">Ton CFC ASE = +1000 CHF/mois de salaire à vie. Ton brevet de coach + ton asso boxe/golf/JJB = un vrai business. Investir en TOI rapporte plus que n'importe quel pari.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="title">📈 Investissements (Suisse) — simple & solide</div>
+    <div class="sub">Quand la dette est à 0 et le coussin prêt. Pas avant.</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">3e pilier (3a) 🇨🇭</div><div class="fiche-c">Épargne retraite. Tu déduis les versements de tes impôts → tu paies moins d'impôts CHAQUE année. Versement libre, à ton rythme. Le placement « malin » n°1 en Suisse.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Fonds indiciels / ETF 🌍</div><div class="fiche-c">Un ETF « monde » = tu possèdes un petit bout de milliers d'entreprises. Frais bas, tu laisses dormir 10-20 ans. C'est lent, ennuyeux… et c'est exactement pour ça que ça marche.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">La règle anti-arnaque 🚨</div><div class="fiche-c">Crypto « x100 », trading rapide, « investis 500 → gagne 5000 en 1 semaine » = PARI déguisé, pas investissement. Pour un cerveau impulsif, c'est un piège. Si on te promet riche vite → c'est faux. Toujours.</div></div>
+    <div class="note" style="margin-top:8px">⚠️ Je ne suis pas conseiller financier. Avant un 3a ou un ETF, parle à ta banque (UBS) ou compare sur comparis.ch. Ne signe jamais sous pression.</div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">💡 Gagner plus (avec tes atouts)</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Coaching sport à la séance</div><div class="fiche-c">Boxe / JJB / prépa physique en privé ou petit groupe. 1-2 clients/semaine = un vrai complément. Ton brevet + ton vécu = ta valeur.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Ton asso sport-handicap</div><div class="fiche-c">Cherche des subventions (Ville/Canton de Genève, fondations, Pro Infirmis, sport-handicap). Une asso bien montée peut être financée. C'est ton projet de vie ET une source de revenu.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">Vends ce que tu n'utilises plus</div><div class="fiche-c">Anibis / Tutti : matériel sport, vêtements, objets. Argent rapide, propre, sans risque.</div></div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🎯 Faire de l'argent avec TON profil</div>
+    <div class="sub">Tu n'es pas n'importe qui. Tu as des atouts rares. On part de LÀ.</div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">🥋 Coaching JJB / boxe / prépa physique</div><div class="fiche-c">Champion d'Europe = crédibilité énorme. Cours privés ou petits groupes : 50-90 CHF/h. 3 clients/semaine = ~600-1000 CHF/mois en plus. C'est ton levier n°1, tout de suite.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">♿ Sport-handicap (Plusport / Handisport)</div><div class="fiche-c">Tu es moniteur ESA. Des mandats existent (clubs, institutions, communes). C'est payé ET c'est ton projet de cœur. Recontacte Handisport Genève.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">👵 Ateliers d'activité physique adaptée (EHPAD)</div><div class="fiche-c">Tu as déjà bossé le sujet (ton rapport APA en EHPAD). Les EMS cherchent ça. Propose des ateliers à la séance : marché réel, peu de concurrence.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">📱 Contenu @wesheliejjb</div><div class="fiche-c">Construis ton audience (technique JJB, mindset, sport-handicap). Lentement, ça amène des clients coaching et de la crédibilité pour ton asso. Gratuit à lancer.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">🎓 Ton CFC ASE = ton socle stable</div><div class="fiche-c">Le diplôme = un salaire fixe et sûr (+~1000 CHF/mois vs sans CFC). C'est la base qui te permet de prendre des risques calculés à côté. Priorité absolue.</div></div>
+    <div class="note" style="margin-top:6px">⚠️ Pour un profil impulsif : on évite les schémas « riche vite » (paris, trading, crypto x100). Ta richesse vient de TES compétences, pas du hasard.</div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">📊 Ton échelle d'investissement (dans l'ordre)</div>
+    <div class="row"><span style="font-size:13px"><b>1.</b> Rembourser les poursuites</span><span class="tag" style="background:var(--red)">d'abord</span></div>
+    <div class="row"><span style="font-size:13px"><b>2.</b> Coussin 1-2 mois de charges</span><span class="tag" style="background:var(--gold)">sécurité</span></div>
+    <div class="row"><span style="font-size:13px"><b>3.</b> 3e pilier 3a (déduit des impôts)</span><span class="tag" style="background:var(--sage)">malin</span></div>
+    <div class="row"><span style="font-size:13px"><b>4.</b> ETF monde (long terme, frais bas)</span><span class="tag" style="background:var(--sage)">solide</span></div>
+    <div class="row"><span style="font-size:13px"><b>5.</b> Réinvestir dans ton business/asso</span><span class="tag" style="background:var(--terra)">toi</span></div>
+    <div class="note" style="margin-top:6px">On ne passe à l'étape suivante que quand la précédente est faite. Pas avant. Je ne suis pas conseiller financier — valide le 3a/ETF avec ta banque.</div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🏦 Financement & aides (Genève)</div>
+    <div class="sub">De l'argent existe pour toi et ton projet. Il faut juste savoir où frapper.</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">🎓 Pour ta formation (toi)</div><div class="fiche-c">Bourse / prêt d'études : Service des bourses et prêts d'études (SBPE) — Genève. Un apprenti peut y avoir droit. Ça vaut le coup de déposer un dossier.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">💳 Pour tes dettes</div><div class="fiche-c">Désendettement gratuit : Caritas Genève, CSP (Centre social protestant). Ils négocient avec les créanciers et font un plan. Le minimum vital est protégé.</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">♿ Pour ton asso sport-handicap</div><div class="fiche-c">• Subventions Ville et Canton de Genève (sport, social)\n• Loterie Romande (fonds pour projets d'utilité publique)\n• Fondations privées · Pro Infirmis\n• Sponsors locaux + cotisations membres</div></div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-t">📈 Enrichissement simple (rappel)</div><div class="fiche-c">Quand dettes = 0 et coussin prêt : 3e pilier 3a (déduit des impôts) puis ETF monde (long terme). Lent, ennuyeux, efficace.</div></div>
+    <div class="note" style="margin-top:6px">⚠️ Je ne suis pas conseiller financier. Pour les bourses/subventions, vérifie les conditions officielles avant de déposer.</div>
+  </div>
+
+  <div class="card">
+    <div class="title">🧾 Mes factures & documents</div>
+    <div class="sub">Note tes factures (libellé + montant), joins le PDF/photo. Tout reste sur ton téléphone, hors-ligne.</div>
+    <input id="fac-lib" placeholder="Libellé (ex : LAMal janvier, électricité…)" style="margin-bottom:7px">
+    <div class="g2" style="margin-bottom:7px">
+      <input id="fac-mt" type="number" inputmode="decimal" placeholder="Montant CHF">
+      <input id="fac-date" type="date">
+    </div>
+    <label class="btn-sm" style="cursor:pointer;display:inline-block;margin-bottom:7px">📎 Joindre le PDF / la photo<input type="file" accept=".pdf,image/*" onchange="facAttach(this)" style="display:none"></label>
+    <span class="note" id="fac-att"></span>
+    <button class="btn" onclick="addFac()">Ajouter la facture</button>
+    <div id="fac-list" style="margin-top:11px"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">🐷 Économiser (trucs anti-impulsivité)</div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">La règle des 24 h</div><div class="fiche-c">Envie d'un achat > 50 CHF ? Tu attends 24 h. Si tu le veux encore demain → ok. 9 fois sur 10, l'envie passe. Parfait pour un cerveau TDAH.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Cash pour les sorties</div><div class="fiche-c">Tu retires un montant fixe par semaine en espèces. Quand c'est fini, c'est fini. Tu ne touches pas la carte.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Virement auto le jour de paie</div><div class="fiche-c">Programme un virement épargne le 25 du mois (jour du salaire). L'argent part AVANT que tu le voies. Le plus efficace de tous.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">Courses : liste + ventre plein</div><div class="fiche-c">Jamais faire les courses affamé. Liste sur le téléphone. Marques distributeur = -30% sans rien perdre.</div></div>
+  </div>
+</div>
+
+<!-- COACH -->
+<div class="sc" id="sc-coach">
+  <div class="hdr"><div class="ht">🛡️ Garde-fous</div><div class="hs">Pour me protéger quand je suis impulsif</div></div>
+
+  <div class="card-sage">
+    <div class="title">🫁 Respire (1 minute de calme)</div>
+    <div class="sub">Une envie (alcool, pari, colère) ? Un stress avant un exam ? Respire avec le cercle. 5 cycles, et la vague redescend.</div>
+    <div class="breath-circle" id="br-circle">Respire</div>
+    <button class="btn-sage" id="br-btn" onclick="breatheToggle()">▶ Démarrer la respiration</button>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">🧠 La leçon clé (paris + alcool, même piège)</div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">💡 Le savais-tu ?</div><div class="fiche-c">Paris, alcool, cannabis : ils tirent TOUS sur le même bouton dans ton cerveau → la dopamine, la récompense rapide. Chez un cerveau TDAH, ce bouton est plus sensible. C'est pour ça que l'envie est plus forte. Ce n'est pas ta faute : c'est ta chimie.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">🔗 Pourquoi les mélanger est dangereux</div><div class="fiche-c">Bu un verre → tes freins sautent → tu paries plus gros → tu perds → tu rebois pour oublier. C'est une spirale. La règle simple : on ne mélange JAMAIS alcool/cannabis et argent/paris. Jamais le même soir.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">🛟 Le réflexe qui te sauve (20 min)</div><div class="fiche-c">L'envie monte ? Elle redescend toute seule en ~20 min. Pendant ce temps : grand verre d'eau 💧 + 10 min de marche 🚶 + un message à quelqu'un 📱. 3 gestes, et la vague passe.</div></div>
+    <div class="fiche" style="border-left-color:var(--gold)"><div class="fiche-t">🎯 Ce que tu remplaces par quoi</div><div class="fiche-c">Tu cherches de la dopamine ? Va la chercher SAINE : une séance de sport, une victoire de révision (+XP), un objectif coché. Même récompense, zéro dégât. Ton cerveau ne fait pas la différence.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="title">🎰 Petit outil paris (si jamais)</div>
+    <div class="sub">Tu paries de temps en temps ? Règle simple : jamais plus de 2% de ce que tu mets de côté pour ça. C'est juste un garde-fou, pas une obligation.</div>
+    <div class="fin-row" style="margin-top:4px"><label>Mise de côté « jeu » (CHF)</label><input id="c-bk" type="number" inputmode="decimal" placeholder="ex : 100"></div>
+    <div class="fin-row"><label>Je veux miser (CHF)</label><input id="c-mise" type="number" inputmode="decimal" placeholder="0"></div>
+    <button class="btn" onclick="checkMise()">Vérifier</button>
+    <div id="c-result"></div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💚 Rappel de force</div>
+    <div style="font-size:13.5px;line-height:1.65">Tu es résilient. Tu t'es toujours battu. Ton CFC, ton asso boxe/golf/JJB pour les personnes en situation de handicap : c'est ça, le vrai gros lot. Mets ton énergie et ton argent là-dessus.</div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🧠 TDAH + alcool / cannabis / drogue</div>
+    <div class="sub">Pas pour te juger. Pour que tu saches ce qui se passe dans ta tête.</div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">Pourquoi c'est plus risqué quand on a un TDAH</div><div class="fiche-c">Le cerveau TDAH cherche la dopamine (la récompense rapide). Alcool, cannabis, jeux → dopamine immédiate. C'est pour ça que l'accroche est plus forte et plus rapide que chez les autres. Ce n'est pas un manque de volonté — c'est ta chimie. Le savoir, c'est déjà reprendre le contrôle.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">Alcool</div><div class="fiche-c">Coupe les freins → tu décides mal. Détruit le sommeil → lendemain : concentration en miettes (mauvais pour le CFC et la VMA). Avec la Ritaline : mauvais mélange pour le cœur.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">Cannabis</div><div class="fiche-c">Attaque direct la mémoire et la motivation — les 2 choses dont tu as besoin pour réviser. Ça calme sur le moment, mais ça aggrave le TDAH sur la durée. Pour un apprenti qui doit réussir : c'est un frein, pas une aide.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">La règle simple</div><div class="fiche-c">Jamais avant : réviser · décider d'argent · t'entraîner · conduire. Si l'envie monte fort → bois un grand verre d'eau, sors marcher 10 min, appelle quelqu'un. L'envie passe en ~20 min.</div></div>
+    <div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">Tu veux de l'aide ? (Genève, gratuit)</div><div class="fiche-c">• Carrefour addictionS — Genève\n• Stop-alcool.ch / Stop-cannabis.ch (anonyme, en ligne)\n• Ton médecin / ton psychiatre Ritaline : dis-lui, il est là pour ça.\nDemander de l'aide = force, pas faiblesse.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="title">🆘 Numéros utiles (Genève / Suisse)</div>
+    <div class="sub">Garde-les ici. Un mauvais moment, ça se traverse à plusieurs.</div>
+    <div class="row"><span style="font-size:13px"><b>144</b> — Urgences médicales</span></div>
+    <div class="row"><span style="font-size:13px"><b>143</b> — La Main Tendue (écoute 24/7)</span></div>
+    <div class="row"><span style="font-size:13px"><b>117</b> — Police · <b>118</b> — Pompiers</span></div>
+    <div class="row"><span style="font-size:13px">Carrefour addictionS — addictions</span></div>
+    <div class="row"><span style="font-size:13px">Caritas Genève / CSP — dettes & social</span></div>
+    <div class="note" style="margin-top:6px">Si ça va vraiment mal dans ta tête : appelle le 143. C'est gratuit, anonyme, 24h/24. Tu n'es pas seul.</div>
+  </div>
+</div>
+
+<!-- ECRIRE -->
+<div class="sc" id="sc-ecrire">
+  <div class="hdr"><div class="ht">✍️ Écrire</div><div class="hs">Correcteur intégré · marche hors-ligne</div></div>
+  <div class="note" style="margin-bottom:8px">👉 Colle ton texte (mail, devoir, message). Touche « Corriger ». Il répare l'orthographe courante, les espaces et les majuscules. Relis toujours après — c'est une aide, pas un prof.</div>
+  <div class="card">
+    <div class="title">Ton texte</div>
+    <textarea id="corr-in" placeholder="Colle ici ton mail, ton paragraphe de CFC, ton message…" style="min-height:120px"></textarea>
+    <div style="display:flex;gap:8px;margin-top:9px">
+      <button class="btn" onclick="corrige()">✨ Corriger</button>
+      <button class="btn-sm" onclick="document.getElementById('corr-in').value='';document.getElementById('corr-out').textContent='';" style="flex:0 0 auto">Vider</button>
+    </div>
+  </div>
+  <div class="card-sage">
+    <div class="title">Texte corrigé</div>
+    <div id="corr-out" class="fiche-c" style="min-height:60px;white-space:pre-wrap">…</div>
+    <button class="btn-sage" style="margin-top:10px" onclick="copyCorr()">📋 Copier le texte corrigé</button>
+  </div>
+  <div class="card-gold">
+    <div class="title">🔎 Analyser un texte / un cours (hors-ligne)</div>
+    <div class="sub">Colle ton cours ou un extrait d'ouvrage. L'appli sort les mots-clés, le temps de lecture, et peut créer des cartes de révision. Astuce : écris des lignes « Terme : définition » → elles deviennent des cartes Q/R.</div>
+    <textarea id="an-in" placeholder="Colle ton cours / texte ici…" style="min-height:110px;margin-bottom:8px"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" onclick="analyser()">🔎 Analyser</button>
+      <button class="btn-sage" onclick="texteVersCartes()" style="flex:1">➕ Créer des cartes Perso</button>
+    </div>
+    <div id="an-out" class="fiche-c" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div class="title">✅ Mes réflexes pour bien écrire</div>
+    <div class="fiche" style="border-left-color:var(--sage)"><div class="fiche-c">• Une idée = une phrase courte.\n• Je relis À VOIX HAUTE : si je manque d'air, je coupe.\n• Mail pro : Bonjour → ma demande claire → merci → mon nom.\n• Dans le doute sur un mot, j'écris simple.</div></div>
+  </div>
+</div>
+
+<!-- RESEAUX -->
+<div class="sc" id="sc-reseaux">
+  <div class="hdr"><div class="ht">📱 Réseaux</div><div class="hs">TikTok & Instagram — grandir hors-ligne</div></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="chip on" id="rtab-tiktok" onclick="setReseau('tiktok')" style="flex:1;text-align:center;background:var(--terra);color:#fff;border-color:transparent">🎵 TikTok</button>
+    <button class="chip" id="rtab-insta" onclick="setReseau('insta')" style="flex:1;text-align:center">📸 Instagram</button>
+    <button class="chip" id="rtab-idees" onclick="setReseau('idees')" style="flex:1;text-align:center">💡 Idées</button>
+  </div>
+  <div id="reseau-zone"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nb on" data-sc="accueil" onclick="go('accueil')"><span class="ic">🏠</span>Accueil</button>
+  <button class="nb" data-sc="revise" onclick="go('revise')"><span class="ic">📚</span>Révise</button>
+  <button class="nb" data-sc="jeux" onclick="go('jeux')"><span class="ic">🎮</span>Jeux</button>
+  <button class="nb" data-sc="sport" onclick="go('sport')"><span class="ic">💪</span>Sport</button>
+  <button class="nb" data-sc="argent" onclick="go('argent')"><span class="ic">💰</span>Argent</button>
+  <button class="nb" data-sc="coach" onclick="go('coach')"><span class="ic">🛡️</span>Garde</button>
+  <button class="nb" data-sc="ecrire" onclick="go('ecrire')"><span class="ic">✍️</span>Écrire</button>
+  <button class="nb" data-sc="reseaux" onclick="go('reseaux')"><span class="ic">📱</span>Réseaux</button>
+</div>
+
+<script>
+// ===== DONNÉES CAREUM FIDÈLES (tes 2 documents réels) =====
+const COMP = {
+A:{name:"Compétence A",sub:"Se situer dans son rôle professionnel",color:"#5a7a9a",
+fiches:[
+{t:"Rôle de l'ASE",c:"L'ASE accompagne des personnes de tous âges dans leur quotidien (enfants, personnes en situation de handicap, personnes âgées). Il structure la journée, propose des activités, respecte les besoins.\n\nExemple : en EMS, Mme B. (84 ans) ne veut pas se lever. Tu respectes son refus, tu notes et tu informes l'équipe."},
+{t:"Éthique — les 5 principes",c:"1. Autonomie\n2. Non-malfaisance\n3. Assistance\n4. Justice\n5. Dignité humaine\n\nExemple : Marc veut manger seul même s'il renverse. Tu l'aides sans lui enlever le contrôle → tu respectes l'autonomie."},
+{t:"Secret professionnel — Art. 321 CP",c:"Tu ne divulgues RIEN sur les personnes accompagnées à des tiers sans autorisation. La LPD = loi sur la protection des données.\n\nExemple : la voisine demande des nouvelles de M. X. Tu réponds : « Je ne peux pas donner d'informations. » C'est la loi."},
+{t:"Burn-out — 3 phases",c:"1. Idéalisation\n2. Fatigue chronique\n3. Épuisement total\n\nSignes : troubles du sommeil, perte d'empathie, maux de dos.\nExemple : tu rentres épuisé chaque soir → signal. Tu en parles à ton responsable."},
+{t:"Stress & coping",c:"Bonnes stratégies : sport, planification, demander de l'aide, prioriser.\nÀ éviter : faire semblant que tout va bien.\n\nExemple : exam dans 3 jours → liste de ce que tu sais, révision 30 min, sport. Pas de « je suis nul »."},
+{t:"Résilience",c:"Capacité à rebondir après les épreuves.\nFacteurs : autoefficacité, réseau social, résolution de problèmes.\n\nExemple : tu as raté un exam → tu analyses, tu reprends, tu continues."},
+{t:"⚠️ À retenir pour l'examen",c:"• Art. 321 CP = secret professionnel\n• 5 principes éthiques : Autonomie · Non-malfaisance · Assistance · Justice · Dignité\n• Burn-out : 3 phases (idéalisation → fatigue → épuisement)\n• LPD = protection des données\n• APEA = Autorité de Protection de l'Enfant et de l'Adulte"}],
+quiz:[
+{q:"Quels sont les 5 principes éthiques ?",a:"Autonomie · Non-malfaisance · Assistance · Justice · Dignité humaine."},
+{q:"Que dit l'Art. 321 CP ?",a:"Le secret professionnel : tu ne divulgues aucune info sur les personnes accompagnées sans autorisation."},
+{q:"Cite les 3 phases du burn-out.",a:"1. Idéalisation → 2. Fatigue chronique → 3. Épuisement total."},
+{q:"La voisine te demande des nouvelles d'un résident. Tu fais quoi ?",a:"Tu refuses : « Je ne peux pas donner d'informations. » (secret pro, Art. 321 CP)."}]},
+
+B:{name:"Compétence B",sub:"Planifier & organiser la journée (B1 · B2)",color:"#5a9a6e",
+fiches:[
+{t:"[B1] C'est quoi « planifier » ?",c:"L'ASE planifie ses tâches et discute les activités avec l'équipe. Il fait une vue d'ensemble + un plan écrit.\n\nIl inclut les personnes accompagnées, tient compte de leurs besoins et de leur autonomie, et assume les tâches déléguées.\n\nPlanifier = anticiper mentalement les étapes (objectifs, moyens, décisions)."},
+{t:"[B1] Objectifs évaluateurs B1",c:"b1.1 → établir l'emploi du temps d'une journée liée aux activités.\nb1.2 → s'acquitter seul des missions confiées.\nb1.3 → tenir compte des centres d'intérêt et besoins, et se concerter avec l'équipe."},
+{t:"[B1] Une activité réussie",c:"• Motivation : la joie est contagieuse (le manque aussi).\n• Réduire la pression des attentes.\n• Calme + gestion du temps.\n• Adaptée à la personne (développement, capacités, troubles).\n• Participation : on implique la personne.\n• Locaux adaptés ; tester l'activité avant.\n• Pas trop d'activités à la fois ; la répétition est OK.\n• Groupe : + il est homogène, + l'activité est ciblée."},
+{t:"[B1] Planifier : pour / contre",c:"CONTRE (idées reçues) : « ça programme », « ça manipule », « ça tue la créativité et la spontanéité », « ça prend du temps ».\n\nPOUR : objectifs clairs, sécurité, communication, confiance, réponse aux besoins, évaluation possible, et un vrai répertoire pour RÉAGIR avec spontanéité."},
+{t:"[B1] ⭐ Escalier à 6 marches",c:"La VRAIE version Careum :\n1. Bilan du groupe\n2. Définition des objectifs\n3. Planification de l'activité\n4. Réalisation de l'activité\n5. Évaluation / Suivi\n6. Réflexion sur sa propre action\n\n= les 6 étapes du processus d'accompagnement (peut se voir comme un cycle)."},
+{t:"[B1] Méthode IPDRCE",c:"Autre démarche en 6 étapes :\nI → s'Informer\nP → Planifier\nD → Décider\nR → Réaliser\nC → Contrôler\nE → Évaluer"},
+{t:"[B1] La 6e marche : réflexion",c:"Après l'activité, tu te demandes :\n• Comment je me suis senti ? Ai-je su motiver ?\n• Ma perception du groupe était-elle juste ?\n• Assez de temps prévu ? Ai-je privilégié certains ?\n• Comment j'ai réagi aux imprévus ?\n→ But : repérer tes points forts ET tes pistes d'amélioration."},
+{t:"[B2] Organiser la journée",c:"L'ASE structure l'emploi du temps des personnes, avec des rituels adéquats. Il adapte aux imprévus, aux besoins et aux ressources. Il organise les transitions, transmet les infos à l'équipe et encourage l'autonomie."},
+{t:"[B2] Objectifs évaluateurs B2",c:"b2.1 → emploi du temps structuré avec rituels adéquats.\nb2.2 → percevoir les besoins et l'état de forme, et adapter le soutien.\nb2.3 → inciter à organiser sa journée avec autonomie.\nb2.4 → percevoir l'ambiance du groupe et adapter."},
+{t:"[B2] Transitions : le + positif",c:"Une transition = le passage entre 2 moments (ex : jeu → repas).\n\nBien vécues, elles apprennent à s'adapter, développent les compétences socio-émotionnelles et donnent confiance. Une transition réussie aide à réussir les suivantes."},
+{t:"[B2] Transitions : les difficultés",c:"Elles peuvent créer stress et sollicitation excessive. Les temps d'attente sont durs.\n\n⚠️ RÈGLE D'OR : voir les réactions (pleurs, agitation) comme des situations transitoires, PAS comme des troubles du comportement.\n\nExemple : Max ne trouve pas de place côté fenêtre dans le tram → il pleure et pousse un autre enfant. Il est dépassé par la nouveauté."},
+{t:"[B2] Réussir une transition : 3 moments",c:"AVANT (ce qui vient de se passer) : « Mme Meyer, je vois que vous avez fini votre quatre-heures. »\nPENDANT (ce qui se passe) : « Je vous accompagne dans votre chambre. »\nAPRÈS (ce qui va se passer) : « Là, vous pourrez vous reposer et lire. »\n\n+ relation de confiance, personnes de référence régulières, et rituels."},
+{t:"[B2] Les rituels",c:"Pratiques à valeur symbolique, régulières, avec des règles. C'est la RÉPÉTITION qui leur donne du sens.\n\nIls rassurent, favorisent l'autonomie et aident dans les transitions.\nMessage : « Nous faisons cela ainsi » et « Nous sommes ainsi » (sentiment d'appartenance)."},
+{t:"[B2] Caractéristiques d'un rituel",c:"• Action délibérée\n• Ton agréable / communication\n• Règles définies, structuré\n• Répété (ou unique)\n• Accompagné de bruits / moyens auxiliaires\n• Moment fixe ou spontané, lieu particulier\n• Signification symbolique + message compréhensible"},
+{t:"[B2] Un rituel : début / milieu / fin",c:"DÉBUT : on nomme ou on lance le rituel ; on se sépare de ce qui précédait (un lieu, un bruit, un signal).\nMILIEU : le rituel lui-même (chanson, symbole, histoire).\nFIN : on revoit / résume, puis on revient au quotidien."},
+{t:"[B2] Mettre en place un rituel",c:"Les questions à se poser :\n• À qui s'adresse-t-il ? Quel thème ? Quel objectif ?\n• Quel message et quelles valeurs ?\n• Quelle symbolique, quel lieu, quelle heure ?\n• Quels moyens auxiliaires ? Quelles règles ?\n• Quand ? Comment je l'apprends aux personnes ? Qui informer ?"},
+{t:"[B2] Les symboles",c:"Signes visibles qui représentent une idée :\n• cœur = amour\n• sapin = Noël\n• bougies = âge\n• trèfle = chance\n• rose = « je t'aime »\n\nTrès utiles comme repères d'orientation (pictogrammes, gares) quand l'écrit n'est pas maîtrisé."},
+{t:"[B2] Activités qui ont du sens",c:"On part des RESSOURCES de la personne. On ne fait pas une activité « pour faire » ou pour « remplir le planning ».\n\n💡 « Parfois, le moins est l'ami du mieux. »\n\nÀ penser : besoins, stade de développement, durée (capacité d'attention), culture, variété, progression du facile au difficile, environnement, météo."},
+{t:"[B2] Ce qui rythme le quotidien",c:"• Corps : faim, soif, sommeil, besoin de repos\n• Nature : jour/nuit, saisons, météo\n• Culture : fêtes, et repos nocturne / temps de travail fixés par la LOI\n\nRepas, repos, soins du corps, travail et saisons donnent des repères sécurisants."},
+{t:"⚠️ À retenir B1 + B2",c:"• Escalier 6 marches : Bilan → Objectifs → Planification → Réalisation → Évaluation → Réflexion\n• IPDRCE : Informer · Planifier · Décider · Réaliser · Contrôler · Évaluer\n• Transition = 3 moments (avant / pendant / après)\n• Rituel = début / milieu / fin, et sa force vient de la répétition\n• Réaction en transition ≠ trouble du comportement\n• On part TOUJOURS des ressources"}],
+quiz:[
+{q:"Cite les 6 marches de l'escalier (version Careum).",a:"1. Bilan du groupe → 2. Définition des objectifs → 3. Planification → 4. Réalisation → 5. Évaluation/Suivi → 6. Réflexion sur sa propre action."},
+{q:"Que veut dire IPDRCE ?",a:"Informer · Planifier · Décider · Réaliser · Contrôler · Évaluer."},
+{q:"Un enfant pleure quand son éducateur de référence part. C'est un trouble du comportement ?",a:"Non. C'est une difficulté de transition. On l'accompagne, on ne le juge pas."},
+{q:"Cite les 3 moments d'une transition réussie.",a:"Avant (ce qui vient de se passer) · Pendant (ce qui se passe) · Après (ce qui va se passer)."},
+{q:"Qu'est-ce qui donne son sens à un rituel ?",a:"Sa répétition régulière."},
+{q:"Quelles sont les 3 parties d'un rituel ?",a:"Début · Milieu · Fin."},
+{q:"Donne un argument POUR la planification.",a:"Elle apporte sécurité et confiance, des objectifs clairs, et permet l'évaluation (entre autres)."},
+{q:"« Parfois, le moins est l'ami du mieux » : ça veut dire quoi ?",a:"Ne pas surcharger d'activités ; ne pas en faire juste pour remplir le planning."}]},
+
+C:{name:"Compétence C",sub:"Observer et documenter",color:"#5a9a92",
+fiches:[
+{t:"L'observation",c:"Collecter des informations de façon STRUCTURÉE et OBJECTIVE. Observer = noter ce qu'on VOIT.\n\nExemple : « Léo est sorti du groupe après 5 min et a regardé par la fenêtre » (FAIT) ≠ « Léo n'aime pas le groupe » (INTERPRÉTATION)."},
+{t:"Fait vs interprétation",c:"FAIT = ce qu'on voit/entend précisément.\nINTERPRÉTATION = ce qu'on en pense.\nÀ l'examen : JAMAIS d'interprétation dans un rapport !\n\n✅ « Marie a refusé son repas et est restée au lit 3h. »\n❌ « Marie est déprimée. »"},
+{t:"Le rapport",c:"Document écrit, factuel, sans jugement. Objectif, précis, compréhensible. Base pour les décisions.\n\nExemple : « À 14h, M. X a frappé la table 3 fois et a crié. Il a quitté la salle. »"},
+{t:"La transmission",c:"Informer l'équipe oralement (passation) et par écrit (rapport, cahier de bord). Protège la continuité.\n\nExemple fin de shift : « Mme B. a refusé de manger ce soir, elle a demandé sa fille. »"},
+{t:"Le portfolio",c:"Dossier qui documente des situations professionnelles réelles avec ton analyse. Preuve pour le jury CFC.\n\nTu écris une situation vécue : contexte, ce que tu as fait, pourquoi, ce que tu retiens."},
+{t:"Confidentialité",c:"Les infos sur les personnes sont PRIVÉES. Rapport = usage interne. Jamais à des tiers.\n\nTu ne laisses pas ton rapport visible. Tu ne parles pas d'un résident à un autre."},
+{t:"⚠️ À retenir pour l'examen",c:"• FAIT = ce qu'on observe directement (comportement, durée, heure, lieu)\n• INTERPRÉTATION = ce qu'on suppose (INTERDIT dans les rapports)\n• Un rapport est toujours objectif, factuel, sans jugement\n• Portfolio = situations réelles + analyse réflexive"}],
+quiz:[
+{q:"Différence entre FAIT et INTERPRÉTATION ?",a:"FAIT = ce qu'on voit/entend précisément. INTERPRÉTATION = ce qu'on suppose. Seul le FAIT va dans un rapport."},
+{q:"« Marie est déprimée » : fait ou interprétation ?",a:"Interprétation ❌. Un fait : « Marie a refusé son repas et est restée au lit 3h. »"},
+{q:"C'est quoi un bon rapport ?",a:"Objectif, factuel, précis, sans jugement de valeur."},
+{q:"À quoi sert le portfolio pour le CFC ?",a:"À documenter des situations réelles + ton analyse réflexive. C'est une preuve pour le jury."}]},
+
+D:{name:"Compétence D",sub:"Collaborer et communiquer",color:"#8a6e9a",
+fiches:[
+{t:"Collaboration interprofessionnelle",c:"Travailler avec d'autres pros : médecin, physio, assistante sociale, curateur, psychologue. Chacun son rôle.\n\nExemple : Mme H. doit faire de la kiné ET tricoter → tu discutes avec le physio : qui fait quoi ?"},
+{t:"Entretien formel",c:"Réunion planifiée, objectif précis, lieu fixe, durée déterminée.\n\nExemple : réunion avec le curateur de M. X, 1h en salle, ordre du jour préparé → FORMEL."},
+{t:"Entretien informel",c:"Échange spontané, sans structure. Couloir, pendant un soin. Aussi important mais non officiel.\n\nExemple : en aidant Marie à s'habiller, elle te confie qu'elle a peur de la nuit → INFORMEL."},
+{t:"Personnes de référence",c:"Proches, représentants légaux, curateurs : ils ont des droits. Tu collabores selon les règles.\n\nExemple : le curateur veut M. B. en EMS, les parents refusent → tu transmets à ton responsable, tu ne décides pas."},
+{t:"Le consensus",c:"Décision collective où chacun peut « vivre avec » le résultat. Plus fort qu'un vote.\n\nExemple : l'équipe ne s'entend pas → on écoute tout le monde, on trouve une solution acceptable."},
+{t:"Le feed-back",c:"Retour constructif.\nDonner : concret, factuel, bienveillant.\nRecevoir : écouter sans se défendre.\n\nExemple : « Tu as bien géré la crise de ce matin, tu es resté calme. »"},
+{t:"⚠️ À retenir pour l'examen",c:"• Collaboration interpro = différents métiers ensemble\n• Entretien formel (planifié) vs informel (spontané)\n• Le représentant légal/curateur a un pouvoir de décision → toujours le respecter\n• Consensus = décision collective où chacun peut vivre avec le résultat"}],
+quiz:[
+{q:"Formel ou informel : une confidence reçue pendant un soin ?",a:"Informel — échange spontané, sans structure."},
+{q:"C'est quoi le consensus ?",a:"Une décision collective où chacun peut « vivre avec » le résultat. Plus fort qu'un vote."},
+{q:"Le curateur décide une chose, les parents refusent. Tu fais quoi ?",a:"Tu transmets à ton responsable. Tu ne décides pas toi-même."},
+{q:"Comment donner un bon feed-back ?",a:"Concret, factuel, bienveillant."}]},
+
+E:{name:"Compétence E",sub:"Établir des relations professionnelles",color:"#c95a5a",
+fiches:[
+{t:"Relation pro vs privée",c:"Pro : rôles définis, limitée dans le temps, asymétrique, avec un objectif.\nPrivée : continue, émotionnelle, sans limite.\n\nExemple : tu t'entends bien avec Mme T. → relation pro. Si tu l'invites chez toi → tu dépasses la limite !"},
+{t:"Proximité / distance",c:"Équilibre constant.\nTrop proche = perte d'objectivité.\nTrop loin = pas de confiance.\n\nExemple : Julien invite Rebecca chez lui à Pâques → trop proche ! Il confond rôle pro et rôle familial."},
+{t:"Les 3 attitudes de Rogers",c:"1. Empathie : comprendre ce que ressent l'autre\n2. Acceptation inconditionnelle : accepter sans juger\n3. Congruence : être authentique\n\nExemple : Mme B. pleure → « Je vois que c'est difficile pour vous. » (empathie). Pas « C'est normal, ça ira. »"},
+{t:"Les 3 phases relationnelles",c:"1. Début → instaurer la confiance\n2. Entretien → vivre la relation, clarifier\n3. Fin → rituel, bilan, séparation\n\nExemple : Rosalie quitte la crèche → on prépare son départ depuis 1 mois (fin ritualisée)."},
+{t:"Pouvoir / dépendance",c:"Les personnes DÉPENDENT de toi → danger d'abus de pouvoir. Conscience nécessaire.\n\nExemple : tu décides où Mme X mange, quand elle se lève. Ce pouvoir doit servir SON bien, pas ta commodité."},
+{t:"L'attachement",c:"Besoin fondamental de lien sécurisant. Enfants et adultes ont besoin d'une figure d'attachement stable.\n\nExemple : Pablo pleure chaque matin à la crèche. Ta présence stable et chaleureuse l'aide à s'attacher."},
+{t:"⚠️ À retenir pour l'examen",c:"• Rogers : Empathie + Acceptation inconditionnelle + Congruence\n• 3 phases : Début (confiance) → Entretien (vie de la relation) → Fin (rituel, bilan)\n• Proximité/Distance : équilibre constant\n• Relation pro : asymétrique, limitée, avec un mandat\n• Fin de relation = toujours ritualisée et préparée à l'avance"}],
+quiz:[
+{q:"Cite les 3 attitudes de Rogers.",a:"Empathie · Acceptation inconditionnelle · Congruence (authenticité)."},
+{q:"Cite les 3 phases d'une relation pro.",a:"Début (confiance) → Entretien (vie de la relation) → Fin (rituel, bilan)."},
+{q:"Inviter un résident chez soi : problème ?",a:"Oui — on dépasse la limite pro/privée. Perte de la juste distance."},
+{q:"Comment se passe une bonne fin de relation ?",a:"Elle est ritualisée et préparée à l'avance (bilan, séparation en douceur)."}]},
+
+F:{name:"Compétence F",sub:"Accompagner dans les activités",color:"#6b7c5f",
+fiches:[
+{t:"Les formes d'accompagnement",c:"• Encourager (motiver)\n• Inciter (proposer)\n• Laisser essayer (autonomie)\n• Faire avec (co-participer)\n\nExemple : Léa hésite à peindre → tu l'encourages, elle commence, tu laisses essayer, si elle bloque tu fais avec."},
+{t:"Les théories de l'apprentissage",c:"• Behaviorisme : renforcement (R+ / R- / P+ / P-)\n• Cognitif : compréhension, sens\n• Socio-cognitif : apprendre en observant (Bandura)\n\nExemple : tu félicites Paul quand il range → behaviorisme. Tu expliques POURQUOI ranger → cognitif."},
+{t:"Le jeu",c:"Le jeu EST le travail de l'enfant.\nTypes : libre, symbolique, de règles, de construction.\n\nExemple : Léo joue à la dinette → jeu symbolique. Il imite les adultes, développe langage et codes sociaux."},
+{t:"Dynamique de groupe (Tuckman)",c:"Les groupes passent par des phases : Formation → Tensions → Normalisation → Performance → Dissolution.\n\nL'ASE accompagne le groupe à chaque phase, surtout dans les tensions."},
+{t:"Le processus créatif & le cycle de Gibbs",c:"Activité créative : on laisse la place à l'expression, pas au « beau résultat ».\nCycle de Gibbs (réflexion) : Description → Sentiments → Évaluation → Analyse → Conclusion → Plan d'action."},
+{t:"⚠️ À retenir pour l'examen",c:"• 4 formes : Encourager · Inciter · Laisser essayer · Faire avec\n• Behaviorisme (renforcement) / Cognitif (sens) / Socio-cognitif (Bandura, observation)\n• Le jeu = le travail de l'enfant (libre, symbolique, règles, construction)\n• Gibbs = outil de réflexion en 6 étapes"}],
+quiz:[
+{q:"Cite les 4 formes d'accompagnement.",a:"Encourager · Inciter · Laisser essayer · Faire avec."},
+{q:"Qui a décrit l'apprentissage par observation ?",a:"Bandura (apprentissage socio-cognitif / vicariant)."},
+{q:"Pourquoi dit-on que le jeu est le travail de l'enfant ?",a:"Parce qu'en jouant, l'enfant développe langage, motricité, émotions et codes sociaux."},
+{q:"Cite 2 types de jeu.",a:"Au choix : jeu libre, symbolique, de règles, de construction."}]},
+
+F0:{name:"Careum F0",sub:"Psychologie du développement",color:"#8a6e9a",
+fiches:[
+{t:"Fiche 1 — Le développement",c:"Le développement dure toute la vie, de la naissance à la mort.\n\n3 facteurs :\n🧬 BIOLOGIQUE (inné — gènes, tempérament)\n🌍 ENVIRONNEMENT (acquis — famille, école, culture)\n💪 AUTODÉTERMINATION (volonté — ce qu'on choisit)\n\nMémo : BIO + ENVIRO + MOI = MON DÉVELOPPEMENT"},
+{t:"Fiche 2 — Erikson : les 8 crises",c:"0-1 an : Confiance vs Méfiance\n1-3 ans : Autonomie vs Honte\n3-5 ans : Initiative vs Culpabilité\n5-12 ans : Travail vs Infériorité\nAdo : Identité vs Confusion\nJeune adulte : Intimité vs Isolement\nAdulte : Générativité vs Stagnation\nVieux : Intégrité vs Désespoir\n\nMémo : CONFIANCE → AUTONOMIE → INITIATIVE → TRAVAIL → IDENTITÉ → INTIMITÉ → GÉNÉRER → INTÉGRITÉ"},
+{t:"Fiche 3 — Piaget : les 4 stades",c:"🍼 Sensorimoteur (0-2 ans) : apprend avec le corps et les sens. 18 mois : se reconnaît dans le miroir.\n🎭 Préopératoire (2-7 ans) : parle et imagine, pensée magique, voit seulement SON point de vue.\n📚 Opératoire concret (7-12 ans) : logique avec objets réels (l'eau versée reste la même quantité).\n🔬 Opératoire formel (12 ans+) : pensée abstraite, « si… alors… »\n\nMémo : CORPS → MAGIE → CONCRET → ABSTRAIT"},
+{t:"Fiche 4 — Les émotions",c:"Les émotions influencent le CORPS, les PENSÉES et le COMPORTEMENT.\n\n8 compétences émotionnelles :\n1. Reconnaître MES émotions\n2. Reconnaître celles des AUTRES\n3. Mettre des MOTS dessus\n4. Faire preuve d'EMPATHIE\n5. Distinguer ce que je ressens / ce que les autres montrent\n6. GÉRER mes émotions difficiles\n7. Comprendre leur effet sur les RELATIONS\n8. ACCEPTER mes émotions"},
+{t:"Fiche 5 — La motricité",c:"Le mouvement se développe du HAUT vers le BAS et du CENTRE vers l'EXTÉRIEUR.\n\n🍼 Réflexes : automatique, inné (téter, attraper)\n💪 Motricité globale : grands mouvements (marcher, courir, s'asseoir)\n✋ Motricité fine : petits mouvements précis (pince pouce-index, écrire, dessiner)"},
+{t:"Fiche 6 — Les 7 sens",c:"👋 Toucher : le PLUS important, premier développé, vital pour le bébé\n⚖️ Équilibre : se tenir debout, s'orienter\n🏃 Orientation/Mouvement : savoir où est son corps (proprioception)\n👅 Goût : sucré, salé, acide, amer, umami\n👁️ Vue : le MOINS développé à la naissance (mature vers 6-7 mois)\n👂 Ouïe : fonctionne AVANT la naissance (reconnaît la voix de la mère)\n👃 Odorat : fonctionnel dès la naissance"},
+{t:"Fiche 7 — Les 7 stades du langage",c:"1. Préliminaire (0-5 mois) : pleurs, « aaaahhh »\n2. Babillage (6-12 mois) : « ba-ba-ba »\n3. Phrases d'1 mot (12-18 mois) : « maman »\n4. Phrases de 2 mots (18 mois-2 ans) : « maman partie »\n5. Grammaire (2-3 ans) : premiers « pourquoi ? »\n6. Consolidation (3-4 ans) : phrases complexes\n7. Maîtrise complète (4-5 ans) : presque comme un adulte"},
+{t:"Fiche 8 — Social & moral",c:"ATTACHEMENT :\n✅ Sécure : confiance → explore → bon développement\n❌ Insécure : peur → n'ose pas → plus difficile\n\nMORALE selon EISENBERG (5 stades) :\n1. Hédoniste (4-5 ans) : pour avoir qqch en retour\n2. Besoins (6 ans) : parce que l'autre en a besoin\n3. Reconnaissance (7-12 ans) : pour être bien vu\n4a. Empathie (12-14 ans) / 4b. Valeurs (14-17 ans)\n5. Internalisé (18-25 ans) : parce que c'est juste pour la société"},
+{t:"Fiche 9 — La socialisation",c:"Apprendre à vivre en société. Ça dure toute la vie !\n\n🥇 Primaire : Famille (manger, parler, se comporter)\n🥈 Secondaire : École, crèche, institution (règles sociales hors famille)\n🥉 Tertiaire : Loisirs, médias, amis\n\nMémo : FAMILLE → ÉCOLE → MONDE = Je deviens qui je suis"}],
+quiz:[
+{q:"Cite les 3 facteurs du développement.",a:"Biologique (inné) · Environnement (acquis) · Autodétermination (volonté)."},
+{q:"Erikson 0-1 an : quel défi ?",a:"Confiance vs Méfiance."},
+{q:"Piaget : stade 2-7 ans ?",a:"Préopératoire — pensée magique, l'enfant ne voit que son point de vue."},
+{q:"Quel est le sens le PLUS important et le premier développé ?",a:"Le toucher. Vital pour le bébé."},
+{q:"Quel sens fonctionne AVANT la naissance ?",a:"L'ouïe — le bébé reconnaît la voix de sa mère."},
+{q:"Les 3 niveaux de socialisation ?",a:"Primaire (famille) → Secondaire (école/institution) → Tertiaire (loisirs, médias, amis)."}]},
+
+LOIS:{name:"Lois & droit",sub:"Tout ce qui peut tomber à l'examen",color:"#c95a5a",
+fiches:[
+{t:"Art. 321 CP — Secret professionnel",c:"Tu ne divulgues JAMAIS d'infos sur les personnes accompagnées. Peine possible en cas de violation."},
+{t:"Art. 307-312 CC — Protection de l'enfant",c:"Mesures de protection ordonnées par l'APEA si le bien de l'enfant est menacé."},
+{t:"Art. 314c-d CC — Obligation de signalement",c:"Tu DOIS signaler à l'APEA si tu vois des signes de maltraitance sur un enfant."},
+{t:"Art. 321c CO — Heures supplémentaires",c:"+25% de salaire ou compensation en temps libre. Ne peut pas être exclu par contrat."},
+{t:"Art. 328 CO — Protection de la personnalité",c:"L'employeur doit te protéger contre le harcèlement, le mobbing, la discrimination."},
+{t:"Institutions clés",c:"• APEA : Autorité de Protection de l'Enfant et de l'Adulte\n• SPMi : Service de Protection des Mineurs (Genève)\n• AVS/AI : assurances sociales\n• LPD : loi sur la protection des données"},
+{t:"Protection de l'enfant — les mesures graduées",c:"L'APEA agit POUR le bien de l'enfant, pas pour punir les parents. Mesures subsidiaires (en dernier) et proportionnelles, de la + douce à la + forte :\n1. Instructions aux parents (art. 307 al.3 CC)\n2. Curatelle éducative (art. 308 CC)\n3. Retrait de la garde / placement (art. 310 CC)\n4. Retrait de l'autorité parentale (art. 311-312 CC)\n→ puis tutelle (art. 327a CC)"},
+{t:"Châtiments corporels",c:"L'art. 11 CF protège l'intégrité de l'enfant.\n• Une gifle = voie de fait (art. 126 CP).\n• C'est la RÉPÉTITION qui rend l'acte punissable (art. 126 al.2a CP).\n• Arrêt du Tribunal fédéral 129 IV 216 : il n'existe PAS de « droit de correction »."},
+{t:"Abus sexuels sur enfants",c:"• Majorité sexuelle = 16 ans (art. 187 CP). Exception : écart d'âge ≤ 3 ans.\n• Protection contre la prostitution (art. 195 CP) et la pornographie (art. 197 CP).\n• Délits poursuivis d'OFFICE.\n• LAVI = loi sur l'aide aux victimes (procédures adaptées aux enfants)."},
+{t:"Obligation de déclaration (réforme 2019)",c:"• Art. 314c CC = DROIT d'aviser l'APEA.\n• Art. 314d CC = OBLIGATION d'aviser pour les pros en contact régulier avec des enfants (soins, social, éducateurs, enseignants, sport… DONT les accompagnants de crèche).\n💡 Transmettre le cas à ton SUPÉRIEUR hiérarchique = tu as rempli ton obligation."},
+{t:"Tes DROITS d'employé (CO)",c:"• Salaire dû en fin de mois (art. 323 CO).\n• 13e mois : pas imposé par la loi, mais s'il est au contrat il est dû — même au prorata si tu pars en cours d'année.\n• Remboursement des frais professionnels (art. 327 CO).\n• Égalité salariale H/F (art. 8 al.3 CF + LEg).\n• Protection accidents (LAA)."},
+{t:"Tes DEVOIRS d'employé (CO)",c:"• Travail personnel : tu ne te fais pas remplacer.\n• Tu dois prouver un empêchement (certificat médical selon le contrat).\n• Heures supplémentaires : art. 321c CO → +25% du salaire OU compensation en congé."},
+{t:"Jeune en formation < 18 ans (LTr)",c:"Protection spéciale nuit / dimanche. En tant qu'ASE en formation (dès 17 ans), au maximum :\n• 2 nuits par semaine\n• 10 nuits par an\n• 1 dimanche ou jour férié par mois\n• 2 jours fériés par an"}],
+quiz:[
+{q:"Quel article protège le secret professionnel ?",a:"Art. 321 CP."},
+{q:"À qui signaler une suspicion de maltraitance sur un enfant ?",a:"À l'APEA (Art. 314c-d CC). Obligation de signalement."},
+{q:"Heures sup : quel article et quelle compensation ?",a:"Art. 321c CO : +25% de salaire ou compensation en temps libre."},
+{q:"Que veut dire APEA ?",a:"Autorité de Protection de l'Enfant et de l'Adulte."},
+{q:"Cite l'ordre des mesures de protection de l'enfant (douce → forte).",a:"Instructions (307) → curatelle éducative (308) → retrait de garde/placement (310) → retrait de l'autorité parentale (311-312)."},
+{q:"Les mesures de protection servent-elles à punir les parents ?",a:"Non. Elles sont prises POUR le bien de l'enfant, de façon subsidiaire et proportionnelle."},
+{q:"À quel âge est fixée la majorité sexuelle ?",a:"16 ans (art. 187 CP), sauf si l'écart d'âge est de 3 ans ou moins."},
+{q:"Tu signales une suspicion à ton supérieur. As-tu rempli ton obligation ?",a:"Oui (art. 314d CC : transmettre au supérieur hiérarchique suffit)."},
+{q:"Heures sup d'un ASE : combien ?",a:"+25% du salaire ou une compensation en congé (art. 321c CO)."},
+{q:"ASE en formation < 18 ans : nombre de nuits par an max ?",a:"10 nuits par an (et au maximum 2 par semaine)."}]}
+,
+STRAT:{name:"Stratégie & persuasion",sub:"Te défendre intellectuellement",color:"#8a6e9a",
+fiches:[
+{t:"Les 6 leviers de persuasion (Cialdini)",c:"On t influence avec 6 boutons :\n1. Réciprocité — on te donne un truc, tu te sens obligé de rendre\n2. Cohérence — tu as dit oui une fois, tu continues\n3. Preuve sociale — « tout le monde le fait »\n4. Autorité — « c est un expert qui le dit »\n5. Sympathie — on t aime bien, tu dis oui\n6. Rareté — « offre limitée, vite ! »\n\nLes connaître = ne plus se faire avoir."},
+{t:"Les repérer pour te défendre",c:"Quand tu sens une pression, NOMME la technique dans ta tête. Une fois nommée, elle perd son pouvoir.\n\nExemple : « valable ce soir seulement » → c est de la RARETÉ. Tu respires, tu décides demain. Si l offre est vraie, elle tiendra."},
+{t:"3 pièges du cerveau (biais)",c:"• Ancrage : le 1er prix annoncé fausse ton jugement (« 500 au lieu de 1000 » te paraît donné)\n• Confirmation : tu ne vois que ce qui t arrange\n• FOMO : la peur de rater te fait décider trop vite\n\nLe remède : ralentir. L impulsivité est ton point faible — la lenteur est ton arme."},
+{t:"Dire non sans agresser",c:"Technique du disque rayé : tu répètes calmement la même phrase.\n« Je comprends. Et c est non. »\n« Je comprends. Et c est non. »\n\nPas besoin de te justifier 10 fois. Calme + répétition = respect."},
+{t:"Négocier comme un pro",c:"• Vise l intérêt, pas la position (« pourquoi tu veux ça ? »)\n• Parle moins, écoute plus\n• Le silence est une force : après ton prix, tais-toi\n• Toujours une porte de sortie : ne jamais négocier dos au mur"},
+{t:"⚠️ À retenir",c:"• 6 leviers : Réciprocité · Cohérence · Preuve sociale · Autorité · Sympathie · Rareté\n• Nommer la technique = la neutraliser\n• Ton arme contre l impulsivité : ralentir, décider à froid\n• Dire non : calme + répétition"}],
+quiz:[
+{q:"Cite 3 des 6 leviers de persuasion.",a:"Au choix : Réciprocité · Cohérence · Preuve sociale · Autorité · Sympathie · Rareté."},
+{q:"« Offre valable ce soir seulement » : quelle technique ?",a:"La rareté. Réflexe : respirer et décider demain à froid."},
+{q:"Comment neutraliser une technique de persuasion ?",a:"La nommer dans ta tête. Une fois identifiée, elle perd son pouvoir."},
+{q:"C est quoi le biais d ancrage ?",a:"Le 1er chiffre annoncé fausse ton jugement (ex : un prix barré qui fait paraître l autre donné)."},
+{q:"Comment dire non sans te justifier 10 fois ?",a:"Le disque rayé : répéter calmement « Je comprends, et c est non »."}]},
+
+SUISSE:{name:"Civisme suisse",sub:"Comprendre ton pays (et voter malin)",color:"#c95a5a",
+fiches:[
+{t:"La démocratie directe",c:"En Suisse, le PEUPLE décide souvent lui-même, par votation.\n• Initiative populaire : 100 000 signatures pour proposer une nouvelle règle\n• Référendum : 50 000 signatures pour contester une loi votée\n\nC est unique au monde. Ton bulletin a un vrai poids."},
+{t:"Le Conseil fédéral",c:"C est le gouvernement : 7 membres (les ministres).\nLa présidence tourne CHAQUE année entre eux.\nIls décident ensemble (collégialité) : une fois la décision prise, tous la défendent."},
+{t:"Le Parlement",c:"L Assemblée fédérale = 2 chambres :\n• Conseil national : 200 élus (représente le peuple)\n• Conseil des États : 46 élus (représente les cantons, 2 par canton)\n\nLes deux doivent être d accord pour faire une loi."},
+{t:"Cantons & langues",c:"• 26 cantons (Genève en est un)\n• 4 langues nationales : allemand, français, italien, romanche\n• Neutralité : la Suisse ne prend pas parti dans les guerres\n• Genève : ville internationale (ONU, CICR)"},
+{t:"⚠️ À retenir",c:"• 7 conseillers fédéraux, présidence tournante 1 an\n• 200 (national) + 46 (États)\n• 26 cantons, 4 langues nationales\n• Initiative = 100 000 sign. · Référendum = 50 000 sign."}],
+quiz:[
+{q:"Combien de membres au Conseil fédéral ?",a:"7. La présidence tourne chaque année."},
+{q:"Combien de cantons en Suisse ?",a:"26."},
+{q:"Combien de signatures pour une initiative populaire ?",a:"100 000."},
+{q:"Quelles sont les 4 langues nationales ?",a:"Allemand, français, italien, romanche."},
+{q:"Les 2 chambres du Parlement ?",a:"Conseil national (200, le peuple) + Conseil des États (46, les cantons)."}]},
+
+BIZ:{name:"Argent & entreprise",sub:"Monter ton projet sans erreur",color:"#d9a441",
+fiches:[
+{t:"Asso ou entreprise ? (lis bien)",c:"Important pour ton projet sport-handicap :\n• Une ASSOCIATION (Art. 60 CC) a un but IDÉAL — pas fait pour s enrichir. Parfaite pour le social, les subventions, les cotisations.\n• Pour GAGNER ta vie avec → il te faut une Sàrl ou une SA.\n\nLa stratégie maligne : une asso pour le social + une Sàrl pour les prestations payantes. Les deux côte à côte."},
+{t:"Les formes juridiques (Suisse)",c:"• Raison individuelle : simple, mais TA responsabilité perso est engagée\n• Sàrl : capital 20 000 CHF, responsabilité limitée (la plus courante pour démarrer)\n• SA : capital 100 000 CHF, pour plus gros\n\nPour commencer seul : raison individuelle ou Sàrl."},
+{t:"Un business model en 4 questions",c:"1. À QUI je vends ? (clients)\n2. QUOI ? (coaching, séances, ateliers)\n3. Combien ça me COÛTE ?\n4. Combien je GAGNE par client ?\n\nSi GAGNE > COÛTE, et assez de clients → ça tient."},
+{t:"Où trouver l argent",c:"• Cotisations des membres (asso)\n• Subventions : Ville/Canton de Genève, fondations, Pro Infirmis, sport-handicap\n• Sponsors locaux\n• Prestations payantes (cours, stages)\n\nTon réseau (Handisport, Plusport, communes) = ton premier capital."},
+{t:"⚠️ À retenir",c:"• Asso = but idéal (non lucratif) · Sàrl/SA = pour gagner sa vie\n• Sàrl = 20 000 CHF · SA = 100 000 CHF\n• Business model = à qui / quoi / coûte / gagne\n• Argent : cotisations + subventions + sponsors + prestations"}],
+quiz:[
+{q:"Une association peut-elle avoir un but lucratif ?",a:"Non : l asso a un but idéal. Pour gagner ta vie → Sàrl ou SA (souvent les deux ensemble)."},
+{q:"Capital minimum d une Sàrl ?",a:"20 000 CHF."},
+{q:"Les 4 questions d un business model ?",a:"À qui je vends · quoi · combien ça coûte · combien je gagne."},
+{q:"Cite 2 sources de financement pour ton asso.",a:"Au choix : cotisations, subventions (Ville/Canton, fondations), sponsors, prestations payantes."}]},
+
+MONDE:{name:"Culture générale",sub:"Muscler ta tête, un peu chaque jour",color:"#5a9a92",
+fiches:[
+{t:"Géo express",c:"• 5 continents habités (Europe, Asie, Afrique, Amérique, Océanie)\n• Plus grand océan : le Pacifique\n• Plus haute montagne : l Everest (8 849 m)\n• Plus long fleuve : le Nil (ou l Amazone selon la mesure)"},
+{t:"Le corps humain",c:"• ~206 os chez l adulte\n• Le cœur bat ~100 000 fois par jour\n• Le cerveau consomme ~20 % de ton énergie\n• Le plus grand organe : la peau"},
+{t:"Sciences de base",c:"• L eau = H2O (2 hydrogène + 1 oxygène)\n• La gravité fait tomber les objets vers le sol\n• La lumière va plus vite que le son (l éclair avant le tonnerre)\n• La Terre tourne autour du Soleil en 1 an"},
+{t:"Repères d Histoire",c:"• Révolution française : 1789\n• 2e Guerre mondiale : 1939-1945\n• Chute du mur de Berlin : 1989\n• La Suisse moderne (État fédéral) : 1848"},
+{t:"⚠️ Astuce mémoire",c:"Pour retenir : transforme chaque fait en image FORTE ou en histoire absurde. Ton cerveau TDAH retient mille fois mieux une image folle qu une liste plate."}],
+quiz:[
+{q:"Quel est le plus grand océan ?",a:"Le Pacifique."},
+{q:"Combien d os a un adulte (environ) ?",a:"Environ 206."},
+{q:"De quoi est faite l eau ?",a:"H2O : 2 hydrogène + 1 oxygène."},
+{q:"En quelle année la Révolution française ?",a:"1789."},
+{q:"Pourquoi voit-on l éclair avant d entendre le tonnerre ?",a:"La lumière va beaucoup plus vite que le son."}]}
+,
+VIVRE:{name:"Droit & vivre-ensemble",sub:"Tes droits + gérer les gens (TDAH)",color:"#b5664a",
+fiches:[
+{t:"Tes droits au quotidien (Suisse)",c:"• Logement : préavis de 3 mois en général. Le bailleur ne peut PAS entrer chez toi sans ton accord. Tu as droit à un logement en bon état.\n• Travail : ton contrat te protège. Heures sup = +25% (Art. 321c CO). L employeur doit te protéger du harcèlement (Art. 328 CO).\n• Données : personne ne peut diffuser tes infos perso (LPD).\nConnaître tes droits = ne plus subir."},
+{t:"Dettes & poursuites : tu as des droits",c:"• En cas de saisie, ton MINIMUM VITAL est protégé : on ne peut pas tout te prendre.\n• Tu peux demander un PLAN DE DÉSENDETTEMENT gratuit : Caritas Genève, CSP (Centre social protestant).\n• Ne signe jamais un crédit pour rembourser un crédit.\nDemander de l aide pour les dettes = malin, pas honteux."},
+{t:"Codes sociaux quand on a un TDAH",c:"• Impulsivité verbale : avant de répondre à chaud, respire 3 sec. Tu peux dire « je te réponds dans 5 min ».\n• Couper la parole : laisse finir, puis reformule (« si je comprends bien… »).\n• Oublis / retards : préviens, mets des alarmes. Explique ton TDAH aux proches — sinon ils croient que tu t en fiches."},
+{t:"Repérer la manipulation",c:"3 pièges fréquents :\n• Culpabilisation : « après tout ce que j ai fait pour toi… »\n• Chantage affectif : « si tu m aimais, tu… »\n• Gaslighting : on te fait douter de la réalité (« tu inventes, t es fou »).\n\nLa parade : NOMME-le dans ta tête, garde les faits, et prends du temps avant de céder. À froid, tu vois clair."},
+{t:"Poser des limites sans casser le lien",c:"• « Je comprends. Et je ne suis pas d accord. »\n• Tu as le droit de dire non, de changer d avis, de prendre le temps.\n• Une limite, c est dire ce que TOI tu vas faire — pas ce que l autre doit faire.\nExemple : « Si on crie, je quitte la pièce et on reparle au calme. »"},
+{t:"⚠️ À retenir",c:"• Logement : préavis 3 mois · bailleur n entre pas sans accord\n• Heures sup : +25% (321c CO)\n• Saisie : minimum vital protégé · aide désendettement : Caritas / CSP\n• Manipulation : culpabilisation · chantage · gaslighting → nommer + faits + temps\n• Limite = ce que JE fais, dit au calme"}],
+quiz:[
+{q:"Délai de préavis habituel pour un logement ?",a:"3 mois en général."},
+{q:"En cas de saisie, peut-on tout te prendre ?",a:"Non : ton minimum vital est protégé. Et tu peux demander un plan de désendettement (Caritas, CSP)."},
+{q:"C est quoi le gaslighting ?",a:"Une manipulation où on te fait douter de la réalité (« tu inventes »). Parade : garde les faits."},
+{q:"Comment répondre à la culpabilisation ?",a:"Nomme-la dans ta tête, garde les faits, prends du temps avant de céder."},
+{q:"C est quoi poser une limite saine ?",a:"Dire au calme ce que TOI tu vas faire (ex : « si on crie, je quitte la pièce »), pas commander l autre."}]}
+};
+
+const ORDER=["A","B","C","D","E","F","F0","LOIS","VIVRE","STRAT","SUISSE","BIZ","MONDE"];
+let curComp="A", curJeuComp="A", curJeu="quiz";
+
+// ===== NAV =====
+function go(s){
+  document.querySelectorAll(".sc").forEach(e=>e.classList.remove("on"));
+  document.getElementById("sc-"+s).classList.add("on");
+  document.querySelectorAll(".nb").forEach(e=>e.classList.toggle("on",e.dataset.sc===s));
+  window.scrollTo(0,0);
+}
+
+// ===== REVISE =====
+function buildChips(){
+  const c=document.getElementById("comp-chips");
+  c.innerHTML=ORDER.map(k=>`<button class="chip ${k===curComp?'on':''}" style="${k===curComp?'background:'+COMP[k].color:''}" onclick="pickComp('${k}')">${k}</button>`).join("");
+}
+function pickComp(k){curComp=k;buildChips();renderComp();}
+function renderComp(){
+  const d=COMP[curComp];
+  document.getElementById("comp-head").innerHTML=`<div class="card" style="border-left:4px solid ${d.color}"><div class="title" style="color:${d.color}">${d.name}</div><div class="sub" style="margin:0">${d.sub}</div></div>`;
+  document.getElementById("fiches").innerHTML=d.fiches.map(f=>`<div class="fiche" style="border-left-color:${d.color}"><div class="fiche-t">${f.t}</div><div class="fiche-c">${f.c}</div></div>`).join("");
+}
+
+// ===== JEUX (gamifié) =====
+let XP=parseInt(localStorage.getItem("xp_v1")||"0");
+let DONE=JSON.parse(localStorage.getItem("quizdone_v1")||"{}");
+function saveGame(){localStorage.setItem("xp_v1",XP);localStorage.setItem("quizdone_v1",JSON.stringify(DONE));}
+function lvl(){return Math.floor(XP/100)+1;}
+function lvlPct(){return XP%100;}
+function setJeu(j){
+  curJeu=j;
+  ["quiz","flash","defi"].forEach(function(x){
+    const b=document.getElementById("tab-"+x);if(!b)return;
+    const on=j===x;
+    b.classList.toggle("on",on);
+    b.style.background=on?"var(--terra)":"var(--card)";
+    b.style.color=on?"#fff":"var(--sub)";
+  });
+  document.getElementById("jeu-chips").style.display=(j==="defi")?"none":"flex";
+  renderJeu();
+}
+function buildJeuChips(){
+  document.getElementById("jeu-chips").innerHTML=ORDER.map(k=>`<button class="chip ${k===curJeuComp?'on':''}" style="${k===curJeuComp?'background:'+COMP[k].color:''}" onclick="pickJeu('${k}')">${k}</button>`).join("");
+}
+function pickJeu(k){curJeuComp=k;buildJeuChips();renderJeu();}
+function headHTML(){
+  return `<div class="jeu-head"><div class="xp-row"><span class="xp-lvl">⭐ Niveau ${lvl()}</span><span class="xp-pts">${XP} XP</span></div><div class="xp-bar-bg"><div class="xp-bar-fill" style="width:${lvlPct()}%"></div></div></div>`;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let curQuizArr=[];
+function dKey(q){return curJeuComp+"::"+q;}
+function renderJeu(){
+  const z=document.getElementById("jeu-zone");
+  if(curJeu==="defi"){renderDefi();return;}
+  const d=COMP[curJeuComp];
+  if(curJeu==="quiz"){
+    const tot=d.quiz.length;
+    let nb=d.quiz.filter(q=>DONE[dKey(q.q)]).length;
+    curQuizArr=shuffle(d.quiz);
+    let html=headHTML();
+    html+=`<div class="prog-mini">Compétence ${curJeuComp} — ${nb}/${tot} faites · ordre aléatoire 🔀</div>`;
+    if(nb===tot){html+=`<div class="celebrate"><div class="big-emo">🏆</div><div style="font-weight:800;font-size:16px;margin-top:4px">Compétence ${curJeuComp} terminée !</div><div class="note" style="margin-top:4px">Tu maîtrises. Passe à la suivante 👆</div></div>`;}
+    html+=curQuizArr.map((q,i)=>{
+      const done=DONE[dKey(q.q)];
+      return `<div class="card ${done?'done':''}"><div class="quiz-q">${i+1}. ${q.q}</div>`+
+        (done?`<div class="quiz-a" style="display:block">${q.a}</div><div class="done-badge">✅ Déjà fait</div>`:
+        `<button class="btn-sm" id="qbtn-${i}" onclick="reveal(${i})">Voir la réponse</button><div class="quiz-a" id="qa-${i}">${q.a}<div class="assess"><button class="btn-knew" onclick="assess(${i},true)">✅ Je savais</button><button class="btn-rev" onclick="assess(${i},false)">🔁 À revoir</button></div></div>`)+
+        `</div>`;
+    }).join("");
+    z.innerHTML=html;
+  }else{
+    z.innerHTML=headHTML()+`<div class="prog-mini">👆 Touche une carte · ordre aléatoire 🔀</div>`+shuffle(d.quiz).map((q,i)=>`<div class="flash" onclick="this.querySelector('.fc-a').style.display='block';this.querySelector('.fc-hint').style.display='none'"><div class="fc-q">${q.q}</div><div class="fc-hint">👆 Touche pour retourner</div><div class="fc-a">✅ ${q.a}</div></div>`).join("");
+  }
+}
+function reveal(i){
+  document.getElementById("qa-"+i).style.display="block";
+  document.getElementById("qbtn-"+i).style.display="none";
+}
+function assess(i,knew){
+  const q=curQuizArr[i];if(!q)return;
+  const key=dKey(q.q);
+  if(DONE[key])return;
+  DONE[key]=true;
+  const gain=knew?10:4;
+  XP+=gain;
+  saveGame();
+  toast(knew?`Bravo ! +${gain} XP 🎉`:`Tu progresses ! +${gain} XP 💪`);
+  reward();
+  renderJeu();buildDash();
+}
+let toastT=null;
+function toast(msg){
+  let t=document.getElementById("toast");
+  if(!t){t=document.createElement("div");t.id="toast";t.className="toast";document.body.appendChild(t);}
+  t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1600);
+}
+
+// ===== RÉCOMPENSES (hors-ligne) =====
+let soundOn=localStorage.getItem("son_v1")!=="0";
+function toggleSound(){soundOn=!soundOn;localStorage.setItem("son_v1",soundOn?"1":"0");const b=document.getElementById("sound-btn");if(b)b.textContent=soundOn?"🔊":"🔇";toast(soundOn?"Son activé 🔊":"Son coupé 🔇");}
+let _ac=null;
+function chime(kind){
+  if(!soundOn)return;
+  try{
+    _ac=_ac||new (window.AudioContext||window.webkitAudioContext)();
+    if(_ac.state==="suspended")_ac.resume();
+    const notes=kind==="level"?[523,659,784,1047]:[659,880];
+    notes.forEach((f,i)=>{
+      const o=_ac.createOscillator(),g=_ac.createGain(),t=_ac.currentTime+i*0.11;
+      o.type="triangle";o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.22,t+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.28);
+      o.connect(g);g.connect(_ac.destination);o.start(t);o.stop(t+0.3);
+    });
+  }catch(e){}
+}
+const CFCOL=["#c97b5a","#d9a441","#7a9e7e","#05bf8e","#e8c170"];
+function confetti(n){
+  for(let i=0;i<n;i++){
+    const c=document.createElement("div");c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=CFCOL[i%CFCOL.length];
+    c.style.animationDuration=(0.9+Math.random()*0.7)+"s";
+    c.style.transform="rotate("+Math.random()*360+"deg)";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1700);
+  }
+}
+function reward(){confetti(16);chime("win");}
+function celebrate(n){
+  confetti(60);chime("level");
+  let el=document.getElementById("levelup");
+  if(!el){el=document.createElement("div");el.id="levelup";el.className="levelup";el.innerHTML=`<div class="box"><div class="big">🎉</div><div class="lvtxt" id="lv-t"></div><div class="lvsub">Continue comme ça, tu déchires !</div></div>`;document.body.appendChild(el);}
+  document.getElementById("lv-t").textContent="NIVEAU "+n+" !";
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),1900);
+}
+let _lastLvl=lvl();
+function checkLevel(){const L=lvl();if(L>_lastLvl){_lastLvl=L;celebrate(L);}else{_lastLvl=L;}}
+
+// ===== HUMEUR =====
+const MOODS=["😞","😕","😐","🙂","😄"];
+function buildMoods(){
+  const saved=localStorage.getItem("mood_"+today());
+  document.getElementById("moods").innerHTML=MOODS.map((m,i)=>`<button class="mood-btn ${saved==i?'on':''}" onclick="setMood(${i})">${m}</button>`).join("");
+}
+function setMood(i){localStorage.setItem("mood_"+today(),i);buildMoods();}
+function today(){return new Date().toISOString().slice(0,10);}
+
+// ===== FINANCES =====
+const REV_DEF=[{k:"Salaire net (après poursuites)",v:2204.60}];
+const CHG_DEF=[
+{k:"Loyer",v:600},{k:"Assurance maladie (LAMal)",v:350},
+{k:"Téléphone",v:49},{k:"Transports",v:80},
+{k:"Alimentation",v:91},{k:"Remboursement poursuites (OP)",v:1200}];
+let REV=[], CHG=[];
+
+function loadFin(){
+  const sv=localStorage.getItem("fin_v1");
+  if(sv){const o=JSON.parse(sv);REV=o.rev;CHG=o.chg;document.getElementById("bk-in").value=o.bk||900;}
+  else{REV=JSON.parse(JSON.stringify(REV_DEF));CHG=JSON.parse(JSON.stringify(CHG_DEF));}
+  renderFin();
+}
+function renderFin(){
+  document.getElementById("rev-rows").innerHTML=REV.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" inputmode="decimal" value="${r.v}" onchange="REV[${i}].v=parseFloat(this.value)||0;calcFin()"></div>`).join("");
+  document.getElementById("chg-rows").innerHTML=CHG.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" inputmode="decimal" value="${r.v}" onchange="CHG[${i}].v=parseFloat(this.value)||0;calcFin()"></div>`).join("");
+  calcFin();
+}
+function calcFin(){
+  const tr=REV.reduce((s,r)=>s+r.v,0);
+  const tc=CHG.reduce((s,r)=>s+r.v,0);
+  const reste=tr-tc;
+  document.getElementById("t-rev").textContent=tr.toFixed(0)+" CHF";
+  document.getElementById("t-chg").textContent=tc.toFixed(0)+" CHF";
+  document.getElementById("t-reste").textContent=reste.toFixed(0)+" CHF";
+  const box=document.getElementById("reste-box");
+  const bar=document.getElementById("reste-bar");
+  const msg=document.getElementById("reste-msg");
+  const pct=tr>0?Math.max(0,Math.min(100,reste/tr*100)):0;
+  bar.style.width=pct+"%";
+  if(reste<0){box.style.background="#f5e0e0";box.style.color="var(--red)";bar.style.background="var(--red)";msg.textContent="🚨 Tu dépenses plus que tu ne gagnes. Coupe une charge ou augmente les revenus ce mois-ci.";}
+  else if(reste<200){box.style.background="#faf2dd";box.style.color="var(--gold)";bar.style.background="var(--gold)";msg.textContent="⚠️ Reste à vivre très serré. Priorité : nourriture + imprévus.";}
+  else{box.style.background="#eef1ea";box.style.color="var(--sage-d)";bar.style.background="var(--sage)";msg.textContent="✅ Tu as un coussin. Mets-en de côté pour ton projet d'asso.";}
+  // garde-fou jeu (optionnel)
+  const bkEl=document.getElementById("bk-in");
+  if(bkEl){const bk=parseFloat(bkEl.value)||0;const m=document.getElementById("bk-max");if(m)m.textContent=(bk*0.02).toFixed(2)+" CHF";}
+}
+const _bkin=document.getElementById("bk-in");if(_bkin)_bkin.addEventListener("input",calcFin);
+function saveFin(){
+  const bk=parseFloat(document.getElementById("bk-in").value)||900;
+  localStorage.setItem("fin_v1",JSON.stringify({rev:REV,chg:CHG,bk:bk}));
+  const _cb=document.getElementById("c-bk");if(_cb&&!_cb.value)_cb.value=bk;
+  alert("💾 Sauvegardé sur ton téléphone.");
+}
+function resetFin(){
+  if(confirm("Remettre les valeurs de départ ?")){
+    REV=JSON.parse(JSON.stringify(REV_DEF));CHG=JSON.parse(JSON.stringify(CHG_DEF));
+    document.getElementById("bk-in").value=900;renderFin();
+  }
+}
+
+// ===== COACH =====
+function checkMise(){
+  const bk=parseFloat(document.getElementById("c-bk").value)||0;
+  const mise=parseFloat(document.getElementById("c-mise").value)||0;
+  const max=bk*0.02;
+  const r=document.getElementById("c-result");
+  if(bk<=0){r.innerHTML=`<div class="coach-big coach-no">Dis-moi d'abord ta mise de côté « jeu ».</div>`;return;}
+  if(mise<=0){r.innerHTML=`<div class="coach-big coach-no">Dis-moi combien tu veux miser.</div>`;return;}
+  if(mise<=max){
+    r.innerHTML=`<div class="coach-big coach-ok">✅ OK<br><span style="font-size:14px;font-weight:600">Ça reste raisonnable. Max conseillé : ${max.toFixed(2)} CHF.</span></div>`;
+  }else{
+    r.innerHTML=`<div class="coach-big coach-no">⚠️ Trop<br><span style="font-size:14px;font-weight:600">Garde-fou 2% : reste plutôt sous ${max.toFixed(2)} CHF.</span></div>`;
+  }
+}
+
+// ===== CASES DU JOUR =====
+const ACTS=[
+{k:"domestique",l:"🏠 Tâche domestique (ménage, lessive, cuisine…)"},
+{k:"social",l:"💬 Contact social (ami, famille, sortie…)"},
+{k:"financier",l:"💰 Action financière (épargne, budget, paiement…)"},
+{k:"administratif",l:"📋 Démarche administrative (mail, dossier, RDV…)"}];
+function actKey(){return "acts_"+today();}
+function buildActs(){
+  const done=JSON.parse(localStorage.getItem(actKey())||"{}");
+  document.getElementById("acts").innerHTML=ACTS.map(a=>`<div class="row" onclick="toggleAct('${a.k}')" style="cursor:pointer"><span style="font-size:13px">${a.l}</span><span style="font-size:20px">${done[a.k]?"✅":"⬜"}</span></div>`).join("");
+  const n=ACTS.filter(a=>done[a.k]).length;
+  document.getElementById("acts-msg").textContent=n===4?"🔥 Carton plein aujourd'hui ! Les 4 faites.":n+" / 4 faites aujourd'hui.";
+}
+function toggleAct(k){
+  const done=JSON.parse(localStorage.getItem(actKey())||"{}");
+  if(!done[k]){done[k]=true;XP+=5;saveGame();toast("Bien joué ! +5 XP ✅");}else{delete done[k];}
+  localStorage.setItem(actKey(),JSON.stringify(done));buildActs();buildDash();
+}
+
+// ===== DOSSIERS, NOTES & DOCUMENTS =====
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function loadTabs(){return JSON.parse(localStorage.getItem("tabs_v1")||"[]");}
+function saveTabs(t){localStorage.setItem("tabs_v1",JSON.stringify(t));}
+let pendingAttach=null;
+function importTxt(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=function(){
+    document.getElementById("tab-content").value=r.result;
+    if(!document.getElementById("tab-name").value.trim())document.getElementById("tab-name").value=f.name.replace(/\.[^.]+$/,"");
+    toast("Texte importé ✅");
+  };
+  r.readAsText(f);input.value="";
+}
+function attachDoc(input){
+  const f=input.files[0];if(!f)return;
+  if(f.size>1500000){alert("Ce document est trop lourd (>1.5 Mo) pour être stocké hors-ligne. Astuce : importe-le en texte, ou garde-le dans ton appli Fichiers et note juste son nom ici.");input.value="";return;}
+  const r=new FileReader();
+  r.onload=function(){
+    pendingAttach={name:f.name,dataUrl:r.result};
+    document.getElementById("attach-info").textContent="📎 Joint : "+f.name+" (sera enregistré avec la note)";
+    if(!document.getElementById("tab-name").value.trim())document.getElementById("tab-name").value=f.name;
+  };
+  r.readAsDataURL(f);input.value="";
+}
+function addTab(){
+  const n=document.getElementById("tab-name").value.trim();
+  const c=document.getElementById("tab-content").value.trim();
+  const fo=document.getElementById("tab-folder").value.trim()||"Général";
+  if(!n){alert("Donne un titre.");return;}
+  const t=loadTabs();t.push({n:n,c:c,folder:fo,file:pendingAttach});saveTabs(t);
+  document.getElementById("tab-name").value="";document.getElementById("tab-content").value="";document.getElementById("tab-folder").value="";
+  pendingAttach=null;document.getElementById("attach-info").textContent="";
+  buildTabs();buildDash();toast("Enregistré dans « "+fo+" » ✅");
+}
+function delTab(i){if(confirm("Supprimer ce document ?")){const t=loadTabs();t.splice(i,1);saveTabs(t);buildTabs();buildDash();}}
+function buildTabs(){
+  const t=loadTabs();const z=document.getElementById("custom-tabs");
+  if(!t.length){z.innerHTML=`<div class="note">Aucun document pour l'instant. Ajoute le premier 👆</div>`;return;}
+  const folders={};t.forEach((x,i)=>{const f=x.folder||"Général";(folders[f]=folders[f]||[]).push([x,i]);});
+  let html="";
+  for(const f in folders){
+    html+=`<div style="font-weight:800;font-size:12px;color:var(--terra-d);margin:10px 0 5px">📁 ${esc(f)}</div>`;
+    html+=folders[f].map(([x,i])=>`<div class="fiche" style="border-left-color:var(--terra-d)"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div class="fiche-t">${esc(x.n)}</div><button onclick="delTab(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:16px">🗑️</button></div><div class="fiche-c">${esc(x.c)||"(pas de texte)"}</div>${x.file?`<a href="${x.file.dataUrl}" download="${esc(x.file.name)}" class="note" style="color:var(--terra);font-weight:700">📎 Ouvrir ${esc(x.file.name)}</a>`:""}</div>`).join("");
+  }
+  z.innerHTML=html;
+}
+
+// ===== MES RÉVISIONS PERSO (deck personnalisé) =====
+function loadPersoArr(){return JSON.parse(localStorage.getItem("perso_deck")||"[]");}
+function savePersoArr(a){localStorage.setItem("perso_deck",JSON.stringify(a));}
+function loadPerso(){
+  const a=loadPersoArr();
+  if(a.length){
+    COMP.PERSO={name:"Mes révisions",sub:"Tes cartes perso",color:"#d9a441",
+      fiches:a.map(c=>({t:c.q,c:c.a})),quiz:a.map(c=>({q:c.q,a:c.a}))};
+    if(ORDER.indexOf("PERSO")<0)ORDER.push("PERSO");
+  }
+  const el=document.getElementById("perso-count");if(el)el.textContent=a.length?(a.length+" carte(s) perso. Va dans 📚 Révise / 🎮 Jeux → thème « Perso »."):"Aucune carte perso pour l'instant.";
+}
+function addPerso(){
+  const q=document.getElementById("perso-q").value.trim();
+  const a=document.getElementById("perso-a").value.trim();
+  if(!q||!a){alert("Remplis la question ET la réponse.");return;}
+  const arr=loadPersoArr();arr.push({q:q,a:a});savePersoArr(arr);
+  document.getElementById("perso-q").value="";document.getElementById("perso-a").value="";
+  loadPerso();buildChips();buildJeuChips();buildDash();toast("Carte ajoutée à tes révisions ✅");
+}
+
+// ===== AGENDA + EXPORT .ics =====
+function loadEvents(){return JSON.parse(localStorage.getItem("events_v1")||"[]");}
+function saveEvents(e){localStorage.setItem("events_v1",JSON.stringify(e));}
+function addEvent(){
+  const t=document.getElementById("ev-title").value.trim();
+  const d=document.getElementById("ev-date").value;
+  const h=document.getElementById("ev-time").value||"09:00";
+  if(!t||!d){alert("Mets au moins un titre et une date.");return;}
+  const e=loadEvents();e.push({t:t,d:d,h:h});e.sort((a,b)=>(a.d+a.h).localeCompare(b.d+b.h));saveEvents(e);
+  document.getElementById("ev-title").value="";document.getElementById("ev-date").value="";document.getElementById("ev-time").value="";
+  buildEvents();toast("Ajouté au planning 📅");
+}
+function delEvent(i){const e=loadEvents();e.splice(i,1);saveEvents(e);buildEvents();}
+function buildEvents(){
+  const e=loadEvents();const z=document.getElementById("ev-list");
+  if(!e.length){z.innerHTML=`<div class="note">Aucune échéance. Ajoute-en une 👆</div>`;return;}
+  z.innerHTML=e.map((x,i)=>{
+    const dd=new Date(x.d+"T"+(x.h||"09:00"));
+    const lab=dd.toLocaleDateString("fr-CH",{weekday:"short",day:"numeric",month:"short"})+" · "+(x.h||"09:00");
+    return `<div class="row" style="flex-wrap:wrap;gap:6px"><div style="flex:1;min-width:140px"><b style="font-size:13px">${esc(x.t)}</b><div class="note">${lab}</div></div><button class="btn-sm" onclick="icsEvent(${i})">📅 Agenda</button><button onclick="delEvent(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:15px">🗑️</button></div>`;
+  }).join("")+`<button class="btn-sm" style="width:100%;margin-top:8px" onclick="icsAll()">📲 Tout exporter (.ics)</button>`;
+}
+function pad(n){return (n<10?"0":"")+n;}
+function icsDate(d,h){const dt=new Date(d+"T"+(h||"09:00"));return dt.getFullYear()+pad(dt.getMonth()+1)+pad(dt.getDate())+"T"+pad(dt.getHours())+pad(dt.getMinutes())+"00";}
+function icsBlock(ev){const start=icsDate(ev.d,ev.h);return "BEGIN:VEVENT\nUID:"+Date.now()+Math.random().toString(36).slice(2)+"@asepro\nDTSTART:"+start+"\nDURATION:PT1H\nSUMMARY:"+ev.t.replace(/[\n,;]/g," ")+"\nDESCRIPTION:Depuis ASE Pro\nEND:VEVENT";}
+function downloadIcs(name,events){
+  const cal="BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//ASE Pro//FR\n"+events.map(icsBlock).join("\n")+"\nEND:VCALENDAR";
+  const blob=new Blob([cal],{type:"text/calendar"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+  toast("Ouvre le fichier → il rentre dans ton agenda 📅");
+}
+function icsEvent(i){const e=loadEvents();downloadIcs("event.ics",[e[i]]);}
+function icsAll(){const e=loadEvents();if(!e.length){toast("Rien à exporter");return;}downloadIcs("mon_agenda.ics",e);}
+
+// ===== SPORT — PROGRAMME 14 JOURS =====
+const SPORT=[
+{t:"Jour 1 — Haut du corps (tractions + pompes)",c:"🔥 Échauffement (8 min)\nRotations épaules, bandes/élastique, 20 pompes lentes.\n\n💪 Bloc cross-training\n• Tractions : 5 séries × max (garde 1-2 en réserve)\n• Pompes : 5 × 20\n• Tractions supination : 4 × max\n• Pompes déclinées (pieds surélevés) : 4 × 12\n• Gainage planche : 4 × 45 sec\n\n🥋 Touche JJB : grip — suspension à la barre 3 × 30 sec.\n\n🏁 Finisher (4 tours) : 8 tractions + 15 pompes.\n🧘 Récup : étirements dos + pecs."},
+{t:"Jour 2 — VMA course à pied 30/30",c:"🔥 Échauffement (10 min)\nFooting léger + montées de genoux + accélérations progressives.\n\n⏱️ VMA (minuteur : 30/30 × 8 à 10)\nCours VITE 30 sec / footing-marche 30 sec. MÊME distance à chaque effort.\n\n🪨 Gainage (3 tours) : planche 45 sec + planche latérale 25 sec/côté.\n\n📌 Note le nb de tours tenus → tu compares au Jour 13.\n🧘 Récup : marche 5 min + étirements jambes."},
+{t:"Jour 3 — Vélo endurance + bas du corps",c:"🔥 Échauffement (8 min) mobilité hanches.\n\n🚴 Vélo : 30-40 min en zone confortable (tu peux parler). Travaille le moteur de fond.\n\n💪 Bas du corps (après le vélo)\n• Squats : 4 × 20\n• Fentes marchées : 4 × 20 pas\n• Hip thrust au sol : 3 × 15\n• Mollets : 3 × 25\n\n🧘 Récup : étirements quadris + ischios."},
+{t:"Jour 4 — Récup active / JJB léger",c:"🌿 Journée légère (la récup = la progression)\n\n• 20-30 min vélo tranquille OU marche rapide\n• Mobilité complète (15 min) : hanches, épaules, chevilles\n• Drilling JJB léger / shadow, sans intensité\n• Respiration : 5 min (inspire 4 sec / expire 6 sec)\n\nObjectif : récupérer, pas se cramer."},
+{t:"Jour 5 — WOD cross-training (AMRAP 16 min)",c:"🔥 Échauffement (8 min) complet.\n\n⏱️ AMRAP 16 min (minuteur effort 960 sec, ou chrono)\nMax de tours de :\n• 8 tractions\n• 12 pompes\n• 15 squats\n• 10 burpees\n\n📌 Note ton nombre de tours → objectif : le battre au Jour 12.\n\n🧘 Récup : étirements complets + eau."},
+{t:"Jour 6 — VMA vélo 30/15 (sprints)",c:"🔥 Échauffement (10 min) vélo progressif.\n\n⏱️ Sprints vélo (minuteur : 30/15 × 10)\n30 sec à fond / 15 sec pédalage lent. Résistance assez forte. Brutal mais court.\n\n🤸 Skills : double-unders / corde 5 × 40 sec + hollow hold 4 × 25 sec.\n\n🧘 Récup : pédalage léger 5 min + étirements."},
+{t:"Jour 7 — Repos complet",c:"😴 Repos total.\n\n• Dors 7-8 h (priorité n°1 — c'est là que tu progresses)\n• Bois bien (1,5-2 L)\n• Zéro alcool/cannabis : ta récup et ta VMA en dépendent direct\n• Optionnel : 15 min d'étirements doux\n\nLe muscle et le moteur se construisent au repos."},
+{t:"Jour 8 — Force haut du corps",c:"🔥 Échauffement (8 min).\n\n💪 Force (tempo lent, qualité)\n• Tractions lestées (sac à dos) ou strictes : 5 × 5-6\n• Pompes diamant : 4 × 12\n• Tractions prise large : 4 × max\n• Pompes archer / surélevées : 3 × 8/côté\n• Gainage dynamique : 4 × 30 sec\n\n🥋 Grip JJB : tenue serviette à la barre 3 × 20 sec.\n🧘 Récup : étirements haut du corps."},
+{t:"Jour 9 — Course intervalles longs (gas tank)",c:"🔥 Échauffement (10 min).\n\n⏱️ Intervalles longs course (minuteur : 60/30 × 6)\n1 min effort soutenu / 30 sec footing. Allure piquante mais tenable. Parfait pour le cardio JJB.\n\n🪨 Gainage (3 tours) : planche 45 sec + relevés jambes 15 + superman 15.\n\n🧘 Récup : marche + mobilité."},
+{t:"Jour 10 — Bas du corps + explosivité + vélo",c:"🔥 Échauffement (8 min) hanches/genoux.\n\n💪 Explosivité\n• Squats sautés : 5 × 10\n• Fentes sautées : 4 × 10/jambe\n• Box jumps / sauts sur marche : 4 × 8\n• Chaise au mur : 3 × 45 sec\n\n🚴 Finisher vélo : 10 min, alterne 1 min fort / 1 min léger.\n🧘 Récup : étirements jambes."},
+{t:"Jour 11 — Récup active / mobilité",c:"🌿 Journée légère.\n\n• 25 min vélo ou marche tranquille\n• Mobilité complète (15 min)\n• Drilling JJB léger\n• Auto-massage (rouleau/balle) si tu as\n\nDemain on tape fort : laisse le corps se recharger."},
+{t:"Jour 12 — WOD chrono (reteste le Jour 5)",c:"🔥 Échauffement (10 min) complet.\n\n⏱️ Reprends l'AMRAP du Jour 5 (16 min) — BATS ton score.\n• 8 tractions / 12 pompes / 15 squats / 10 burpees\n\n📈 Compare : plus de tours = ta condition a monté. C'est ta preuve chiffrée.\n\n🧘 Récup : étirements + grand verre d'eau."},
+{t:"Jour 13 — Test VMA course (reteste le Jour 2)",c:"🔥 Échauffement (12 min) progressif.\n\n⏱️ Test (minuteur : 30/30 × 10) — donne tout.\nCompare au Jour 2 : tu tiens plus de tours ? tu vas plus loin ? → ta VMA a progressé. 🚀\n\n🪨 Gainage léger 3 × 30 sec.\n🧘 Récup complète. Demain = simulation."},
+{t:"Jour 14 — Simulation compétition cross + bilan",c:"🏆 Jour final !\n\n🔥 Échauffement complet (12 min).\n\n🥇 Mini-compét (chrono, le plus vite possible) — 3 tours :\n• 10 tractions\n• 20 pompes\n• 20 squats\n• 12 burpees\n• 200 m course (ou 1 min vélo fort)\n\n📊 Bilan : note ton temps, ton ressenti, tes progrès des 14 jours. Puis relance un cycle plus dur.\n\n💪 Champion d'Europe un jour, champion toujours. Fier de toi."}];
+let curDay=parseInt(localStorage.getItem("sport_day")||"1");
+let DAYDONE=JSON.parse(localStorage.getItem("sport_done_v1")||"{}");
+function buildSportChips(){
+  document.getElementById("sport-chips").innerHTML=SPORT.map((d,i)=>{
+    const n=i+1,sel=n===curDay,done=DAYDONE[n];
+    const st=sel?"background:var(--terra);color:#fff":(done?"border-color:var(--green);color:var(--green)":"");
+    return `<button class="chip ${sel?"on":""}" style="${st}" onclick="pickDay(${n})">J${n}${done?" ✅":""}</button>`;
+  }).join("");
+}
+function pickDay(n){curDay=n;localStorage.setItem("sport_day",n);buildSportChips();renderDay();}
+function renderDay(){
+  const d=SPORT[curDay-1];const done=DAYDONE[curDay];
+  document.getElementById("sport-day").innerHTML=`<div class="fiche" style="border-left-color:var(--terra)"><div class="fiche-t">${d.t}</div><div class="fiche-c">${d.c}</div></div><button class="${done?"btn-sm":"btn"}" onclick="toggleDay()">${done?"✅ Fait — annuler":"Marquer comme fait (+15 XP)"}</button>`;
+}
+function toggleDay(){
+  if(!DAYDONE[curDay]){DAYDONE[curDay]=true;XP+=15;saveGame();toast("Séance validée ! +15 XP 💪");}else{delete DAYDONE[curDay];}
+  localStorage.setItem("sport_done_v1",JSON.stringify(DAYDONE));buildSportChips();renderDay();buildDash();
+}
+
+// ===== MINUTEUR INTERVALLES + VOIX =====
+let tIv=null,tState="idle",tPhase="work",tRound=0,tLeft=0,tRounds=8,tWork=30,tRest=30;
+function say(txt){
+  const v=document.getElementById("t-voice");
+  if(v&&v.value!=="1")return;
+  try{const u=new SpeechSynthesisUtterance(txt);u.lang="fr-FR";u.rate=1.05;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}
+}
+function fmt(s){const m=Math.floor(s/60),x=s%60;return (m<10?"0":"")+m+":"+(x<10?"0":"")+x;}
+function tUpdate(){
+  document.getElementById("t-display").textContent=fmt(tLeft);
+  const ph=document.getElementById("t-phase");
+  ph.textContent=tPhase==="work"?"💥 EFFORT":"😮‍💨 REPOS";
+  ph.style.color=tPhase==="work"?"var(--terra-d)":"var(--sage-d)";
+  document.getElementById("t-info").textContent="Tour "+tRound+" / "+tRounds;
+  const full=tPhase==="work"?tWork:tRest;
+  const bar=document.getElementById("t-bar");
+  bar.style.width=(full>0?(100-tLeft/full*100):0)+"%";
+  bar.style.background=tPhase==="work"?"var(--terra)":"var(--sage)";
+}
+function preset(w,r,n){tWork=w;tRest=r;tRounds=n;document.getElementById("t-work").value=w;document.getElementById("t-rest").value=r;document.getElementById("t-rounds").value=n;timerReset();}
+function timerStart(){
+  if(tState==="running")return;
+  if(tState==="idle"){
+    tWork=parseInt(document.getElementById("t-work").value)||30;
+    tRest=parseInt(document.getElementById("t-rest").value)||30;
+    tRounds=parseInt(document.getElementById("t-rounds").value)||8;
+    tRound=1;tPhase="work";tLeft=tWork;say("Tour 1. Effort !");
+  }else{say("On reprend !");}
+  tState="running";document.getElementById("t-start").textContent="▶ En cours…";
+  tUpdate();tIv=setInterval(tick,1000);
+}
+function tick(){
+  tLeft--;
+  if(tLeft>0&&tLeft<=3)say(String(tLeft));
+  if(tLeft<=0){
+    if(tPhase==="work"){
+      if(tRound>=tRounds){finishTimer();return;}
+      tPhase="rest";tLeft=tRest;say("Repos");
+    }else{
+      tRound++;tPhase="work";tLeft=tWork;say("Tour "+tRound+". Effort !");
+    }
+  }
+  tUpdate();
+}
+function finishTimer(){
+  clearInterval(tIv);tIv=null;tState="idle";
+  document.getElementById("t-display").textContent="🏁";
+  document.getElementById("t-phase").textContent="Terminé ! Bravo 💪";
+  document.getElementById("t-start").textContent="▶ Démarrer";
+  document.getElementById("t-bar").style.width="100%";
+  say("Terminé ! Bravo.");toast("Séance d'intervalles finie 🏁");
+}
+function timerPause(){
+  if(tState==="running"){clearInterval(tIv);tIv=null;tState="paused";document.getElementById("t-start").textContent="▶ Reprendre";say("Pause");}
+}
+function timerReset(){
+  clearInterval(tIv);tIv=null;tState="idle";tRound=0;
+  tWork=parseInt(document.getElementById("t-work").value)||30;
+  tRest=parseInt(document.getElementById("t-rest").value)||30;
+  tRounds=parseInt(document.getElementById("t-rounds").value)||8;
+  tPhase="work";tLeft=tWork;
+  document.getElementById("t-start").textContent="▶ Démarrer";
+  tUpdate();
+}
+
+// ===== ASTUCE DU JOUR =====
+const TIPS=[
+"📚 CFC : révise 1 compétence par jour, pas plus. La régularité bat l'intensité.",
+"💪 Sport : échauffe-toi toujours 8-10 min. Tu progresses plus et tu te blesses moins.",
+"💰 Argent : la règle des 24 h. Envie d'un achat > 50 CHF ? Attends demain. 9 fois sur 10 l'envie passe.",
+"🧠 TDAH : découpe une grosse tâche en mini-étapes de 10 min. Commencer = le plus dur, le reste suit.",
+"🥋 Ta force : tu es champion d'Europe. La même discipline qui t'a mené là réussit ton CFC.",
+"😴 Sommeil : 7-8 h. C'est la nuit que la mémoire range tes révisions et que le muscle se construit.",
+"💧 Envie forte (sucre, écran, pari) ? Bois un verre d'eau et attends 20 min. La vague redescend.",
+"📋 Admin : traite tout de suite ce qui prend moins de 2 min. Le reste, mets-le sur une seule liste.",
+"🎯 Coche tes 4 cases du jour. Voir les ✅ s'aligner = ta dose de dopamine SAINE.",
+"🚴 Récup = progression. Un jour de repos n'est pas un jour perdu, c'est là que ton corps encaisse."];
+function buildTip(){
+  const d=new Date();const n=Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);
+  document.getElementById("tip-txt").textContent=TIPS[n%TIPS.length];
+}
+
+// ===== CORRECTEUR DE TEXTE (hors-ligne) =====
+const DICT={"parceque":"parce que","aujourdhui":"aujourd'hui","quelquechose":"quelque chose","malgres":"malgré","tres":"très","deja":"déjà","etre":"être","meme":"même","probleme":"problème","numero":"numéro","developper":"développer","developpement":"développement","etudiant":"étudiant","etudiante":"étudiante","ecole":"école","eleve":"élève","francais":"français","francaise":"française","voila":"voilà","apres":"après","experience":"expérience","reussir":"réussir","reussite":"réussite","necessaire":"nécessaire","interessant":"intéressant","interessante":"intéressante","activite":"activité","activites":"activités","securite":"sécurité","responsabilite":"responsabilité","competence":"compétence","competences":"compétences","preferer":"préférer","prefere":"préfère","prefere":"préfère","general":"général","generale":"générale","different":"différent","differente":"différente","createur":"créateur","creer":"créer","tELEPHONE":"téléphone","telephone":"téléphone","numero":"numéro","etais":"étais","etait":"était","etaient":"étaient","etudier":"étudier","interet":"intérêt","cordialement":"Cordialement","madame":"Madame","monsieur":"Monsieur"};
+function corrige(){
+  let t=document.getElementById("corr-in").value;
+  if(!t.trim()){document.getElementById("corr-out").textContent="Colle un texte d'abord.";return;}
+  let o=t.replace(/\u2019/g,"'").replace(/\u00A0/g," ");
+  o=o.replace(/[ \t]+/g," ");
+  o=o.replace(/ +([,.])/g,"$1");                 // pas d'espace avant , .
+  o=o.replace(/([,.])([A-Za-zÀ-ÿ])/g,"$1 $2");   // espace après , . (pas dans les nombres)
+  o=o.replace(/([;:!?])([A-Za-zÀ-ÿ])/g,"$1 $2"); // espace après ; : ! ?
+  o=o.replace(/([A-Za-zÀ-ÿ]) *([;:!?])/g,"$1 $2"); // espace FR avant ; : ! ?
+  o=o.replace(/[ \t]+/g," ");
+  for(const k in DICT){o=o.replace(new RegExp("\\b"+k+"\\b","g"),DICT[k]);}
+  // majuscule en début de phrase
+  o=o.replace(/(^|[.!?]\s+)([a-zà-ÿ])/g,function(m,p1,p2){return p1+p2.toUpperCase();});
+  o=o.split("\n").map(function(l){l=l.trim();return l?l.charAt(0).toUpperCase()+l.slice(1):l;}).join("\n");
+  document.getElementById("corr-out").textContent=o;
+  toast("Texte corrigé ✨");
+}
+function copyCorr(){
+  const t=document.getElementById("corr-out").innerText;
+  if(!t||t==="…"){toast("Rien à copier");return;}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t);toast("Copié ✅");}
+    else{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");document.body.removeChild(a);toast("Copié ✅");}
+  }catch(e){toast("Sélectionne et copie à la main");}
+}
+
+// ===== POMODORO ÉTUDE =====
+let pIv=null,pState="idle",pPhase="work",pLeft=1500;
+function pFmt(s){const m=Math.floor(s/60),x=s%60;return (m<10?"0":"")+m+":"+(x<10?"0":"")+x;}
+function pUpd(){
+  document.getElementById("p-display").textContent=pFmt(pLeft);
+  document.getElementById("p-phase").textContent=pPhase==="work"?"📚 Concentration":"☕ Pause";
+}
+function pomoStart(){
+  if(pState==="running"){clearInterval(pIv);pIv=null;pState="paused";document.getElementById("p-start").textContent="▶ Reprendre";return;}
+  pState="running";document.getElementById("p-start").textContent="⏸ Pause";
+  if(pPhase==="work"&&pLeft===1500)say("C'est parti. 25 minutes de concentration.");
+  pIv=setInterval(function(){
+    pLeft--;
+    if(pLeft<=0){
+      if(pPhase==="work"){pPhase="rest";pLeft=300;say("Bravo ! 5 minutes de pause.");toast("Pause méritée ☕ (+10 XP)");XP+=10;saveGame();buildDash();}
+      else{pPhase="work";pLeft=1500;say("On repart pour 25 minutes.");}
+    }
+    pUpd();
+  },1000);
+  pUpd();
+}
+function pomoReset(){clearInterval(pIv);pIv=null;pState="idle";pPhase="work";pLeft=1500;document.getElementById("p-start").textContent="▶ Démarrer";pUpd();}
+
+// ===== TABLEAU DE BORD =====
+function buildDash(){
+  document.getElementById("d-lvl").textContent=lvl();
+  document.getElementById("d-xp").textContent=XP;
+  document.getElementById("d-bar").style.width=lvlPct()+"%";
+  document.getElementById("d-sport").textContent=Object.keys(DAYDONE).filter(function(k){return DAYDONE[k];}).length;
+  const ad=JSON.parse(localStorage.getItem(actKey())||"{}");
+  document.getElementById("d-acts").textContent=ACTS.filter(function(a){return ad[a.k];}).length+"/4";
+  document.getElementById("d-notes").textContent=loadTabs().length;
+  if(typeof buildBadges==="function")buildBadges();
+  checkLevel();
+}
+
+// ===== DÉFI QCM (correction instantanée, style LogicielEducatif) =====
+const QUIZJEU=[
+{q:"Les 3 attitudes de Carl Rogers, c'est :",o:["Empathie, Acceptation, Congruence","Force, Autorité, Distance","Punition, Récompense, Ignorance"],c:0},
+{q:"Dans un rapport, on écrit :",o:["Ce qu'on pense de la personne","Seulement les FAITS observés","Des suppositions"],c:1},
+{q:"L'escalier de planification a combien de marches ?",o:["3","6","10"],c:1},
+{q:"Erikson 0-1 an, c'est le défi :",o:["Identité vs Confusion","Confiance vs Méfiance","Autonomie vs Honte"],c:1},
+{q:"Le sens le plus important chez le bébé :",o:["La vue","Le toucher","Le goût"],c:1},
+{q:"Le secret professionnel, c'est l'article :",o:["Art. 321 CP","Art. 187 CP","Art. 60 CC"],c:0},
+{q:"Une association (Art. 60 CC) a un but :",o:["Lucratif","Idéal (non lucratif)","Secret"],c:1},
+{q:"Le Conseil fédéral compte :",o:["7 membres","12 membres","26 membres"],c:0},
+{q:"« Offre valable ce soir seulement » = technique de :",o:["Réciprocité","Rareté","Autorité"],c:1},
+{q:"En cas de saisie, ton minimum vital est :",o:["Protégé","Saisissable","Supprimé"],c:0},
+{q:"Piaget, stade 2-7 ans :",o:["Sensorimoteur","Préopératoire","Formel"],c:1},
+{q:"SMART, le M veut dire :",o:["Motivant","Mesurable","Magique"],c:1},
+{q:"Combien de cantons en Suisse ?",o:["20","26","31"],c:1},
+{q:"Le gaslighting, c'est :",o:["Un compliment","Te faire douter de la réalité","Un type de contrat"],c:1},
+{q:"Apprendre en observant les autres (Bandura) :",o:["Behaviorisme","Socio-cognitif","Réflexe"],c:1}];
+let defiState=null;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startDefi(){
+  defiState={qs:shuffle(QUIZJEU).slice(0,10),idx:0,score:0,locked:false};
+  renderDefi();
+}
+function renderDefi(){
+  const z=document.getElementById("jeu-zone");
+  if(!defiState){
+    z.innerHTML=headHTML()+`<div class="card" style="text-align:center"><div style="font-size:40px">⚡</div><div class="title" style="margin-top:4px">Quiz Défi</div><div class="sub">10 questions à choix. Correction immédiate. Vise les 3 étoiles ⭐⭐⭐</div><button class="btn" onclick="startDefi()">Commencer le défi</button></div>`;
+    return;
+  }
+  if(defiState.idx>=defiState.qs.length){
+    const tot=defiState.qs.length,sc=defiState.score;
+    const pct=sc/tot;
+    const stars=pct>=0.9?"⭐⭐⭐":pct>=0.6?"⭐⭐":"⭐";
+    const msg=pct>=0.9?"Énorme ! Tu maîtrises.":pct>=0.6?"Bien joué ! Encore un effort.":"On révise et on recommence, champion.";
+    z.innerHTML=headHTML()+`<div class="celebrate"><div class="stars">${stars}</div><div style="font-weight:800;font-size:20px;margin-top:6px">${sc} / ${tot}</div><div class="note" style="margin-top:4px">${msg}</div><button class="btn" style="margin-top:12px" onclick="startDefi()">🔁 Rejouer</button></div>`;
+    return;
+  }
+  const q=defiState.qs[defiState.idx];
+  let html=headHTML();
+  html+=`<div class="prog-mini">Question ${defiState.idx+1} / ${defiState.qs.length} · Score ${defiState.score}</div>`;
+  html+=`<div class="card"><div class="quiz-q">${q.q}</div><div id="opts">`;
+  q.o.forEach(function(opt,i){html+=`<button class="mcq-opt" id="opt-${i}" onclick="answerDefi(${i})">${opt}</button>`;});
+  html+=`</div><div id="defi-next"></div></div>`;
+  z.innerHTML=html;
+}
+function answerDefi(i){
+  if(defiState.locked)return;
+  defiState.locked=true;
+  const q=defiState.qs[defiState.idx];
+  for(let k=0;k<q.o.length;k++){
+    const b=document.getElementById("opt-"+k);
+    if(k===q.c)b.classList.add("good");
+    else if(k===i)b.classList.add("bad");
+    else b.classList.add("dim");
+    b.onclick=null;
+  }
+  if(i===q.c){defiState.score++;XP+=5;saveGame();buildDash();toast("Bravo ! +5 XP ✅");reward();}
+  else{toast("La bonne réponse est en vert 👀");}
+  document.getElementById("defi-next").innerHTML=`<button class="btn" style="margin-top:11px" onclick="nextDefi()">Suivant ➡</button>`;
+}
+function nextDefi(){defiState.idx++;defiState.locked=false;renderDefi();}
+
+// ===== RESPIRE (douceur, style Calmigo) =====
+let brIv=null,brOn=false,brStep=0,brCycle=0;
+const BR=[{t:"Inspire 🌬️",cls:"in",sec:4},{t:"Retiens",cls:"",sec:2},{t:"Expire 😮‍💨",cls:"out",sec:6}];
+function breatheToggle(){
+  if(brOn){breatheStop(true);return;}
+  brOn=true;brStep=0;brCycle=0;
+  document.getElementById("br-btn").textContent="⏹ Arrêter";
+  brTick();
+}
+function brTick(){
+  if(!brOn)return;
+  const ph=BR[brStep];
+  const c=document.getElementById("br-circle");
+  c.className="breath-circle "+ph.cls;
+  c.textContent=ph.t;
+  if(brStep===0)say("Inspire");else if(brStep===2)say("Expire");
+  brIv=setTimeout(function(){
+    brStep++;
+    if(brStep>=BR.length){brStep=0;brCycle++;}
+    if(brCycle>=5){breatheStop(false);return;}
+    brTick();
+  },ph.sec*1000);
+}
+function breatheStop(manual){
+  brOn=false;clearTimeout(brIv);brIv=null;
+  const c=document.getElementById("br-circle");
+  document.getElementById("br-btn").textContent="▶ Démarrer la respiration";
+  if(manual){c.className="breath-circle";c.textContent="Respire";}
+  else{c.className="breath-circle";c.textContent="Bravo 💚";say("Bravo. Tu es plus calme.");toast("Respiration finie 💚 +5 XP");XP+=5;saveGame();buildDash();}
+}
+
+// ===== BADGES (récompenses, style Migros/jeux) =====
+const BADGES=[
+{e:"🌱",l:"Premier pas",t:function(s){return s.xp>=10;}},
+{e:"🔥",l:"Niveau 2",t:function(s){return s.lvl>=2;}},
+{e:"📝",l:"1re note",t:function(s){return s.notes>=1;}},
+{e:"🎯",l:"Journée 4/4",t:function(s){return s.acts>=4;}},
+{e:"💪",l:"3 séances",t:function(s){return s.sport>=3;}},
+{e:"🧠",l:"100 XP",t:function(s){return s.xp>=100;}},
+{e:"🏋️",l:"7 séances",t:function(s){return s.sport>=7;}},
+{e:"👑",l:"Niveau 5",t:function(s){return s.lvl>=5;}}];
+function buildBadges(){
+  const ad=JSON.parse(localStorage.getItem(actKey())||"{}");
+  const s={xp:XP,lvl:lvl(),notes:loadTabs().length,acts:ACTS.filter(function(a){return ad[a.k];}).length,sport:Object.keys(DAYDONE).filter(function(k){return DAYDONE[k];}).length};
+  const el=document.getElementById("badge-grid");if(!el)return;
+  el.innerHTML=BADGES.map(function(b){const on=b.t(s);return `<div class="badge ${on?'on':''}"><div class="be">${b.e}</div><div class="bl">${b.l}</div></div>`;}).join("");
+}
+
+// ===== FACTURES & DOCUMENTS FINANCIERS =====
+let pendingFac=null;
+function facAttach(input){
+  const f=input.files[0];if(!f)return;
+  if(f.size>1500000){alert("Fichier trop lourd (>1.5 Mo) pour le stockage hors-ligne. Garde-le dans ton appli Fichiers et note juste le montant ici.");input.value="";return;}
+  const r=new FileReader();r.onload=function(){pendingFac={name:f.name,dataUrl:r.result};document.getElementById("fac-att").textContent="📎 "+f.name;};
+  r.readAsDataURL(f);input.value="";
+}
+function loadFacs(){return JSON.parse(localStorage.getItem("factures_v1")||"[]");}
+function addFac(){
+  const lib=document.getElementById("fac-lib").value.trim();
+  const mt=parseFloat(document.getElementById("fac-mt").value)||0;
+  const dt=document.getElementById("fac-date").value;
+  if(!lib){alert("Mets au moins un libellé.");return;}
+  const f=loadFacs();f.push({lib:lib,mt:mt,dt:dt,file:pendingFac});
+  f.sort((a,b)=>(b.dt||"").localeCompare(a.dt||""));
+  localStorage.setItem("factures_v1",JSON.stringify(f));
+  document.getElementById("fac-lib").value="";document.getElementById("fac-mt").value="";document.getElementById("fac-date").value="";
+  pendingFac=null;document.getElementById("fac-att").textContent="";
+  buildFacs();toast("Facture ajoutée 🧾");
+}
+function delFac(i){const f=loadFacs();f.splice(i,1);localStorage.setItem("factures_v1",JSON.stringify(f));buildFacs();}
+function buildFacs(){
+  const f=loadFacs();const z=document.getElementById("fac-list");if(!z)return;
+  if(!f.length){z.innerHTML=`<div class="note">Aucune facture pour l'instant.</div>`;return;}
+  const tot=f.reduce((s,x)=>s+(x.mt||0),0);
+  z.innerHTML=f.map((x,i)=>`<div class="row" style="flex-wrap:wrap;gap:6px"><div style="flex:1;min-width:120px"><b style="font-size:13px">${esc(x.lib)}</b><div class="note">${x.dt||"—"}${x.file?` · <a href="${x.file.dataUrl}" download="${esc(x.file.name)}" style="color:var(--terra);font-weight:700">📎 ouvrir</a>`:""}</div></div><b style="font-size:13px">${(x.mt||0).toFixed(0)} CHF</b><button onclick="delFac(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:15px">🗑️</button></div>`).join("")+`<div class="fin-tot" style="background:#eef1ea;margin-top:6px"><span>Total factures</span><span>${tot.toFixed(0)} CHF</span></div>`;
+}
+
+// ===== ANALYSE DE TEXTE (hors-ligne, light) =====
+const STOP=" le la les un une des de du d à a au aux et ou en dans sur pour par avec sans ce cet cette ces son sa ses leur leurs il elle ils elles je tu nous vous on que qui quoi dont où est sont être avoir fait plus moins très bien mais donc car ne pas ni se si comme tout tous toute toutes me te lui y l ".split(" ");
+function analyser(){
+  const t=document.getElementById("an-in").value.trim();
+  const out=document.getElementById("an-out");
+  if(!t){out.textContent="Colle un texte d'abord.";return;}
+  const words=t.split(/\s+/).filter(Boolean);
+  const nbW=words.length;
+  const mins=Math.max(1,Math.round(nbW/200));
+  const sentences=t.split(/[.!?]+/).filter(s=>s.trim().length>3).length;
+  const freq={};
+  words.forEach(w=>{const k=w.toLowerCase().replace(/[^a-zà-ÿ]/gi,"");if(k.length>3&&STOP.indexOf(k)<0)freq[k]=(freq[k]||0)+1;});
+  const top=Object.keys(freq).sort((a,b)=>freq[b]-freq[a]).slice(0,8);
+  out.innerHTML=`📊 <b>${nbW}</b> mots · <b>${sentences}</b> phrases · lecture ≈ <b>${mins} min</b>\n\n🔑 Mots-clés : ${top.length?top.join(" · "):"(texte trop court)"}\n\n💡 Pour des cartes de révision, écris des lignes « Terme : définition » puis touche « Créer des cartes Perso ».`;
+  toast("Analysé 🔎");
+}
+function texteVersCartes(){
+  const t=document.getElementById("an-in").value;
+  if(!t.trim()){alert("Colle un texte d'abord.");return;}
+  const lines=t.split("\n");
+  const arr=loadPersoArr();let added=0;
+  lines.forEach(l=>{
+    const m=l.split(/\s*[:：–—-]\s+/);
+    if(m.length>=2&&m[0].trim().length>1&&m.slice(1).join(" ").trim().length>1){
+      arr.push({q:m[0].trim(),a:m.slice(1).join(" ").trim()});added++;
+    }
+  });
+  if(!added){alert("Aucune ligne « Terme : définition » trouvée. Mets un deux-points entre le terme et son explication, une par ligne.");return;}
+  savePersoArr(arr);loadPerso();buildChips();buildJeuChips();buildDash();
+  document.getElementById("an-out").innerHTML=`✅ ${added} carte(s) créée(s) ! Va dans 📚 Révise ou 🎮 Jeux → thème « Perso ».`;
+  toast(added+" cartes créées ✅");
+}
+
+// ===== RESEAUX =====
+let curReseau="tiktok";
+const IDEES_POST=[
+  "Montre 1 technique de JJB en 20 sec (entrée + finition). Sous-titre chaque étape.",
+  "« 3 erreurs en garde fermée » → carrousel ou vidéo, 1 erreur = 1 plan.",
+  "Avant / après : un élève qui progresse (avec son accord). L'émotion fait rester les gens.",
+  "Adapte un exercice pour une personne en situation de handicap. Montre que le sport est pour TOUS.",
+  "Ta routine d'apprenti ASE + sportif : une journée en 30 sec, vidéo accélérée.",
+  "Réponds à une question débutant : « Comment ne plus se faire étrangler ? »",
+  "Mindset : pourquoi tu te bats pour réussir. 1 phrase forte, regard caméra.",
+  "Démo d'un échauffement de 4 mouvements à refaire à la maison, sans matériel.",
+  "« Ce que personne ne dit sur la compétition de JJB » → ton vécu de champion.",
+  "Mini-défi à tes abonnés : tiens la planche 30 sec avec moi. Filme-toi en train de le faire."
+];
+function setReseau(r){
+  curReseau=r;
+  ["tiktok","insta","idees"].forEach(function(x){
+    const b=document.getElementById("rtab-"+x);if(!b)return;
+    const on=r===x;b.classList.toggle("on",on);
+    b.style.background=on?"var(--terra)":"var(--card)";
+    b.style.color=on?"#fff":"var(--sub)";
+  });
+  renderReseau();
+}
+function renderReseau(){
+  const z=document.getElementById("reseau-zone");if(!z)return;
+  let h="";
+  if(curReseau==="tiktok"){
+    h+=`<div class="card-terra"><div class="title">🎵 TikTok — ton terrain de jeu</div><div class="fiche-c">Ton créneau est CLAIR : JJB + sport adapté/handicap + coaching. Une niche claire = l'algorithme te pousse vers les bonnes personnes. C'est parfait pour faire connaître ton futur projet d'asso.</div></div>`;
+    h+=`<div class="card"><div class="title">✅ Check-list AVANT de publier</div>`;
+    h+=fic("Les 3 premières secondes","C'est TOUT. Accroche direct : montre le plus beau mouvement OU pose une question. Pas d'intro « salut c'est moi ».");
+    h+=fic("Sous-titres TOUJOURS","Beaucoup regardent sans le son. Pas de sous-titres = ils scrollent.");
+    h+=fic("1 seule idée, 15-30 sec","Une vidéo = un message. Si tu as 3 idées, fais 3 vidéos.");
+    h+=fic("Vertical + lumière sur ton visage","Plein écran. Filme face à une fenêtre, jamais dos à la lumière.");
+    h+=fic("Appel à la fin","« Abonne-toi pour la suite » ou « Dis-moi en commentaire ». Simple.");
+    h+=`</div>`;
+    h+=`<div class="card"><div class="title">🚫 Erreurs qui tuent une vidéo</div>`;
+    h+=fic("Trop long / ça traîne","Si ça commence à être mou, coupe au montage. Rythme = rétention.");
+    h+=fic("Pas régulier","3-4 vidéos/semaine valent mieux qu'1 vidéo « parfaite » par mois.");
+    h+=fic("Vouloir tout dire","Le but n'est pas d'expliquer, c'est de donner envie de te suivre.");
+    h+=`</div>`;
+    h+=`<div class="card-gold"><div class="title">🧠 Astuce TDAH : le batch</div><div class="fiche-c">Filme 3 vidéos d'un coup le même jour (même tenue, même lieu). Publie-les sur 3 jours. Tu évites de te reposer la question « je poste quoi ? » chaque jour.</div></div>`;
+    h+=`<div class="card"><div class="title"># Hashtags utiles</div><div class="fiche-c">#jjb #bjj #grappling #jiujitsu · #sportadapté #handisport #sportsanté · + 1 large : #mindset ou #motivation. 4 à 6 max.</div></div>`;
+  }
+  else if(curReseau==="insta"){
+    h+=`<div class="card-terra"><div class="title">📸 Instagram — ta vitrine PRO</div><div class="fiche-c">Insta, c'est plus « propre » que TikTok. C'est là que regardent : un employeur, un partenaire, une fondation pour ton asso. Soigne-le comme une carte de visite.</div></div>`;
+    h+=`<div class="card"><div class="title">✅ Les bases à régler</div>`;
+    h+=fic("Ta bio","Qui tu es + ce que tu proposes + un lien. Ex : « Champion JJB · Coach sport adapté · Genève ». Clair en 3 secondes.");
+    h+=fic("Recycle tes TikTok en Reels","La même vidéo marche sur les deux ! Garde-la sans le logo TikTok (enregistre depuis l'appli de montage, pas avec le watermark).");
+    h+=fic("Photo de profil nette","Ton visage ou ton logo. Toujours la même partout.");
+    h+=`</div>`;
+    h+=`<div class="card"><div class="title">📅 Quoi poster (le bon mélange)</div>`;
+    h+=fic("Reels = portée","Pour être vu par des NOUVELLES personnes. Tes démos JJB / sport adapté.");
+    h+=fic("Carrousels = sauvegardes","Très puissant. 1 conseil par image. Ex : « 3 erreurs en garde fermée », une par slide. Les gens sauvegardent = l'algo adore.");
+    h+=fic("Stories = proximité","Tous les jours : coulisses, ton entraînement, ta journée d'apprenti. Ça crée le lien.");
+    h+=`</div>`;
+    h+=`<div class="card-gold"><div class="title">🎯 Pense « asso »</div><div class="fiche-c">Chaque post sport-handicap construit la crédibilité de ton futur projet. Garde une cohérence : même style, mêmes couleurs, même message « le sport pour tous ». Mets le contact/lien de ton projet en bio.</div></div>`;
+  }
+  else {
+    h+=`<div class="card-terra"><div class="title">💡 Générateur d'idées</div><div class="fiche-c">Plus jamais la page blanche. Touche le bouton, prends l'idée, filme. Une à la fois.</div><button class="btn" onclick="pickIdee()" style="margin-top:8px">🎲 Donne-moi une idée</button><div id="idee-out" class="fiche" style="border-left-color:var(--gold);margin-top:10px;display:none"></div></div>`;
+    h+=`<div class="card"><div class="title">📈 Comment savoir si ça marche (hors-ligne)</div>`;
+    h+=fic("Regarde la rétention","Dans les stats de l'appli TikTok/Insta : si les gens regardent jusqu'au bout, c'est bon. Sinon, raccourcis.");
+    h+=fic("Note ce qui marche","Quand une vidéo cartonne, REFAIS le même type. Ne change pas une recette qui gagne.");
+    h+=fic("Sauvegardes & partages > likes","Un like c'est joli, un partage/sauvegarde c'est ce qui te fait grandir.");
+    h+=`</div>`;
+  }
+  z.innerHTML=h;
+}
+function fic(t,c){return `<div class="fiche"><div class="fiche-t">${t}</div><div class="fiche-c">${c}</div></div>`;}
+function pickIdee(){
+  const o=document.getElementById("idee-out");if(!o)return;
+  const idee=IDEES_POST[Math.floor(Math.random()*IDEES_POST.length)];
+  o.style.display="block";o.innerHTML="🎬 "+idee;
+}
+
+// ===== INIT =====
+loadPerso();
+buildChips();renderComp();
+buildJeuChips();setJeu("quiz");
+buildMoods();
+buildTip();
+buildActs();
+buildTabs();
+buildEvents();
+buildFacs();
+renderReseau();
+(function(){const b=document.getElementById("sound-btn");if(b)b.textContent=soundOn?"🔊":"🔇";})();
+buildSportChips();renderDay();
+loadFin();
+timerReset();
+pomoReset();
+buildDash();
+</script>
+</body>
+</html>

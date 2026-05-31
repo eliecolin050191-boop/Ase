@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ASE Pro 2026 — Élie</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+--bg:#f5f0e8;--card:#ffffff;--bd:#e6ddd0;--sage:#8a9a7e;--sage-d:#6b7c5f;
+--terra:#c97b5a;--terra-d:#b5664a;--gold:#d9a441;--ink:#3a3631;--sub:#8a8278;
+--inp:#f5f0e8;--green:#5a9a6e;--red:#c95a5a;--blue:#5a7a9a;--purple:#8a6e9a;--teal:#5a9a92}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+max-width:480px;margin:0 auto;padding-bottom:78px;min-height:100vh;line-height:1.5}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;
+background:var(--card);border-top:1px solid var(--bd);display:flex;z-index:99;box-shadow:0 -2px 12px rgba(0,0,0,.05)}
+.nb{flex:1;padding:9px 2px 8px;border:none;background:none;color:var(--sub);font-size:9.5px;cursor:pointer;
+display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}
+.nb.on{color:var(--terra);font-weight:700}
+.nb .ic{font-size:18px}
+.sc{display:none;padding:0 14px}
+.sc.on{display:block}
+.hdr{padding:26px 14px 12px}
+.ht{font-size:22px;font-weight:800;color:var(--terra)}
+.hs{font-size:12px;color:var(--sub);margin-top:3px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:15px;padding:15px;margin-bottom:11px;box-shadow:0 1px 6px rgba(0,0,0,.03)}
+.card-sage{background:#eef1ea;border:1px solid #d5ddca;border-radius:15px;padding:15px;margin-bottom:11px}
+.card-terra{background:#f7e9e2;border:1px solid #e8cdbf;border-radius:15px;padding:15px;margin-bottom:11px}
+.card-gold{background:#faf2dd;border:1px solid #ecdcae;border-radius:15px;padding:15px;margin-bottom:11px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--inp);border-radius:10px;margin-bottom:6px}
+.row b{font-size:14px}
+input,select,textarea{background:var(--card);border:1px solid var(--bd);border-radius:9px;color:var(--ink);
+padding:9px 11px;font-size:15px;font-family:inherit;outline:none;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--sage)}
+textarea{min-height:90px;resize:vertical;line-height:1.6}
+.btn{background:var(--terra);color:#fff;border:none;border-radius:11px;padding:11px 18px;font-weight:700;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-sage{background:var(--sage);color:#fff;border:none;border-radius:11px;padding:11px 18px;font-weight:700;font-family:inherit;cursor:pointer;font-size:14px;width:100%}
+.btn-sm{background:var(--inp);color:var(--ink);border:1px solid var(--bd);border-radius:9px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600}
+.title{font-size:16px;font-weight:800;margin-bottom:4px}
+.sub{font-size:12px;color:var(--sub);margin-bottom:10px}
+.bar-bg{height:9px;background:var(--inp);border-radius:5px;overflow:hidden;margin-top:7px}
+.bar-fill{height:100%;border-radius:5px;transition:width .5s;background:var(--sage)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.div{height:1px;background:var(--bd);margin:12px 0}
+.tag{display:inline-block;border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;color:#fff}
+.chip{border-radius:20px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:inherit;border:1px solid var(--bd);background:var(--card);color:var(--sub);font-weight:600;white-space:nowrap}
+.chip.on{color:#fff;border-color:transparent}
+.scroll-x{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch}
+.scroll-x::-webkit-scrollbar{display:none}
+.fiche{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--sage);border-radius:12px;padding:13px;margin-bottom:9px}
+.fiche-t{font-size:14px;font-weight:800;margin-bottom:5px}
+.fiche-c{font-size:13.5px;line-height:1.65;color:#4a463f;white-space:pre-line}
+.quiz-q{font-size:14.5px;font-weight:700;margin-bottom:9px;line-height:1.5}
+.quiz-a{background:#eef1ea;border:1px solid #d5ddca;border-radius:11px;padding:12px;font-size:13.5px;line-height:1.65;color:#3f4a37;white-space:pre-line;margin-top:9px;display:none}
+.flash{background:linear-gradient(135deg,#f7e9e2,#faf2dd);border:1px solid #e8cdbf;border-radius:18px;padding:22px;min-height:170px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;margin-bottom:13px}
+.fc-q{font-size:17px;font-weight:800;line-height:1.5}
+.fc-a{font-size:14px;line-height:1.7;color:#5a7a5e;display:none;margin-top:12px;white-space:pre-line}
+.fc-hint{font-size:11px;color:var(--terra);margin-top:9px;font-weight:600}
+.big{font-size:30px;font-weight:800}
+.coach-big{font-size:24px;font-weight:900;text-align:center;padding:16px;border-radius:13px;margin:12px 0}
+.coach-ok{background:#e3f0e7;color:var(--green);border:2px solid #b8d8c2}
+.coach-no{background:#f5e0e0;color:var(--red);border:2px solid #e0b8b8}
+.coach-rule{background:var(--inp);border-left:3px solid var(--terra);padding:10px 13px;border-radius:0 10px 10px 0;margin-bottom:7px;font-size:12.5px;line-height:1.55}
+.fin-row{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;margin-bottom:7px}
+.fin-row label{font-size:13px;font-weight:600}
+.fin-row input{text-align:right;padding:7px 9px;font-size:14px}
+.fin-tot{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-radius:11px;margin-top:6px;font-weight:700}
+.mood-btn{flex:1;font-size:26px;background:var(--inp);border:2px solid transparent;border-radius:12px;padding:9px 0;cursor:pointer}
+.mood-btn.on{border-color:var(--terra);background:#f7e9e2}
+.arabic{font-size:19px;line-height:1.9;text-align:right;direction:rtl;color:var(--sage-d);margin-bottom:8px;font-weight:600}
+.note{font-size:11.5px;color:var(--sub);line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div class="sc on" id="sc-accueil">
+  <div class="hdr"><div class="ht">Salut Élie 👋</div><div class="hs">Ton coach CFC ASE · hors-ligne</div></div>
+
+  <div class="card-terra">
+    <div class="title">🛡️ Règle d'or paris</div>
+    <div style="font-size:13.5px;line-height:1.6">Bankroll : <b id="ac-bk">900</b> CHF<br>
+    Mise max autorisée : <b style="color:var(--terra-d);font-size:18px" id="ac-max">18.00</b> CHF par ticket.</div>
+    <div class="note" style="margin-top:7px">Jamais plus de 2%. Aucune exception.</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Ton humeur aujourd'hui</div>
+    <div class="sub">Un appui pour suivre ta forme (TDAH, énergie, motivation).</div>
+    <div style="display:flex;gap:7px" id="moods"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="title">🎯 Focus du jour</div>
+    <div class="sub" id="focus-txt">1 compétence par jour. Pas plus.</div>
+    <button class="btn-sage" onclick="go('revise')">Réviser maintenant</button>
+  </div>
+
+  <div class="card">
+    <div class="title">⏰ À ne pas oublier</div>
+    <div class="row"><span style="font-size:13px">Déclaration impôts 2025</span><span class="tag" style="background:var(--red)">échéance 30 avr.</span></div>
+    <div class="row"><span style="font-size:13px">Rembourser les poursuites (OP)</span><span class="tag" style="background:var(--gold)">priorité</span></div>
+    <div class="row"><span style="font-size:13px">Fin de contrat apprentissage</span><span class="tag" style="background:var(--sage)">18.08.2027</span></div>
+  </div>
+</div>
+
+<!-- REVISE -->
+<div class="sc" id="sc-revise">
+  <div class="hdr"><div class="ht">📚 Révisions</div><div class="hs">Tout ton savoir Careum + SAVOIRSOCIAL</div></div>
+  <div class="scroll-x" id="comp-chips"></div>
+  <div id="comp-head"></div>
+  <div id="fiches"></div>
+</div>
+
+<!-- JEUX -->
+<div class="sc" id="sc-jeux">
+  <div class="hdr"><div class="ht">🎮 Jeux</div><div class="hs">Quiz & flashcards pour ancrer</div></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="chip on" id="tab-quiz" onclick="setJeu('quiz')" style="flex:1;text-align:center;background:var(--terra);color:#fff;border-color:transparent">Quiz</button>
+    <button class="chip" id="tab-flash" onclick="setJeu('flash')" style="flex:1;text-align:center">Flashcards</button>
+  </div>
+  <div class="scroll-x" id="jeu-chips"></div>
+  <div id="jeu-zone"></div>
+</div>
+
+<!-- ARGENT -->
+<div class="sc" id="sc-argent">
+  <div class="hdr"><div class="ht">💰 Mon argent</div><div class="hs">Feuille de calcul · pré-remplie · garde-fous</div></div>
+
+  <div class="card">
+    <div class="title">📥 Mes revenus (par mois)</div>
+    <div class="sub">Modifie si ça change. Tout se recalcule tout seul.</div>
+    <div id="rev-rows"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">📤 Mes charges fixes (par mois)</div>
+    <div class="sub">Ce qui part chaque mois, obligatoire.</div>
+    <div id="chg-rows"></div>
+  </div>
+
+  <div class="card-sage">
+    <div class="fin-tot" style="background:#fff"><span>Total revenus</span><span id="t-rev" style="color:var(--green)">0 CHF</span></div>
+    <div class="fin-tot" style="background:#fff"><span>Total charges</span><span id="t-chg" style="color:var(--red)">0 CHF</span></div>
+    <div class="fin-tot" id="reste-box" style="background:#eef1ea;font-size:17px"><span>Reste à vivre</span><span id="t-reste">0 CHF</span></div>
+    <div class="bar-bg"><div class="bar-fill" id="reste-bar" style="width:0%"></div></div>
+    <div class="note" id="reste-msg" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card-terra">
+    <div class="title">🛡️ Tirelire paris & règle des 2%</div>
+    <div class="fin-row" style="margin-top:8px"><label>Ma bankroll (CHF)</label><input id="bk-in" type="number" inputmode="decimal" value="900"></div>
+    <div class="fin-tot" style="background:#fff;font-size:17px"><span>Mise MAX par ticket</span><span id="bk-max" style="color:var(--terra-d)">18.00 CHF</span></div>
+    <div class="note" style="margin-top:7px">2% de la bankroll. C'est le plafond. Aucune exception.</div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="btn-sage" onclick="saveFin()">💾 Sauvegarder</button>
+    <button class="btn-sm" onclick="resetFin()" style="flex:0 0 auto">Réinit.</button>
+  </div>
+  <div class="note" style="text-align:center;margin-bottom:6px">TikTok boxe/JJB : @wesheliejjb · objectif asso sport-handicap 💪</div>
+</div>
+
+<!-- COACH -->
+<div class="sc" id="sc-coach">
+  <div class="hdr"><div class="ht">🛡️ Coach paris</div><div class="hs">Strict. Bienveillant. Zéro exception.</div></div>
+
+  <div class="card-terra">
+    <div class="title">Vérifier une mise</div>
+    <div class="fin-row" style="margin-top:8px"><label>Ma bankroll (CHF)</label><input id="c-bk" type="number" inputmode="decimal" value="900"></div>
+    <div class="fin-row"><label>Je veux miser (CHF)</label><input id="c-mise" type="number" inputmode="decimal" placeholder="0"></div>
+    <button class="btn" onclick="checkMise()">Est-ce que j'ai le droit ?</button>
+    <div id="c-result"></div>
+  </div>
+
+  <div class="card">
+    <div class="title">Mes règles fixes</div>
+    <div class="coach-rule">1. Toujours commencer par : « Stop. Combien tu as dans ta tirelire pour parier ? »</div>
+    <div class="coach-rule">2. Jamais plus de 2% de ma bankroll sur un seul ticket.</div>
+    <div class="coach-rule">3. Si je veux miser plus : NON. Règle des 2%.</div>
+    <div class="coach-rule">4. Pas d'alcool ni de cannabis avant de parier.</div>
+    <div class="coach-rule">5. Si je perds 2 fois de suite : je m'arrête pour la journée.</div>
+    <div class="coach-rule">6. L'argent des charges (loyer, LAMal, poursuites) ne se touche JAMAIS.</div>
+  </div>
+
+  <div class="card-gold">
+    <div class="title">💚 Rappel de force</div>
+    <div style="font-size:13.5px;line-height:1.65">Tu es résilient. Tu t'es toujours battu. Ton CFC, ton asso boxe/golf/JJB pour les personnes en situation de handicap : c'est ça, le vrai gros lot. Garde ton argent pour CE projet.</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nb on" data-sc="accueil" onclick="go('accueil')"><span class="ic">🏠</span>Accueil</button>
+  <button class="nb" data-sc="revise" onclick="go('revise')"><span class="ic">📚</span>Révise</button>
+  <button class="nb" data-sc="jeux" onclick="go('jeux')"><span class="ic">🎮</span>Jeux</button>
+  <button class="nb" data-sc="argent" onclick="go('argent')"><span class="ic">💰</span>Argent</button>
+  <button class="nb" data-sc="coach" onclick="go('coach')"><span class="ic">🛡️</span>Coach</button>
+</div>
+
+<script>
+// ===== DONNÉES CAREUM FIDÈLES (tes 2 documents réels) =====
+const COMP = {
+A:{name:"Compétence A",sub:"Se situer dans son rôle professionnel",color:"#5a7a9a",
+fiches:[
+{t:"Rôle de l'ASE",c:"L'ASE accompagne des personnes de tous âges dans leur quotidien (enfants, personnes en situation de handicap, personnes âgées). Il structure la journée, propose des activités, respecte les besoins.\n\nExemple : en EMS, Mme B. (84 ans) ne veut pas se lever. Tu respectes son refus, tu notes et tu informes l'équipe."},
+{t:"Éthique — les 5 principes",c:"1. Autonomie\n2. Non-malfaisance\n3. Assistance\n4. Justice\n5. Dignité humaine\n\nExemple : Marc veut manger seul même s'il renverse. Tu l'aides sans lui enlever le contrôle → tu respectes l'autonomie."},
+{t:"Secret professionnel — Art. 321 CP",c:"Tu ne divulgues RIEN sur les personnes accompagnées à des tiers sans autorisation. La LPD = loi sur la protection des données.\n\nExemple : la voisine demande des nouvelles de M. X. Tu réponds : « Je ne peux pas donner d'informations. » C'est la loi."},
+{t:"Burn-out — 3 phases",c:"1. Idéalisation\n2. Fatigue chronique\n3. Épuisement total\n\nSignes : troubles du sommeil, perte d'empathie, maux de dos.\nExemple : tu rentres épuisé chaque soir → signal. Tu en parles à ton responsable."},
+{t:"Stress & coping",c:"Bonnes stratégies : sport, planification, demander de l'aide, prioriser.\nÀ éviter : faire semblant que tout va bien.\n\nExemple : exam dans 3 jours → liste de ce que tu sais, révision 30 min, sport. Pas de « je suis nul »."},
+{t:"Résilience",c:"Capacité à rebondir après les épreuves.\nFacteurs : autoefficacité, réseau social, résolution de problèmes.\n\nExemple : tu as raté un exam → tu analyses, tu reprends, tu continues."},
+{t:"⚠️ À retenir pour l'examen",c:"• Art. 321 CP = secret professionnel\n• 5 principes éthiques : Autonomie · Non-malfaisance · Assistance · Justice · Dignité\n• Burn-out : 3 phases (idéalisation → fatigue → épuisement)\n• LPD = protection des données\n• APEA = Autorité de Protection de l'Enfant et de l'Adulte"}],
+quiz:[
+{q:"Quels sont les 5 principes éthiques ?",a:"Autonomie · Non-malfaisance · Assistance · Justice · Dignité humaine."},
+{q:"Que dit l'Art. 321 CP ?",a:"Le secret professionnel : tu ne divulgues aucune info sur les personnes accompagnées sans autorisation."},
+{q:"Cite les 3 phases du burn-out.",a:"1. Idéalisation → 2. Fatigue chronique → 3. Épuisement total."},
+{q:"La voisine te demande des nouvelles d'un résident. Tu fais quoi ?",a:"Tu refuses : « Je ne peux pas donner d'informations. » (secret pro, Art. 321 CP)."}]},
+
+B:{name:"Compétence B",sub:"Planifier et organiser",color:"#5a9a6e",
+fiches:[
+{t:"L'escalier à 6 marches",c:"Outil de planification en 6 étapes :\n1. Situation actuelle\n2. Objectif\n3. Ressources\n4. Étapes\n5. Réalisation\n6. Évaluation\n\nExemple : sortie au parc avec 3 résidents → Qui vient ? Quoi préparer ? Qui fait quoi ? Comment évaluer ?"},
+{t:"Objectif SMART",c:"Spécifique · Mesurable · Atteignable · Réaliste · Temporel.\n\nMAUVAIS : « Marc doit marcher plus. »\nBON : « Marc marche 10 min chaque matin pendant 2 semaines. »"},
+{t:"Quotidien structuré",c:"L'ASE organise le lever, les repas, les activités, le coucher. La structure donne un repère sécurisant.\n\nExemple crèche : accueil (8h) → collation (9h) → activité (10h). Cette routine rassure les enfants."},
+{t:"Individuel vs groupe",c:"Activité individuelle = adaptée à la personne seule.\nActivité de groupe = dynamique collective.\nOn planifie différemment.\n\nExemple : Marie tricote seule (individuel), le groupe peint ensemble (groupe)."},
+{t:"Partir des ressources",c:"Identifier ce que la personne PEUT faire, ce qu'elle aime, son réseau. Partir des forces, pas des manques.\n\nExemple : M. Ali aime cuisiner → tu planifies une activité cuisine pour valoriser ses compétences."},
+{t:"Évaluation",c:"Après chaque activité : ça a marché ? Pourquoi ? Qu'est-ce qui change la prochaine fois ?\n\nExemple : « Léa épuisée après 20 min → réduire la durée la prochaine fois. »"},
+{t:"⚠️ À retenir pour l'examen",c:"• Escalier 6 marches : Situation → Objectif → Ressources → Étapes → Réalisation → Évaluation\n• SMART : Spécifique · Mesurable · Atteignable · Réaliste · Temporel\n• Activité réussie = adaptée, planifiée, évaluée\n• Planification = structure sécurisante"}],
+quiz:[
+{q:"Cite les 6 marches de l'escalier de planification.",a:"1. Situation actuelle → 2. Objectif → 3. Ressources → 4. Étapes → 5. Réalisation → 6. Évaluation."},
+{q:"Que veut dire SMART ?",a:"Spécifique · Mesurable · Atteignable · Réaliste · Temporel."},
+{q:"Transforme en objectif SMART : « Marc doit marcher plus ».",a:"« Marc marche 10 min chaque matin pendant 2 semaines. »"},
+{q:"Pourquoi un quotidien structuré est important ?",a:"La structure donne un repère sécurisant aux personnes accompagnées."}]},
+
+C:{name:"Compétence C",sub:"Observer et documenter",color:"#5a9a92",
+fiches:[
+{t:"L'observation",c:"Collecter des informations de façon STRUCTURÉE et OBJECTIVE. Observer = noter ce qu'on VOIT.\n\nExemple : « Léo est sorti du groupe après 5 min et a regardé par la fenêtre » (FAIT) ≠ « Léo n'aime pas le groupe » (INTERPRÉTATION)."},
+{t:"Fait vs interprétation",c:"FAIT = ce qu'on voit/entend précisément.\nINTERPRÉTATION = ce qu'on en pense.\nÀ l'examen : JAMAIS d'interprétation dans un rapport !\n\n✅ « Marie a refusé son repas et est restée au lit 3h. »\n❌ « Marie est déprimée. »"},
+{t:"Le rapport",c:"Document écrit, factuel, sans jugement. Objectif, précis, compréhensible. Base pour les décisions.\n\nExemple : « À 14h, M. X a frappé la table 3 fois et a crié. Il a quitté la salle. »"},
+{t:"La transmission",c:"Informer l'équipe oralement (passation) et par écrit (rapport, cahier de bord). Protège la continuité.\n\nExemple fin de shift : « Mme B. a refusé de manger ce soir, elle a demandé sa fille. »"},
+{t:"Le portfolio",c:"Dossier qui documente des situations professionnelles réelles avec ton analyse. Preuve pour le jury CFC.\n\nTu écris une situation vécue : contexte, ce que tu as fait, pourquoi, ce que tu retiens."},
+{t:"Confidentialité",c:"Les infos sur les personnes sont PRIVÉES. Rapport = usage interne. Jamais à des tiers.\n\nTu ne laisses pas ton rapport visible. Tu ne parles pas d'un résident à un autre."},
+{t:"⚠️ À retenir pour l'examen",c:"• FAIT = ce qu'on observe directement (comportement, durée, heure, lieu)\n• INTERPRÉTATION = ce qu'on suppose (INTERDIT dans les rapports)\n• Un rapport est toujours objectif, factuel, sans jugement\n• Portfolio = situations réelles + analyse réflexive"}],
+quiz:[
+{q:"Différence entre FAIT et INTERPRÉTATION ?",a:"FAIT = ce qu'on voit/entend précisément. INTERPRÉTATION = ce qu'on suppose. Seul le FAIT va dans un rapport."},
+{q:"« Marie est déprimée » : fait ou interprétation ?",a:"Interprétation ❌. Un fait : « Marie a refusé son repas et est restée au lit 3h. »"},
+{q:"C'est quoi un bon rapport ?",a:"Objectif, factuel, précis, sans jugement de valeur."},
+{q:"À quoi sert le portfolio pour le CFC ?",a:"À documenter des situations réelles + ton analyse réflexive. C'est une preuve pour le jury."}]},
+
+D:{name:"Compétence D",sub:"Collaborer et communiquer",color:"#8a6e9a",
+fiches:[
+{t:"Collaboration interprofessionnelle",c:"Travailler avec d'autres pros : médecin, physio, assistante sociale, curateur, psychologue. Chacun son rôle.\n\nExemple : Mme H. doit faire de la kiné ET tricoter → tu discutes avec le physio : qui fait quoi ?"},
+{t:"Entretien formel",c:"Réunion planifiée, objectif précis, lieu fixe, durée déterminée.\n\nExemple : réunion avec le curateur de M. X, 1h en salle, ordre du jour préparé → FORMEL."},
+{t:"Entretien informel",c:"Échange spontané, sans structure. Couloir, pendant un soin. Aussi important mais non officiel.\n\nExemple : en aidant Marie à s'habiller, elle te confie qu'elle a peur de la nuit → INFORMEL."},
+{t:"Personnes de référence",c:"Proches, représentants légaux, curateurs : ils ont des droits. Tu collabores selon les règles.\n\nExemple : le curateur veut M. B. en EMS, les parents refusent → tu transmets à ton responsable, tu ne décides pas."},
+{t:"Le consensus",c:"Décision collective où chacun peut « vivre avec » le résultat. Plus fort qu'un vote.\n\nExemple : l'équipe ne s'entend pas → on écoute tout le monde, on trouve une solution acceptable."},
+{t:"Le feed-back",c:"Retour constructif.\nDonner : concret, factuel, bienveillant.\nRecevoir : écouter sans se défendre.\n\nExemple : « Tu as bien géré la crise de ce matin, tu es resté calme. »"},
+{t:"⚠️ À retenir pour l'examen",c:"• Collaboration interpro = différents métiers ensemble\n• Entretien formel (planifié) vs informel (spontané)\n• Le représentant légal/curateur a un pouvoir de décision → toujours le respecter\n• Consensus = décision collective où chacun peut vivre avec le résultat"}],
+quiz:[
+{q:"Formel ou informel : une confidence reçue pendant un soin ?",a:"Informel — échange spontané, sans structure."},
+{q:"C'est quoi le consensus ?",a:"Une décision collective où chacun peut « vivre avec » le résultat. Plus fort qu'un vote."},
+{q:"Le curateur décide une chose, les parents refusent. Tu fais quoi ?",a:"Tu transmets à ton responsable. Tu ne décides pas toi-même."},
+{q:"Comment donner un bon feed-back ?",a:"Concret, factuel, bienveillant."}]},
+
+E:{name:"Compétence E",sub:"Établir des relations professionnelles",color:"#c95a5a",
+fiches:[
+{t:"Relation pro vs privée",c:"Pro : rôles définis, limitée dans le temps, asymétrique, avec un objectif.\nPrivée : continue, émotionnelle, sans limite.\n\nExemple : tu t'entends bien avec Mme T. → relation pro. Si tu l'invites chez toi → tu dépasses la limite !"},
+{t:"Proximité / distance",c:"Équilibre constant.\nTrop proche = perte d'objectivité.\nTrop loin = pas de confiance.\n\nExemple : Julien invite Rebecca chez lui à Pâques → trop proche ! Il confond rôle pro et rôle familial."},
+{t:"Les 3 attitudes de Rogers",c:"1. Empathie : comprendre ce que ressent l'autre\n2. Acceptation inconditionnelle : accepter sans juger\n3. Congruence : être authentique\n\nExemple : Mme B. pleure → « Je vois que c'est difficile pour vous. » (empathie). Pas « C'est normal, ça ira. »"},
+{t:"Les 3 phases relationnelles",c:"1. Début → instaurer la confiance\n2. Entretien → vivre la relation, clarifier\n3. Fin → rituel, bilan, séparation\n\nExemple : Rosalie quitte la crèche → on prépare son départ depuis 1 mois (fin ritualisée)."},
+{t:"Pouvoir / dépendance",c:"Les personnes DÉPENDENT de toi → danger d'abus de pouvoir. Conscience nécessaire.\n\nExemple : tu décides où Mme X mange, quand elle se lève. Ce pouvoir doit servir SON bien, pas ta commodité."},
+{t:"L'attachement",c:"Besoin fondamental de lien sécurisant. Enfants et adultes ont besoin d'une figure d'attachement stable.\n\nExemple : Pablo pleure chaque matin à la crèche. Ta présence stable et chaleureuse l'aide à s'attacher."},
+{t:"⚠️ À retenir pour l'examen",c:"• Rogers : Empathie + Acceptation inconditionnelle + Congruence\n• 3 phases : Début (confiance) → Entretien (vie de la relation) → Fin (rituel, bilan)\n• Proximité/Distance : équilibre constant\n• Relation pro : asymétrique, limitée, avec un mandat\n• Fin de relation = toujours ritualisée et préparée à l'avance"}],
+quiz:[
+{q:"Cite les 3 attitudes de Rogers.",a:"Empathie · Acceptation inconditionnelle · Congruence (authenticité)."},
+{q:"Cite les 3 phases d'une relation pro.",a:"Début (confiance) → Entretien (vie de la relation) → Fin (rituel, bilan)."},
+{q:"Inviter un résident chez soi : problème ?",a:"Oui — on dépasse la limite pro/privée. Perte de la juste distance."},
+{q:"Comment se passe une bonne fin de relation ?",a:"Elle est ritualisée et préparée à l'avance (bilan, séparation en douceur)."}]},
+
+F:{name:"Compétence F",sub:"Accompagner dans les activités",color:"#6b7c5f",
+fiches:[
+{t:"Les formes d'accompagnement",c:"• Encourager (motiver)\n• Inciter (proposer)\n• Laisser essayer (autonomie)\n• Faire avec (co-participer)\n\nExemple : Léa hésite à peindre → tu l'encourages, elle commence, tu laisses essayer, si elle bloque tu fais avec."},
+{t:"Les théories de l'apprentissage",c:"• Behaviorisme : renforcement (R+ / R- / P+ / P-)\n• Cognitif : compréhension, sens\n• Socio-cognitif : apprendre en observant (Bandura)\n\nExemple : tu félicites Paul quand il range → behaviorisme. Tu expliques POURQUOI ranger → cognitif."},
+{t:"Le jeu",c:"Le jeu EST le travail de l'enfant.\nTypes : libre, symbolique, de règles, de construction.\n\nExemple : Léo joue à la dinette → jeu symbolique. Il imite les adultes, développe langage et codes sociaux."},
+{t:"Dynamique de groupe (Tuckman)",c:"Les groupes passent par des phases : Formation → Tensions → Normalisation → Performance → Dissolution.\n\nL'ASE accompagne le groupe à chaque phase, surtout dans les tensions."},
+{t:"Le processus créatif & le cycle de Gibbs",c:"Activité créative : on laisse la place à l'expression, pas au « beau résultat ».\nCycle de Gibbs (réflexion) : Description → Sentiments → Évaluation → Analyse → Conclusion → Plan d'action."},
+{t:"⚠️ À retenir pour l'examen",c:"• 4 formes : Encourager · Inciter · Laisser essayer · Faire avec\n• Behaviorisme (renforcement) / Cognitif (sens) / Socio-cognitif (Bandura, observation)\n• Le jeu = le travail de l'enfant (libre, symbolique, règles, construction)\n• Gibbs = outil de réflexion en 6 étapes"}],
+quiz:[
+{q:"Cite les 4 formes d'accompagnement.",a:"Encourager · Inciter · Laisser essayer · Faire avec."},
+{q:"Qui a décrit l'apprentissage par observation ?",a:"Bandura (apprentissage socio-cognitif / vicariant)."},
+{q:"Pourquoi dit-on que le jeu est le travail de l'enfant ?",a:"Parce qu'en jouant, l'enfant développe langage, motricité, émotions et codes sociaux."},
+{q:"Cite 2 types de jeu.",a:"Au choix : jeu libre, symbolique, de règles, de construction."}]},
+
+F0:{name:"Careum F0",sub:"Psychologie du développement",color:"#8a6e9a",
+fiches:[
+{t:"Fiche 1 — Le développement",c:"Le développement dure toute la vie, de la naissance à la mort.\n\n3 facteurs :\n🧬 BIOLOGIQUE (inné — gènes, tempérament)\n🌍 ENVIRONNEMENT (acquis — famille, école, culture)\n💪 AUTODÉTERMINATION (volonté — ce qu'on choisit)\n\nMémo : BIO + ENVIRO + MOI = MON DÉVELOPPEMENT"},
+{t:"Fiche 2 — Erikson : les 8 crises",c:"0-1 an : Confiance vs Méfiance\n1-3 ans : Autonomie vs Honte\n3-5 ans : Initiative vs Culpabilité\n5-12 ans : Travail vs Infériorité\nAdo : Identité vs Confusion\nJeune adulte : Intimité vs Isolement\nAdulte : Générativité vs Stagnation\nVieux : Intégrité vs Désespoir\n\nMémo : CONFIANCE → AUTONOMIE → INITIATIVE → TRAVAIL → IDENTITÉ → INTIMITÉ → GÉNÉRER → INTÉGRITÉ"},
+{t:"Fiche 3 — Piaget : les 4 stades",c:"🍼 Sensorimoteur (0-2 ans) : apprend avec le corps et les sens. 18 mois : se reconnaît dans le miroir.\n🎭 Préopératoire (2-7 ans) : parle et imagine, pensée magique, voit seulement SON point de vue.\n📚 Opératoire concret (7-12 ans) : logique avec objets réels (l'eau versée reste la même quantité).\n🔬 Opératoire formel (12 ans+) : pensée abstraite, « si… alors… »\n\nMémo : CORPS → MAGIE → CONCRET → ABSTRAIT"},
+{t:"Fiche 4 — Les émotions",c:"Les émotions influencent le CORPS, les PENSÉES et le COMPORTEMENT.\n\n8 compétences émotionnelles :\n1. Reconnaître MES émotions\n2. Reconnaître celles des AUTRES\n3. Mettre des MOTS dessus\n4. Faire preuve d'EMPATHIE\n5. Distinguer ce que je ressens / ce que les autres montrent\n6. GÉRER mes émotions difficiles\n7. Comprendre leur effet sur les RELATIONS\n8. ACCEPTER mes émotions"},
+{t:"Fiche 5 — La motricité",c:"Le mouvement se développe du HAUT vers le BAS et du CENTRE vers l'EXTÉRIEUR.\n\n🍼 Réflexes : automatique, inné (téter, attraper)\n💪 Motricité globale : grands mouvements (marcher, courir, s'asseoir)\n✋ Motricité fine : petits mouvements précis (pince pouce-index, écrire, dessiner)"},
+{t:"Fiche 6 — Les 7 sens",c:"👋 Toucher : le PLUS important, premier développé, vital pour le bébé\n⚖️ Équilibre : se tenir debout, s'orienter\n🏃 Orientation/Mouvement : savoir où est son corps (proprioception)\n👅 Goût : sucré, salé, acide, amer, umami\n👁️ Vue : le MOINS développé à la naissance (mature vers 6-7 mois)\n👂 Ouïe : fonctionne AVANT la naissance (reconnaît la voix de la mère)\n👃 Odorat : fonctionnel dès la naissance"},
+{t:"Fiche 7 — Les 7 stades du langage",c:"1. Préliminaire (0-5 mois) : pleurs, « aaaahhh »\n2. Babillage (6-12 mois) : « ba-ba-ba »\n3. Phrases d'1 mot (12-18 mois) : « maman »\n4. Phrases de 2 mots (18 mois-2 ans) : « maman partie »\n5. Grammaire (2-3 ans) : premiers « pourquoi ? »\n6. Consolidation (3-4 ans) : phrases complexes\n7. Maîtrise complète (4-5 ans) : presque comme un adulte"},
+{t:"Fiche 8 — Social & moral",c:"ATTACHEMENT :\n✅ Sécure : confiance → explore → bon développement\n❌ Insécure : peur → n'ose pas → plus difficile\n\nMORALE selon EISENBERG (5 stades) :\n1. Hédoniste (4-5 ans) : pour avoir qqch en retour\n2. Besoins (6 ans) : parce que l'autre en a besoin\n3. Reconnaissance (7-12 ans) : pour être bien vu\n4a. Empathie (12-14 ans) / 4b. Valeurs (14-17 ans)\n5. Internalisé (18-25 ans) : parce que c'est juste pour la société"},
+{t:"Fiche 9 — La socialisation",c:"Apprendre à vivre en société. Ça dure toute la vie !\n\n🥇 Primaire : Famille (manger, parler, se comporter)\n🥈 Secondaire : École, crèche, institution (règles sociales hors famille)\n🥉 Tertiaire : Loisirs, médias, amis\n\nMémo : FAMILLE → ÉCOLE → MONDE = Je deviens qui je suis"}],
+quiz:[
+{q:"Cite les 3 facteurs du développement.",a:"Biologique (inné) · Environnement (acquis) · Autodétermination (volonté)."},
+{q:"Erikson 0-1 an : quel défi ?",a:"Confiance vs Méfiance."},
+{q:"Piaget : stade 2-7 ans ?",a:"Préopératoire — pensée magique, l'enfant ne voit que son point de vue."},
+{q:"Quel est le sens le PLUS important et le premier développé ?",a:"Le toucher. Vital pour le bébé."},
+{q:"Quel sens fonctionne AVANT la naissance ?",a:"L'ouïe — le bébé reconnaît la voix de sa mère."},
+{q:"Les 3 niveaux de socialisation ?",a:"Primaire (famille) → Secondaire (école/institution) → Tertiaire (loisirs, médias, amis)."}]},
+
+LOIS:{name:"Lois & droit",sub:"Tout ce qui peut tomber à l'examen",color:"#c95a5a",
+fiches:[
+{t:"Art. 321 CP — Secret professionnel",c:"Tu ne divulgues JAMAIS d'infos sur les personnes accompagnées. Peine possible en cas de violation."},
+{t:"Art. 307-312 CC — Protection de l'enfant",c:"Mesures de protection ordonnées par l'APEA si le bien de l'enfant est menacé."},
+{t:"Art. 314c-d CC — Obligation de signalement",c:"Tu DOIS signaler à l'APEA si tu vois des signes de maltraitance sur un enfant."},
+{t:"Art. 321c CO — Heures supplémentaires",c:"+25% de salaire ou compensation en temps libre. Ne peut pas être exclu par contrat."},
+{t:"Art. 328 CO — Protection de la personnalité",c:"L'employeur doit te protéger contre le harcèlement, le mobbing, la discrimination."},
+{t:"Institutions clés",c:"• APEA : Autorité de Protection de l'Enfant et de l'Adulte\n• SPMi : Service de Protection des Mineurs (Genève)\n• AVS/AI : assurances sociales\n• LPD : loi sur la protection des données"}],
+quiz:[
+{q:"Quel article protège le secret professionnel ?",a:"Art. 321 CP."},
+{q:"À qui signaler une suspicion de maltraitance sur un enfant ?",a:"À l'APEA (Art. 314c-d CC). Obligation de signalement."},
+{q:"Heures sup : quel article et quelle compensation ?",a:"Art. 321c CO : +25% de salaire ou compensation en temps libre."},
+{q:"Que veut dire APEA ?",a:"Autorité de Protection de l'Enfant et de l'Adulte."}]}
+};
+
+const ORDER=["A","B","C","D","E","F","F0","LOIS"];
+let curComp="A", curJeuComp="A", curJeu="quiz";
+
+// ===== NAV =====
+function go(s){
+  document.querySelectorAll(".sc").forEach(e=>e.classList.remove("on"));
+  document.getElementById("sc-"+s).classList.add("on");
+  document.querySelectorAll(".nb").forEach(e=>e.classList.toggle("on",e.dataset.sc===s));
+  window.scrollTo(0,0);
+}
+
+// ===== REVISE =====
+function buildChips(){
+  const c=document.getElementById("comp-chips");
+  c.innerHTML=ORDER.map(k=>`<button class="chip ${k===curComp?'on':''}" style="${k===curComp?'background:'+COMP[k].color:''}" onclick="pickComp('${k}')">${k}</button>`).join("");
+}
+function pickComp(k){curComp=k;buildChips();renderComp();}
+function renderComp(){
+  const d=COMP[curComp];
+  document.getElementById("comp-head").innerHTML=`<div class="card" style="border-left:4px solid ${d.color}"><div class="title" style="color:${d.color}">${d.name}</div><div class="sub" style="margin:0">${d.sub}</div></div>`;
+  document.getElementById("fiches").innerHTML=d.fiches.map(f=>`<div class="fiche" style="border-left-color:${d.color}"><div class="fiche-t">${f.t}</div><div class="fiche-c">${f.c}</div></div>`).join("");
+}
+
+// ===== JEUX =====
+function setJeu(j){
+  curJeu=j;
+  document.getElementById("tab-quiz").classList.toggle("on",j==="quiz");
+  document.getElementById("tab-flash").classList.toggle("on",j==="flash");
+  document.getElementById("tab-quiz").style.background=j==="quiz"?"var(--terra)":"var(--card)";
+  document.getElementById("tab-quiz").style.color=j==="quiz"?"#fff":"var(--sub)";
+  document.getElementById("tab-flash").style.background=j==="flash"?"var(--terra)":"var(--card)";
+  document.getElementById("tab-flash").style.color=j==="flash"?"#fff":"var(--sub)";
+  renderJeu();
+}
+function buildJeuChips(){
+  document.getElementById("jeu-chips").innerHTML=ORDER.map(k=>`<button class="chip ${k===curJeuComp?'on':''}" style="${k===curJeuComp?'background:'+COMP[k].color:''}" onclick="pickJeu('${k}')">${k}</button>`).join("");
+}
+function pickJeu(k){curJeuComp=k;buildJeuChips();renderJeu();}
+function renderJeu(){
+  const d=COMP[curJeuComp];const z=document.getElementById("jeu-zone");
+  if(curJeu==="quiz"){
+    z.innerHTML=d.quiz.map((q,i)=>`<div class="card"><div class="quiz-q">${i+1}. ${q.q}</div><button class="btn-sm" onclick="document.getElementById('qa-${i}').style.display='block';this.style.display='none'">Voir la réponse</button><div class="quiz-a" id="qa-${i}">${q.a}</div></div>`).join("");
+  }else{
+    z.innerHTML=d.quiz.map((q,i)=>`<div class="flash" onclick="this.querySelector('.fc-a').style.display='block';this.querySelector('.fc-hint').style.display='none'"><div class="fc-q">${q.q}</div><div class="fc-hint">👆 Touche pour retourner</div><div class="fc-a">✅ ${q.a}</div></div>`).join("");
+  }
+}
+
+// ===== HUMEUR =====
+const MOODS=["😞","😕","😐","🙂","😄"];
+function buildMoods(){
+  const saved=localStorage.getItem("mood_"+today());
+  document.getElementById("moods").innerHTML=MOODS.map((m,i)=>`<button class="mood-btn ${saved==i?'on':''}" onclick="setMood(${i})">${m}</button>`).join("");
+}
+function setMood(i){localStorage.setItem("mood_"+today(),i);buildMoods();}
+function today(){return new Date().toISOString().slice(0,10);}
+
+// ===== FINANCES =====
+const REV_DEF=[{k:"Salaire net (après poursuites)",v:2204.60}];
+const CHG_DEF=[
+{k:"Loyer",v:600},{k:"Assurance maladie (LAMal)",v:350},
+{k:"Téléphone",v:49},{k:"Transports",v:80},
+{k:"Alimentation",v:91},{k:"Remboursement poursuites (OP)",v:1200}];
+let REV=[], CHG=[];
+
+function loadFin(){
+  const sv=localStorage.getItem("fin_v1");
+  if(sv){const o=JSON.parse(sv);REV=o.rev;CHG=o.chg;document.getElementById("bk-in").value=o.bk||900;}
+  else{REV=JSON.parse(JSON.stringify(REV_DEF));CHG=JSON.parse(JSON.stringify(CHG_DEF));}
+  renderFin();
+}
+function renderFin(){
+  document.getElementById("rev-rows").innerHTML=REV.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" inputmode="decimal" value="${r.v}" onchange="REV[${i}].v=parseFloat(this.value)||0;calcFin()"></div>`).join("");
+  document.getElementById("chg-rows").innerHTML=CHG.map((r,i)=>`<div class="fin-row"><label>${r.k}</label><input type="number" inputmode="decimal" value="${r.v}" onchange="CHG[${i}].v=parseFloat(this.value)||0;calcFin()"></div>`).join("");
+  calcFin();
+}
+function calcFin(){
+  const tr=REV.reduce((s,r)=>s+r.v,0);
+  const tc=CHG.reduce((s,r)=>s+r.v,0);
+  const reste=tr-tc;
+  document.getElementById("t-rev").textContent=tr.toFixed(0)+" CHF";
+  document.getElementById("t-chg").textContent=tc.toFixed(0)+" CHF";
+  document.getElementById("t-reste").textContent=reste.toFixed(0)+" CHF";
+  const box=document.getElementById("reste-box");
+  const bar=document.getElementById("reste-bar");
+  const msg=document.getElementById("reste-msg");
+  const pct=tr>0?Math.max(0,Math.min(100,reste/tr*100)):0;
+  bar.style.width=pct+"%";
+  if(reste<0){box.style.background="#f5e0e0";box.style.color="var(--red)";bar.style.background="var(--red)";msg.textContent="🚨 Tu dépenses plus que tu ne gagnes. Coupe une charge ou augmente les revenus. Et zéro pari ce mois-ci.";}
+  else if(reste<200){box.style.background="#faf2dd";box.style.color="var(--gold)";bar.style.background="var(--gold)";msg.textContent="⚠️ Reste à vivre très serré. Pas de pari. Priorité : nourriture + imprévus.";}
+  else{box.style.background="#eef1ea";box.style.color="var(--sage-d)";bar.style.background="var(--sage)";msg.textContent="✅ Tu as un coussin. Garde-le pour ton projet d'asso, pas pour les paris.";}
+  // bankroll
+  const bk=parseFloat(document.getElementById("bk-in").value)||0;
+  document.getElementById("bk-max").textContent=(bk*0.02).toFixed(2)+" CHF";
+  // accueil sync
+  document.getElementById("ac-bk").textContent=bk.toFixed(0);
+  document.getElementById("ac-max").textContent=(bk*0.02).toFixed(2);
+}
+document.getElementById("bk-in").addEventListener("input",calcFin);
+function saveFin(){
+  const bk=parseFloat(document.getElementById("bk-in").value)||900;
+  localStorage.setItem("fin_v1",JSON.stringify({rev:REV,chg:CHG,bk:bk}));
+  document.getElementById("c-bk").value=bk;
+  alert("💾 Sauvegardé sur ton téléphone.");
+}
+function resetFin(){
+  if(confirm("Remettre les valeurs de départ ?")){
+    REV=JSON.parse(JSON.stringify(REV_DEF));CHG=JSON.parse(JSON.stringify(CHG_DEF));
+    document.getElementById("bk-in").value=900;renderFin();
+  }
+}
+
+// ===== COACH =====
+function checkMise(){
+  const bk=parseFloat(document.getElementById("c-bk").value)||0;
+  const mise=parseFloat(document.getElementById("c-mise").value)||0;
+  const max=bk*0.02;
+  const r=document.getElementById("c-result");
+  if(bk<=0){r.innerHTML=`<div class="coach-big coach-no">Dis-moi d'abord ta bankroll.</div>`;return;}
+  if(mise<=0){r.innerHTML=`<div class="coach-big coach-no">Dis-moi combien tu veux miser.</div>`;return;}
+  if(mise<=max){
+    r.innerHTML=`<div class="coach-big coach-ok">✅ OK<br><span style="font-size:14px;font-weight:600">Tu as le droit. Max ${max.toFixed(2)} CHF.</span></div>`;
+  }else{
+    r.innerHTML=`<div class="coach-big coach-no">❌ NON<br><span style="font-size:14px;font-weight:600">Règle des 2%. Tu n'as le droit qu'à ${max.toFixed(2)} CHF.</span></div>`;
+  }
+}
+
+// ===== INIT =====
+buildChips();renderComp();
+buildJeuChips();setJeu("quiz");
+buildMoods();
+loadFin();
+</script>
+</body>
+</html>
